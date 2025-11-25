@@ -1,19 +1,19 @@
-const CACHE_NAME = 'kyoto-osaka-travel-v1';
+const CACHE_NAME = 'kyoto-osaka-travel-v2';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/offline.html',
-  '/styles.css',
-  '/app.js',
-  '/manifest.json',
-  '/icon-72.png',
-  '/icon-96.png',
-  '/icon-128.png',
-  '/icon-144.png',
-  '/icon-152.png',
-  '/icon-192.png',
-  '/icon-384.png',
-  '/icon-512.png'
+  './',
+  './index.html',
+  './offline.html',
+  './styles.css',
+  './app.js',
+  './manifest.json',
+  './icon-72.png',
+  './icon-96.png',
+  './icon-128.png',
+  './icon-144.png',
+  './icon-152.png',
+  './icon-192.png',
+  './icon-384.png',
+  './icon-512.png'
 ];
 
 // Install event - cache resources
@@ -91,7 +91,7 @@ self.addEventListener('fetch', event => {
           
           // Return the offline page for navigation requests
           if (event.request.mode === 'navigate') {
-            return caches.match('/offline.html');
+            return caches.match('./offline.html');
           }
           
           // For other requests, return a simple error response
