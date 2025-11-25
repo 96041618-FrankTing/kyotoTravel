@@ -261,3 +261,45 @@ navButtons.forEach(button => {
 // Initial page load
 console.log('Kyoto-Osaka Travel Itinerary App loaded successfully');
 logPageView('overview');
+
+// Countdown Timer
+function updateCountdown() {
+    const departureDate = new Date('2026-01-16T09:20:00+08:00'); // Departure time in Taiwan timezone
+    const now = new Date();
+    const diff = departureDate - now;
+    
+    const countdownElement = document.getElementById('countdown');
+    const daysElement = document.getElementById('countdown-days');
+    const hoursElement = document.getElementById('countdown-hours');
+    const minutesElement = document.getElementById('countdown-minutes');
+    const secondsElement = document.getElementById('countdown-seconds');
+    
+    if (diff <= 0) {
+        // Trip has started or ended
+        if (countdownElement) {
+            const endDate = new Date('2026-01-22T16:45:00+08:00'); // Return time
+            if (now < endDate) {
+                countdownElement.querySelector('.countdown-label').textContent = '✈️ 旅途進行中！';
+                countdownElement.querySelector('.countdown-timer').style.display = 'none';
+            } else {
+                countdownElement.querySelector('.countdown-label').textContent = '🎉 旅程已結束，美好回憶永存！';
+                countdownElement.querySelector('.countdown-timer').style.display = 'none';
+            }
+        }
+        return;
+    }
+    
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+    
+    if (daysElement) daysElement.textContent = days.toString().padStart(2, '0');
+    if (hoursElement) hoursElement.textContent = hours.toString().padStart(2, '0');
+    if (minutesElement) minutesElement.textContent = minutes.toString().padStart(2, '0');
+    if (secondsElement) secondsElement.textContent = seconds.toString().padStart(2, '0');
+}
+
+// Initialize countdown and update every second
+updateCountdown();
+setInterval(updateCountdown, 1000);
