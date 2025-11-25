@@ -22,7 +22,7 @@ self.addEventListener('install', (event) => {
         caches.open(CACHE_NAME)
             .then((cache) => {
                 console.log('Service Worker: Caching files');
-                return cache.addAll(ASSETS_TO_CACHE.filter(url => !url.includes('/icons/')))
+                return cache.addAll(ASSETS_TO_CACHE)
                     .catch((error) => {
                         console.log('Service Worker: Cache addAll error:', error);
                         // Continue installation even if some files fail to cache

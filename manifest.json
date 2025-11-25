@@ -57,12 +57,5 @@
       "purpose": "maskable any"
     }
   ],
-  "categories": ["travel", "lifestyle", "tourism"],
-  "screenshots": [
-    {
-      "src": "/screenshots/screenshot1.png",
-      "sizes": "540x720",
-      "type": "image/png"
-    }
-  ]
+  "categories": ["travel", "lifestyle", "tourism"]
 }
