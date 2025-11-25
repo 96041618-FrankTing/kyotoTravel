@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" fill="#E63946" rx="80"/>
+  
+  <!-- White circle background -->
+  <circle cx="256" cy="256" r="200" fill="#FFFFFF" opacity="0.95"/>
+  
+  <!-- Torii gate (simplified) -->
+  <g fill="#E63946">
+    <!-- Top horizontal beam -->
+    <rect x="106" y="140" width="300" height="20" rx="10"/>
+    
+    <!-- Top decorative curves -->
+    <path d="M 96 150 Q 106 130 116 140 L 106 160 Z" fill="#E63946"/>
+    <path d="M 416 150 Q 406 130 396 140 L 406 160 Z" fill="#E63946"/>
+    
+    <!-- Second horizontal beam -->
+    <rect x="126" y="180" width="260" height="16" rx="8"/>
+    
+    <!-- Left pillar -->
+    <rect x="146" y="160" width="40" height="180" rx="5"/>
+    
+    <!-- Right pillar -->
+    <rect x="326" y="160" width="40" height="180" rx="5"/>
+    
+    <!-- Base decorations -->
+    <rect x="136" y="330" width="60" height="20" rx="5"/>
+    <rect x="316" y="330" width="60" height="20" rx="5"/>
+  </g>
+  
+  <!-- Cherry blossom (sakura) -->
+  <g transform="translate(340, 220)">
+    <!-- Petals -->
+    <ellipse cx="0" cy="-15" rx="12" ry="18" fill="#FFB3BA" transform="rotate(0)"/>
+    <ellipse cx="0" cy="-15" rx="12" ry="18" fill="#FFB3BA" transform="rotate(72)"/>
+    <ellipse cx="0" cy="-15" rx="12" ry="18" fill="#FFB3BA" transform="rotate(144)"/>
+    <ellipse cx="0" cy="-15" rx="12" ry="18" fill="#FFB3BA" transform="rotate(216)"/>
+    <ellipse cx="0" cy="-15" rx="12" ry="18" fill="#FFB3BA" transform="rotate(288)"/>
+    <!-- Center -->
+    <circle cx="0" cy="0" r="8" fill="#FFC107"/>
+  </g>
+  
+  <g transform="translate(180, 200)">
+    <!-- Petals -->
+    <ellipse cx="0" cy="-12" rx="10" ry="15" fill="#FFB3BA" transform="rotate(0)"/>
+    <ellipse cx="0" cy="-12" rx="10" ry="15" fill="#FFB3BA" transform="rotate(72)"/>
+    <ellipse cx="0" cy="-12" rx="10" ry="15" fill="#FFB3BA" transform="rotate(144)"/>
+    <ellipse cx="0" cy="-12" rx="10" ry="15" fill="#FFB3BA" transform="rotate(216)"/>
+    <ellipse cx="0" cy="-12" rx="10" ry="15" fill="#FFB3BA" transform="rotate(288)"/>
+    <!-- Center -->
+    <circle cx="0" cy="0" r="6" fill="#FFC107"/>
+  </g>
+  
+  <!-- Text -->
+  <text x="256" y="420" font-family="sans-serif" font-size="60" font-weight="bold" fill="#E63946" text-anchor="middle">京阪</text>
+</svg>
