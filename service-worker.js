@@ -2,6 +2,7 @@ const CACHE_NAME = 'kyoto-osaka-travel-v1';
 const urlsToCache = [
   '/',
   '/index.html',
+  '/offline.html',
   '/styles.css',
   '/app.js',
   '/manifest.json',
@@ -88,13 +89,16 @@ self.addEventListener('fetch', event => {
         }).catch(error => {
           console.error('Fetch failed:', error);
           
-          // Return a custom offline page or message
-          return new Response(
-            '<html><body><h1>離線模式</h1><p>請檢查您的網路連線</p></body></html>',
-            {
-              headers: { 'Content-Type': 'text/html' }
-            }
-          );
+          // Return the offline page for navigation requests
+          if (event.request.mode === 'navigate') {
+            return caches.match('/offline.html');
+          }
+          
+          // For other requests, return a simple error response
+          return new Response('Network error', {
+            status: 408,
+            headers: { 'Content-Type': 'text/plain' }
+          });
         });
       })
   );

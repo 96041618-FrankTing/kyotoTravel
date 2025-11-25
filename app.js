@@ -71,7 +71,7 @@ window.addEventListener('appinstalled', () => {
 // Service Worker Registration
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js')
+        navigator.serviceWorker.register('./service-worker.js')
             .then(registration => {
                 console.log('Service Worker registered successfully:', registration.scope);
             })
@@ -166,13 +166,18 @@ function showOfflineNotification() {
     
     document.body.appendChild(notification);
     
-    // Remove notification after 3 seconds
-    setTimeout(() => {
+    // Use animationend event instead of nested setTimeout
+    const removeNotification = () => {
         notification.style.animation = 'slideUp 0.5s ease';
-        setTimeout(() => {
-            document.body.removeChild(notification);
-        }, 500);
-    }, 3000);
+        notification.addEventListener('animationend', () => {
+            if (notification.parentNode) {
+                document.body.removeChild(notification);
+            }
+        }, { once: true });
+    };
+    
+    // Remove notification after 3 seconds
+    setTimeout(removeNotification, 3000);
 }
 
 window.addEventListener('online', updateOnlineStatus);
