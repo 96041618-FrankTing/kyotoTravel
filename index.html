@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Kyoto and Osaka Travel Guide - Your ultimate guide to exploring Japan's cultural gems">
+    <meta name="theme-color" content="#d32f2f">
+    
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    
+    <title>Kyoto & Osaka Travel Guide</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <h1>🏯 Kyoto & Osaka Travel</h1>
+            <p class="subtitle">Explore Japan's Cultural Heart</p>
+        </header>
+
+        <!-- Install Banner -->
+        <div id="installBanner" class="install-banner hidden">
+            <p>Install this app for offline access!</p>
+            <button id="installButton" class="btn-install">Install</button>
+            <button id="dismissButton" class="btn-dismiss">×</button>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Kyoto Section -->
+            <section class="destination-card">
+                <div class="card-header">
+                    <h2>🎎 Kyoto</h2>
+                    <span class="badge">Ancient Capital</span>
+                </div>
+                <div class="card-content">
+                    <p>Kyoto, the former imperial capital of Japan, is home to numerous classical Buddhist temples, gardens, imperial palaces, and traditional wooden houses.</p>
+                    
+                    <h3>Top Attractions:</h3>
+                    <ul class="attractions-list">
+                        <li>
+                            <strong>Fushimi Inari Shrine</strong> - Famous for thousands of vermillion torii gates
+                        </li>
+                        <li>
+                            <strong>Kinkaku-ji (Golden Pavilion)</strong> - Stunning golden temple surrounded by gardens
+                        </li>
+                        <li>
+                            <strong>Arashiyama Bamboo Grove</strong> - Peaceful bamboo forest walk
+                        </li>
+                        <li>
+                            <strong>Kiyomizu-dera</strong> - Historic temple with panoramic city views
+                        </li>
+                        <li>
+                            <strong>Gion District</strong> - Traditional geisha district
+                        </li>
+                    </ul>
+
+                    <h3>Best Time to Visit:</h3>
+                    <p>Spring (March-May) for cherry blossoms or Fall (October-November) for autumn foliage</p>
+                </div>
+            </section>
+
+            <!-- Osaka Section -->
+            <section class="destination-card">
+                <div class="card-header">
+                    <h2>🏙️ Osaka</h2>
+                    <span class="badge">Food Paradise</span>
+                </div>
+                <div class="card-content">
+                    <p>Osaka is known for its modern architecture, nightlife, street food culture, and friendly locals. It's Japan's kitchen and entertainment hub.</p>
+                    
+                    <h3>Top Attractions:</h3>
+                    <ul class="attractions-list">
+                        <li>
+                            <strong>Osaka Castle</strong> - Historic castle with museum and beautiful grounds
+                        </li>
+                        <li>
+                            <strong>Dōtonbori</strong> - Vibrant entertainment district with neon lights
+                        </li>
+                        <li>
+                            <strong>Universal Studios Japan</strong> - World-class theme park
+                        </li>
+                        <li>
+                            <strong>Kuromon Ichiba Market</strong> - Traditional market for street food
+                        </li>
+                        <li>
+                            <strong>Shinsekai</strong> - Retro entertainment district
+                        </li>
+                    </ul>
+
+                    <h3>Must-Try Foods:</h3>
+                    <p>Takoyaki (octopus balls), Okonomiyaki (savory pancake), Kushikatsu (fried skewers), and Kani (crab dishes)</p>
+                </div>
+            </section>
+
+            <!-- Travel Tips Section -->
+            <section class="destination-card tips-card">
+                <div class="card-header">
+                    <h2>💡 Travel Tips</h2>
+                </div>
+                <div class="card-content">
+                    <ul class="tips-list">
+                        <li>
+                            <strong>JR Pass:</strong> Consider getting a JR Pass for unlimited train travel between cities
+                        </li>
+                        <li>
+                            <strong>IC Cards:</strong> Get a Suica or ICOCA card for convenient public transport
+                        </li>
+                        <li>
+                            <strong>Language:</strong> Download a translation app - English is not widely spoken
+                        </li>
+                        <li>
+                            <strong>Cash:</strong> Many places still prefer cash, so carry yen
+                        </li>
+                        <li>
+                            <strong>Etiquette:</strong> Remove shoes when entering temples and traditional restaurants
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>📱 This is a Progressive Web App - Install it for offline access!</p>
+            <p class="connection-status">
+                <span id="onlineStatus" class="status-indicator online">●</span>
+                <span id="statusText">Online</span>
+            </p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
