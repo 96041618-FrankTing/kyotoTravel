@@ -525,28 +525,29 @@ footer {
 
     /* Reduce transport sidebar width on tablets */
     .transport-sidebar {
-        flex: 0 0 90px;
+        flex: 0 0 70px;
     }
 
     .day-content {
-        gap: 15px;
+        gap: 12px;
     }
 
     .day-content::before {
-        left: 45px; /* Adjust connection line position for smaller sidebar */
+        left: 35px; /* Adjust connection line position for smaller sidebar */
     }
 
     .transport-item {
-        padding: 12px 8px;
-        min-height: 60px;
+        padding: 8px 4px;
+        min-height: 45px;
+        gap: 2px;
     }
 
     .transport-icon {
-        font-size: 20px;
+        font-size: 16px;
     }
 
     .transport-text {
-        font-size: 11px;
+        font-size: 9px;
     }
 }
 
@@ -569,29 +570,61 @@ footer {
 
     /* Further reduce transport sidebar width on mobile phones */
     .transport-sidebar {
-        flex: 0 0 70px;
+        flex: 0 0 50px;
     }
 
     .day-content {
-        gap: 10px;
+        gap: 8px;
     }
 
     .day-content::before {
-        left: 35px; /* Adjust connection line position for mobile */
+        left: 25px; /* Adjust connection line position for mobile */
     }
 
     .transport-item {
-        padding: 10px 6px;
-        min-height: 50px;
-        gap: 4px;
+        padding: 6px 3px;
+        min-height: 35px;
+        gap: 1px;
+        border-radius: 8px;
     }
 
     .transport-icon {
-        font-size: 18px;
+        font-size: 14px;
     }
 
     .transport-text {
-        font-size: 10px;
+        font-size: 8px;
+    }
+}
+
+@media (max-width: 360px) {
+    /* Ultra-compact layout for very small screens */
+    .transport-sidebar {
+        flex: 0 0 40px;
+    }
+
+    .day-content {
+        gap: 6px;
+    }
+
+    .day-content::before {
+        left: 20px;
+    }
+
+    .transport-item {
+        padding: 4px 2px;
+        min-height: 28px;
+        gap: 0px;
+        border-radius: 6px;
+        border-width: 1px;
+    }
+
+    .transport-icon {
+        font-size: 12px;
+    }
+
+    .transport-text {
+        font-size: 7px;
     }
 }
 
