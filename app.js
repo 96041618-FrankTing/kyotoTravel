@@ -258,9 +258,215 @@ navButtons.forEach(button => {
     });
 });
 
-// Initial page load
-console.log('Kyoto-Osaka Travel Itinerary App loaded successfully');
-logPageView('overview');
+// Modal functionality
+const modal = document.getElementById('detailModal');
+const modalTitle = document.getElementById('modalTitle');
+const modalImage = document.getElementById('modalImage');
+const modalDetails = document.getElementById('modalDetails');
+const modalClose = document.querySelector('.modal-close');
+
+// Close modal when clicking the close button
+modalClose.onclick = function() {
+    modal.style.display = 'none';
+}
+
+// Close modal when clicking outside of it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// Add click event listeners to itinerary items
+document.addEventListener('DOMContentLoaded', function() {
+    const itineraryItems = document.querySelectorAll('.itinerary-item .content');
+    
+    itineraryItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const title = this.querySelector('h3').textContent;
+            const description = this.querySelector('p').textContent;
+            const details = this.querySelector('.details');
+            
+            // Set modal title
+            modalTitle.textContent = title;
+            
+            // Build modal content
+            let content = `<p><strong>簡介：</strong>${description}</p>`;
+            
+            if (details) {
+                content += details.innerHTML;
+            }
+            
+            // Add specific details based on the item
+            const additionalDetails = getAdditionalDetails(title);
+            if (additionalDetails) {
+                content += additionalDetails;
+            }
+            
+            modalDetails.innerHTML = content;
+            
+            // Hide image (removed due to inaccurate images)
+            modalImage.style.display = 'none';
+            
+            // Show modal
+            modal.style.display = 'block';
+        });
+    });
+});
+
+// Function to get additional details for specific spots
+function getAdditionalDetails(title) {
+    const detailsMap = {
+        '⛩️ 清水寺': `
+            <h3>🏛️ 清水寺介紹</h3>
+            <p>清水寺是京都最古老的寺院之一，建於778年，是京都最具代表性的寺院。寺院背靠音羽山，面向京都盆地，視野極佳。</p>
+            <h3>📸 必拍景點</h3>
+            <ul>
+                <li>清水舞台：從18公尺高的舞台俯瞰京都景色</li>
+                <li>音羽瀑布：三股清泉，分別代表智慧、健康、長壽</li>
+                <li>子安塔：祈求小孩健康的塔</li>
+            </ul>
+            <h3>💡 參觀Tips</h3>
+            <ul>
+                <li>建議早上或傍晚參觀，人比較少</li>
+                <li>從清水寺到二三年坂的坡道較陡，可選擇乘坐纜車</li>
+                <li>寺內禁止攝影，請尊重寺規</li>
+            </ul>
+        `,
+        '🎋 嵐山竹林之道': `
+            <h3>🎋 嵐山竹林介紹</h3>
+            <p>嵐山竹林是京都最具代表性的景觀之一，竹林小徑長約500公尺，兩旁種滿孟宗竹和淡竹，風吹過時發出沙沙聲響。</p>
+            <h3>📸 必拍景點</h3>
+            <ul>
+                <li>竹林小徑：最佳拍攝時間是清晨或傍晚</li>
+                <li>渡月橋：從橋上拍攝竹林與桂川的美景</li>
+                <li>天龍寺：世界遺產，庭園景色優美</li>
+            </ul>
+            <h3>💡 參觀Tips</h3>
+            <ul>
+                <li>建議穿著平底鞋，竹林小徑有些潮濕</li>
+                <li>清晨人較少，是拍攝竹林的最佳時機</li>
+                <li>附近有嵐山米飛兔麵包店，可品嚐可愛造型麵包</li>
+            </ul>
+        `,
+        '🏯 金閣寺': `
+            <h3>🏯 金閣寺介紹</h3>
+            <p>金閣寺原名鹿苑寺，因其舍利殿全部貼金箔而得名「金閣寺」。它是京都最具代表性的寺院之一，也是世界文化遺產。</p>
+            <h3>📸 必拍景點</h3>
+            <ul>
+                <li>金色舍利殿：從鏡湖池倒影拍攝最美</li>
+                <li>庭園：日式枯山水庭園設計</li>
+                <li>陸舟之松：象徵心靈的平靜</li>
+            </ul>
+            <h3>💡 參觀Tips</h3>
+            <ul>
+                <li>門票¥500，建議早上參觀避開人群</li>
+                <li>從庭園出口可品嚐金箔抹茶冰淇淋</li>
+                <li>寺內禁止攝影，請尊重寺規</li>
+            </ul>
+        `,
+        '⛩️ 伏見稻荷大社': `
+            <h3>⛩️ 伏見稻荷大社介紹</h3>
+            <p>伏見稻荷大社是京都最受歡迎的神社之一，以千本鳥居聞名。鳥居象徵著從現世通往神域的入口。</p>
+            <h3>📸 必拍景點</h3>
+            <ul>
+                <li>千本鳥居：紅色鳥居連綿不絕的景象</li>
+                <li>奧社奉拝所：千本鳥居的盡頭</li>
+                <li>神社本殿：傳統日式建築</li>
+            </ul>
+            <h3>💡 參觀Tips</h3>
+            <ul>
+                <li>建議穿著舒適的鞋子，參觀距離約2公里</li>
+                <li>最佳拍攝時間是清晨或傍晚光線柔和時</li>
+                <li>鳥居是奉納品，請勿擅自移動或破壞</li>
+            </ul>
+        `,
+        '🦌 奈良公園': `
+            <h3>🦌 奈良公園介紹</h3>
+            <p>奈良公園是日本最古老的公園之一，以可自由餵食的野生鹿聞名。公園內散落著多座寺院和神社。</p>
+            <h3>📸 必拍景點</h3>
+            <ul>
+                <li>鹿與小朋友互動：溫馴的小鹿搶食的畫面</li>
+                <li>東大寺：世界最大木造建築</li>
+                <li>春日大社：千年古社</li>
+            </ul>
+            <h3>💡 參觀Tips</h3>
+            <ul>
+                <li>鹿仙貝¥200一包，請購買正規品餵食</li>
+                <li>不要餵食巧克力、糖果等對鹿有害的食物</li>
+                <li>公園很大，建議乘坐巴士在各景點間移動</li>
+            </ul>
+        `,
+        '🚢 天橋立遊覽船': `
+            <h3>🚢 天橋立遊覽船介紹</h3>
+            <p>天橋立是日本三景之一，從遊覽船上可以360度欣賞這條「龍背」美景。船上可餵食海鷗，體驗非常刺激。</p>
+            <h3>📸 必拍景點</h3>
+            <ul>
+                <li>海上天橋立：從船上拍攝完整的龍背形狀</li>
+                <li>海鷗飛來：海鷗吃蝦味先的精彩瞬間</li>
+                <li>傘松公園：從海上看松樹傘狀的樹冠</li>
+            </ul>
+            <h3>💡 參觀Tips</h3>
+            <ul>
+                <li>準備蝦味先餵食海鷗，記得帶塑膠袋清理</li>
+                <li>船程約20分鐘，建議坐在船頭拍攝</li>
+                <li>天橋立最佳觀賞時間是秋季楓紅季節</li>
+            </ul>
+        `,
+        '🚂 丹後「紅松號」觀光列車': `
+            <h3>🚂 紅松號列車介紹</h3>
+            <p>丹後「紅松號」是JR西日本的觀光列車，以「海與山與歷史」為主題，車窗設計讓乘客能360度欣賞風景。</p>
+            <h3>📸 必拍景點</h3>
+            <ul>
+                <li>由良川橋樑：列車行駛在橋上的夢幻場景</li>
+                <li>日本海海岸線：湛藍大海與白色沙灘</li>
+                <li>車內復古裝潢：木質內裝與大片玻璃窗</li>
+            </ul>
+            <h3>💡 參觀Tips</h3>
+            <ul>
+                <li>建議坐在右側座位欣賞日本海景色</li>
+                <li>列車上有導覽廣播，介紹沿途景點</li>
+                <li>車程約1小時，沿途風景變化豐富</li>
+            </ul>
+        `,
+        '🎢 大阪環球影城 USJ': `
+            <h3>🎢 大阪環球影城介紹</h3>
+            <p>大阪環球影城是日本最大的主題樂園，以電影為主題，分為8個主題區。園區佔地約40公頃。</p>
+            <h3>🎫 必玩設施</h3>
+            <ul>
+                <li>超級任天堂世界：瑪利歐主題區，需抽整理券</li>
+                <li>哈利波特魔法世界：霍格華茲城堡與禁忌森林</li>
+                <li>侏羅紀公園：霸王龍與迅猛龍的刺激體驗</li>
+                <li>小小兵樂園：萌翻全場的黃色小小兵</li>
+            </ul>
+            <h3>💡 遊玩Tips</h3>
+            <ul>
+                <li>提前購買Express Pass可節省大量排隊時間</li>
+                <li>下載官方APP查看即時等待時間</li>
+                <li>園區很大，穿著舒適鞋子很重要</li>
+                <li>建議早上入園，先玩熱門設施</li>
+            </ul>
+        `
+    };
+    
+    return detailsMap[title] || '';
+}
+
+// Function to get image URL for specific spots
+function getImageForSpot(title) {
+    const imageMap = {
+        '⛩️ 清水寺': 'https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?w=600&h=300&fit=crop',
+        '🎋 嵐山竹林之道': 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=300&fit=crop',
+        '🏯 金閣寺': 'https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=600&h=300&fit=crop',
+        '⛩️ 伏見稻荷大社': 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=600&h=300&fit=crop',
+        '🦌 奈良公園': 'https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=600&h=300&fit=crop',
+        '🚢 天橋立遊覽船': 'https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=600&h=300&fit=crop',
+        '🚂 丹後「紅松號」觀光列車': 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&h=300&fit=crop',
+        '🎢 大阪環球影城 USJ': 'https://images.unsplash.com/photo-1513889961551-628c1e5e2ee9?w=600&h=300&fit=crop'
+    };
+    
+    return imageMap[title] || null;
+}
 
 // Countdown Timer
 function updateCountdown() {
