@@ -522,6 +522,32 @@ footer {
         padding: 12px 20px;
         font-size: 1rem;
     }
+
+    /* Reduce transport sidebar width on tablets */
+    .transport-sidebar {
+        flex: 0 0 90px;
+    }
+
+    .day-content {
+        gap: 15px;
+    }
+
+    .day-content::before {
+        left: 45px; /* Adjust connection line position for smaller sidebar */
+    }
+
+    .transport-item {
+        padding: 12px 8px;
+        min-height: 60px;
+    }
+
+    .transport-icon {
+        font-size: 20px;
+    }
+
+    .transport-text {
+        font-size: 11px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -539,6 +565,33 @@ footer {
 
     .itinerary-item h3 {
         font-size: 1.2rem;
+    }
+
+    /* Further reduce transport sidebar width on mobile phones */
+    .transport-sidebar {
+        flex: 0 0 70px;
+    }
+
+    .day-content {
+        gap: 10px;
+    }
+
+    .day-content::before {
+        left: 35px; /* Adjust connection line position for mobile */
+    }
+
+    .transport-item {
+        padding: 10px 6px;
+        min-height: 50px;
+        gap: 4px;
+    }
+
+    .transport-icon {
+        font-size: 18px;
+    }
+
+    .transport-text {
+        font-size: 10px;
     }
 }
 
