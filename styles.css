@@ -148,7 +148,7 @@ nav .container::-webkit-scrollbar-thumb {
 
 /* Main Content */
 main {
-    padding: 40px 20px;
+    padding: 20px 10px; /* Reduced padding for tighter layout */
 }
 
 .day-section {
@@ -570,7 +570,7 @@ footer {
     }
 
     main {
-        padding: 20px 15px;
+        padding: 15px 8px; /* Tighter padding for mobile */
     }
 
     .itinerary-item h3 {
@@ -839,18 +839,16 @@ footer {
 
 /* Vertical text layout for transport items with text */
 .transport-item:has(.transport-text:not(:empty)) {
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    padding: 8px 6px;
+    /* Keep vertical layout but adjust spacing */
+    padding: 6px 4px;
     min-height: 50px;
-    gap: 4px;
+    gap: 2px;
 }
 
 .transport-item:has(.transport-text:not(:empty)) .transport-text {
-    writing-mode: vertical-rl;
+    writing-mode: horizontal-tb; /* Back to horizontal text */
     text-orientation: mixed;
-    transform: rotate(180deg);
+    transform: none; /* Remove rotation */
     font-size: 10px;
     line-height: 1.2;
     white-space: nowrap;
