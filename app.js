@@ -23,6 +23,9 @@ navButtons.forEach(button => {
                 top: 0,
                 behavior: 'smooth'
             });
+            
+            // Update weather for the new location
+            updateWeatherForCurrentDay();
         }
     });
 });
@@ -509,3 +512,188 @@ function updateCountdown() {
 // Initialize countdown and update every second
 updateCountdown();
 setInterval(updateCountdown, 1000);
+
+// Weather functionality
+const weatherLocations = {
+    'overview': 'Kyoto', // Default to Kyoto for overview
+    'day1': 'Kyoto',
+    'day2': 'Kyoto', 
+    'day3': 'Kyoto',
+    'day4': 'Osaka',
+    'day5': 'Osaka',
+    'day6': 'Osaka',
+    'day7': 'Osaka'
+};
+
+// Weather icons mapping
+const weatherIcons = {
+    'Clear': '☀️',
+    'Sunny': '☀️',
+    'Partly cloudy': '⛅',
+    'Cloudy': '☁️',
+    'Overcast': '☁️',
+    'Mist': '🌫️',
+    'Patchy rain possible': '🌦️',
+    'Patchy snow possible': '🌨️',
+    'Patchy sleet possible': '🌨️',
+    'Patchy freezing drizzle possible': '🌨️',
+    'Thundery outbreaks possible': '⛈️',
+    'Blowing snow': '🌨️',
+    'Blizzard': '❄️',
+    'Fog': '🌫️',
+    'Freezing fog': '🌫️',
+    'Patchy light drizzle': '🌦️',
+    'Light drizzle': '🌦️',
+    'Freezing drizzle': '🌨️',
+    'Heavy freezing drizzle': '🌨️',
+    'Patchy light rain': '🌦️',
+    'Light rain': '🌦️',
+    'Moderate rain at times': '🌧️',
+    'Moderate rain': '🌧️',
+    'Heavy rain at times': '🌧️',
+    'Heavy rain': '🌧️',
+    'Light freezing rain': '🌨️',
+    'Moderate or heavy freezing rain': '🌨️',
+    'Light sleet': '🌨️',
+    'Moderate or heavy sleet': '🌨️',
+    'Patchy light snow': '🌨️',
+    'Light snow': '🌨️',
+    'Patchy moderate snow': '❄️',
+    'Moderate snow': '❄️',
+    'Patchy heavy snow': '❄️',
+    'Heavy snow': '❄️',
+    'Ice pellets': '🧊',
+    'Light rain shower': '🌦️',
+    'Moderate or heavy rain shower': '🌧️',
+    'Torrential rain shower': '🌧️',
+    'Light sleet showers': '🌨️',
+    'Moderate or heavy sleet showers': '🌨️',
+    'Light snow showers': '🌨️',
+    'Moderate or heavy snow showers': '❄️',
+    'Light showers of ice pellets': '🧊',
+    'Moderate or heavy showers of ice pellets': '🧊',
+    'Patchy light rain with thunder': '⛈️',
+    'Moderate or heavy rain with thunder': '⛈️',
+    'Patchy light snow with thunder': '⛈️',
+    'Moderate or heavy snow with thunder': '⛈️'
+};
+
+async function fetchWeatherData(location) {
+    try {
+        // For demo purposes, return mock data
+        // In production, you would use a real weather API like:
+        // const apiKey = 'YOUR_WEATHER_API_KEY';
+        // const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${location}&days=3&aqi=no&alerts=no`;
+        
+        // Mock weather data for demonstration
+        const mockData = {
+            forecast: {
+                forecastday: [
+                    {
+                        date: new Date().toISOString().split('T')[0],
+                        day: {
+                            condition: { text: 'Partly cloudy' },
+                            maxtemp_c: 8,
+                            mintemp_c: 2
+                        }
+                    },
+                    {
+                        date: new Date(Date.now() + 86400000).toISOString().split('T')[0],
+                        day: {
+                            condition: { text: 'Sunny' },
+                            maxtemp_c: 10,
+                            mintemp_c: 3
+                        }
+                    },
+                    {
+                        date: new Date(Date.now() + 172800000).toISOString().split('T')[0],
+                        day: {
+                            condition: { text: 'Light rain' },
+                            maxtemp_c: 6,
+                            mintemp_c: 1
+                        }
+                    }
+                ]
+            }
+        };
+        
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        return mockData;
+    } catch (error) {
+        console.error('Error fetching weather data:', error);
+        return null;
+    }
+}
+
+function formatWeatherData(weatherData) {
+    if (!weatherData || !weatherData.forecast || !weatherData.forecast.forecastday) {
+        return null;
+    }
+    
+    const days = weatherData.forecast.forecastday.slice(0, 3);
+    return days.map((day, index) => {
+        const date = new Date(day.date);
+        const dayNames = ['今天', '明天', '後天'];
+        const dayName = dayNames[index] || date.toLocaleDateString('zh-TW', { weekday: 'short' });
+        
+        const condition = day.day.condition.text;
+        const icon = weatherIcons[condition] || '🌤️';
+        const tempHigh = Math.round(day.day.maxtemp_c);
+        const tempLow = Math.round(day.day.mintemp_c);
+        
+        return {
+            day: dayName,
+            icon: icon,
+            temp: `${tempHigh}°/${tempLow}°`,
+            condition: condition
+        };
+    });
+}
+
+function updateWeatherDisplay(weatherData) {
+    const weatherContainer = document.getElementById('header-weather');
+    if (!weatherContainer) return;
+    
+    if (!weatherData) {
+        weatherContainer.innerHTML = '<div class="weather-loading">天氣資訊載入失敗</div>';
+        return;
+    }
+    
+    const weatherHTML = `
+        <div class="weather-display">
+            ${weatherData.map(day => `
+                <div class="weather-day">
+                    <div class="weather-day-label">${day.day}</div>
+                    <div class="weather-icon">${day.icon}</div>
+                    <div class="weather-temp">${day.temp}</div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+    
+    weatherContainer.innerHTML = weatherHTML;
+}
+
+async function updateWeatherForCurrentDay() {
+    const activeSection = document.querySelector('.day-section.active');
+    if (!activeSection) return;
+    
+    const sectionId = activeSection.id;
+    const location = weatherLocations[sectionId] || 'Kyoto';
+    
+    const weatherContainer = document.getElementById('header-weather');
+    if (weatherContainer) {
+        weatherContainer.innerHTML = '<div class="weather-loading">載入天氣中...</div>';
+    }
+    
+    const weatherData = await fetchWeatherData(location);
+    const formattedData = formatWeatherData(weatherData);
+    updateWeatherDisplay(formattedData);
+}
+
+// Initialize weather on page load
+document.addEventListener('DOMContentLoaded', () => {
+    updateWeatherForCurrentDay();
+});
