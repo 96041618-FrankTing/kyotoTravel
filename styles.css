@@ -83,13 +83,36 @@ header .container {
     }
     
     .header-weather {
-        min-width: 200px;
+        min-width: 180px;
         flex: 1;
+        max-width: 200px;
     }
     
     .countdown.compact {
-        flex: 1;
-        max-width: 150px;
+        flex: 0 0 auto;
+        max-width: 120px;
+    }
+    
+    .countdown.compact .countdown-label {
+        font-size: 0.8rem;
+        margin-bottom: 5px;
+    }
+    
+    .countdown.compact .countdown-timer {
+        gap: 8px;
+    }
+    
+    .countdown.compact .countdown-item {
+        padding: 6px 8px;
+        min-width: 40px;
+    }
+    
+    .countdown.compact .countdown-number {
+        font-size: 1.2rem;
+    }
+    
+    .countdown.compact .countdown-unit {
+        font-size: 0.7rem;
     }
 }
 
