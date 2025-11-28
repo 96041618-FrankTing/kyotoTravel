@@ -77,42 +77,54 @@ header .container {
         align-items: center;
         min-width: auto;
         width: 100%;
-        flex-direction: row;
-        justify-content: space-between;
-        gap: 10px;
+        flex-direction: column;
+        gap: 8px;
+        position: relative;
     }
     
     .header-weather {
-        min-width: 180px;
-        flex: 1;
-        max-width: 200px;
+        width: 100%;
+        max-width: 280px;
+        margin: 0 auto;
     }
     
     .countdown.compact {
-        flex: 0 0 auto;
-        max-width: 120px;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: auto;
+        max-width: 100px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 4px 6px;
     }
     
     .countdown.compact .countdown-label {
-        font-size: 0.8rem;
-        margin-bottom: 5px;
+        font-size: 0.7rem;
+        margin-bottom: 2px;
+        text-align: center;
     }
     
     .countdown.compact .countdown-timer {
-        gap: 8px;
+        gap: 4px;
+        justify-content: center;
     }
     
     .countdown.compact .countdown-item {
-        padding: 6px 8px;
-        min-width: 40px;
+        padding: 3px 4px;
+        min-width: 30px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 6px;
     }
     
     .countdown.compact .countdown-number {
-        font-size: 1.2rem;
+        font-size: 0.9rem;
+        line-height: 1;
     }
     
     .countdown.compact .countdown-unit {
-        font-size: 0.7rem;
+        font-size: 0.6rem;
+        line-height: 1;
     }
 }
 
