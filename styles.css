@@ -653,40 +653,13 @@ footer {
         font-size: 1rem;
     }
 
-    /* Reduce transport sidebar width on tablets */
-    .transport-sidebar {
-        flex: 0 0 60px;
-    }
-
+    /* Adjust layout for tablets */
     .day-content {
         gap: 0px; /* Tight layout */
     }
 
     .day-content::before {
-        left: 30px; /* Adjust connection line position for smaller sidebar */
-    }
-
-    .transport-item {
-        padding: 6px 3px;
-        min-height: 40px;
-        gap: 1px;
-    }
-
-    .transport-item:has(.transport-text:not(:empty)) {
-        padding: 4px 2px;
-        min-height: 35px;
-    }
-
-    .transport-item:has(.transport-text:not(:empty)) .transport-text {
-        font-size: 8px;
-    }
-
-    .transport-icon {
-        font-size: 16px;
-    }
-
-    .transport-text {
-        font-size: 9px;
+        left: 20px; /* Adjust connection line position */
     }
 }
 
@@ -707,81 +680,12 @@ footer {
         font-size: 1.2rem;
     }
 
-    /* Further reduce transport sidebar width on mobile phones */
-    .transport-sidebar {
-        flex: 0 0 45px;
-    }
-
     .day-content {
         gap: 0px; /* Tight layout */
     }
 
     .day-content::before {
-        left: 22px; /* Adjust connection line position for mobile */
-    }
-
-    .transport-item {
-        padding: 4px 2px;
-        min-height: 30px;
-        gap: 0px;
-        border-radius: 6px;
-    }
-
-    .transport-item:has(.transport-text:not(:empty)) {
-        padding: 3px 1px;
-        min-height: 28px;
-    }
-
-    .transport-item:has(.transport-text:not(:empty)) .transport-text {
-        font-size: 7px;
-    }
-
-    .transport-icon {
-        font-size: 14px;
-    }
-
-    .transport-text {
-        font-size: 8px;
-    }
-}
-
-@media (max-width: 360px) {
-    /* Ultra-compact layout for very small screens */
-    .transport-sidebar {
-        flex: 0 0 35px;
-    }
-
-    .day-content {
-        gap: 0px; /* Tight layout */
-    }
-
-    .day-content::before {
-        left: 17px;
-    }
-
-    .transport-item {
-        padding: 3px 1px;
-        min-height: 24px;
-        gap: 0px;
-        border-radius: 4px;
-        border-width: 1px;
-    }
-
-    .transport-item:has(.transport-text:not(:empty)) {
-        padding: 2px 1px;
-        min-height: 22px;
-    }
-
-    .transport-item:has(.transport-text:not(:empty)) .transport-text {
-        font-size: 6px;
-    }
-
-    .transport-icon {
-        font-size: 12px;
-    }
-
-    .transport-text {
-        font-size: 7px;
+        left: 20px; /* Adjust connection line position for mobile */
     }
 }
 
@@ -894,9 +798,6 @@ footer {
 
 /* Day Content Container */
 .day-content {
-    display: flex;
-    align-items: flex-start;
-    gap: 0px; /* Minimal gap for tight layout */
     margin-bottom: 30px; /* Increased spacing for connection lines */
     position: relative;
 }
@@ -904,7 +805,7 @@ footer {
 .day-content::before {
     content: '';
     position: absolute;
-    left: 60px; /* Position at transport sidebar center */
+    left: 20px; /* Position at left edge */
     top: 0;
     bottom: -30px;
     width: 2px;
@@ -922,93 +823,9 @@ footer {
     display: none;
 }
 
-/* Transport Sidebar */
-.transport-sidebar {
-    flex: 0 0 120px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10px 0;
-    position: relative;
-}
-
-.transport-sidebar::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    top: 100%;
-    width: 0;
-    height: 0;
-    border-left: 3px solid transparent;
-    border-right: 3px solid transparent;
-    border-top: 6px solid var(--accent-color);
-    transform: translateX(-50%);
-    z-index: 1;
-    margin-top: 5px;
-}
-
-.transport-sidebar:last-child::after {
-    display: none;
-}
-
-.transport-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    padding: 15px 10px;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border: 2px solid var(--accent-color);
-    min-height: 80px;
-    text-align: center;
-    position: relative;
-    z-index: 2;
-}
-
-/* Vertical text layout for transport items with text */
-.transport-item:has(.transport-text:not(:empty)) {
-    /* Keep vertical layout but adjust spacing */
-    padding: 6px 4px;
-    min-height: 50px;
-    gap: 2px;
-}
-
-.transport-item:has(.transport-text:not(:empty)) .transport-text {
-    writing-mode: horizontal-tb; /* Back to horizontal text */
-    text-orientation: mixed;
-    transform: none; /* Remove rotation */
-    font-size: 10px;
-    line-height: 1.2;
-    white-space: nowrap;
-}
-
-.transport-icon {
-    font-size: 24px;
-    line-height: 1;
-}
-
-.transport-text {
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--text-dark);
-    white-space: nowrap;
-    display: block;
-}
-
-.transport-text:empty {
-    display: none;
-}
-
-.transport-item:has(.transport-text:not(:empty)) .transport-icon {
-    margin-bottom: 4px;
-}
-
 /* Main Itinerary Content */
 .itinerary-main {
-    flex: 1;
-    min-width: 0;
+    width: 100%;
 }
 
 /* Hide old transport connector elements */
@@ -1020,7 +837,7 @@ footer {
     display: none !important;
 }
 
-/* Remove old transport icon styles - REMOVED: was hiding all transport icons */
+/* Remove old transport icon styles */
 
 .itinerary-item {
     position: relative;

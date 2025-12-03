@@ -1,85 +1,124 @@
-const CACHE_NAME = 'v1';
-const urlsToCache = [
-  './',
-  './index.html',
-  './app.js',
-  './offline.html',
-  './manifest.json'
+const CACHE_NAME = 'kyoto-travel-v1.0.0';
+const STATIC_CACHE = 'kyoto-travel-static-v1.0.0';
+const DYNAMIC_CACHE = 'kyoto-travel-dynamic-v1.0.0';
+
+// Resources to cache immediately
+const STATIC_ASSETS = [
+  '/',
+  '/index.html',
+  '/manifest.json',
+  '/offline.html'
 ];
 
-// Install event - cache resources
+// Install event - cache static resources
 self.addEventListener('install', event => {
   console.log('Service Worker installing...');
 
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        console.log('Opened cache');
-        return cache.addAll(urlsToCache);
+    Promise.all([
+      caches.open(STATIC_CACHE).then(cache => {
+        console.log('Caching static assets');
+        return cache.addAll(STATIC_ASSETS);
       })
-      .catch(error => {
-        console.error('Cache addAll failed:', error);
-      })
+    ]).then(() => {
+      // Force activation
+      return self.skipWaiting();
+    })
   );
-
-  // Force the waiting service worker to become the active service worker
-  self.skipWaiting();
 });
 
-// Activate event - clean up old caches
+// Activate event - clean up old caches and take control
 self.addEventListener('activate', event => {
   console.log('Service Worker activating...');
 
   event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheName !== CACHE_NAME) {
-            console.log('Deleting old cache:', cacheName);
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
+    Promise.all([
+      // Clean up old caches
+      caches.keys().then(cacheNames => {
+        return Promise.all(
+          cacheNames.map(cacheName => {
+            if (cacheName !== STATIC_CACHE && cacheName !== DYNAMIC_CACHE) {
+              console.log('Deleting old cache:', cacheName);
+              return caches.delete(cacheName);
+            }
+          })
+        );
+      }),
+      // Take control of all clients
+      self.clients.claim()
+    ])
   );
-
-  // Take control of all pages immediately
-  return self.clients.claim();
 });
 
-// Fetch event - Network First, falling back to Cache
+// Fetch event - Cache First strategy for better iOS compatibility
 self.addEventListener('fetch', event => {
-  event.respondWith(
-    fetch(event.request)
-      .then(response => {
-        // Check if we received a valid response
-        if (!response || response.status !== 200 || response.type !== 'basic') {
-          throw new Error('Invalid response');
-        }
+  const { request } = event;
+  const url = new URL(request.url);
 
-        // Clone the response
-        const responseToCache = response.clone();
+  // Skip non-GET requests
+  if (request.method !== 'GET') return;
 
-        // Update cache
-        caches.open(CACHE_NAME)
-          .then(cache => {
-            cache.put(event.request, responseToCache);
+  // Skip cross-origin requests
+  if (url.origin !== location.origin) return;
+
+  // Handle navigation requests
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      caches.match('/index.html')
+        .then(response => {
+          return response || fetch(request);
+        })
+        .catch(() => {
+          return caches.match('/offline.html');
+        })
+    );
+    return;
+  }
+
+  // Cache First strategy for static assets
+  if (STATIC_ASSETS.some(asset => url.pathname === asset)) {
+    event.respondWith(
+      caches.match(request)
+        .then(response => {
+          return response || fetch(request).then(response => {
+            if (response.ok) {
+              const responseClone = response.clone();
+              caches.open(STATIC_CACHE).then(cache => {
+                cache.put(request, responseClone);
+              });
+            }
+            return response;
           });
+        })
+    );
+    return;
+  }
 
+  // Network First for dynamic content, fallback to cache
+  event.respondWith(
+    fetch(request)
+      .then(response => {
+        // Cache successful responses
+        if (response.ok) {
+          const responseClone = response.clone();
+          caches.open(DYNAMIC_CACHE).then(cache => {
+            cache.put(request, responseClone);
+          });
+        }
         return response;
       })
       .catch(() => {
         // Network failed, try cache
-        return caches.match(event.request)
+        return caches.match(request)
           .then(response => {
             if (response) {
-              console.log('Serving from cache:', event.request.url);
+              console.log('Serving from cache:', request.url);
               return response;
             }
 
-            // Cache also failed, return offline.html for navigation requests
-            if (event.request.mode === 'navigate') {
-              return caches.match('./offline.html');
+            // Return offline page for navigation requests
+            if (request.mode === 'navigate') {
+              return caches.match('/offline.html');
             }
 
             // For other requests, return a simple error response
@@ -90,4 +129,11 @@ self.addEventListener('fetch', event => {
           });
       })
   );
+});
+
+// Handle messages from the main thread
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });
