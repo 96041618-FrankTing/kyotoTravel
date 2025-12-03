@@ -5,7 +5,7 @@
       <div class="container mx-auto px-4 py-3">
         <div class="flex items-center justify-between">
           <div>
-            <h1 class="text-2xl font-bold text-primary">🇯🇵 關西三代同堂・七天六夜親子孝親之旅</h1>
+            <h1 class="text-lg sm:text-2xl font-bold text-primary">🇯🇵 關西親子孝親之旅</h1>
             <p class="text-sm text-gray-600">2026年1月16日 - 1月22日</p>
           </div>
           <div class="text-right">
@@ -59,6 +59,12 @@
 
     <!-- Main Content -->
     <main class="container mx-auto px-4 py-6">
+      <!-- Touch Swipe Container -->
+      <div 
+        @touchstart="handleTouchStart"
+        @touchend="handleTouchEnd"
+        class="touch-container"
+      >
       <!-- Overview Section -->
       <div v-if="activeDay === 'overview'" class="space-y-6">
         <h2 class="text-2xl font-bold text-dark mb-6">行程總覽</h2>
@@ -302,12 +308,13 @@
           </div>
         </div>
       </div>
+      </div>
     </main>
   </div>
 </template>
 
 <script>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
@@ -321,16 +328,20 @@ export default {
     const userMarker = ref(null)
     const selectedItinerary = ref(null)
     const showDetailModal = ref(false)
+    
+    // Touch swipe variables
+    let touchStartX = 0
+    let touchEndX = 0
 
     const days = [
       { id: 'overview', label: '總覽' },
-      { id: 'day1', label: 'Day 1' },
-      { id: 'day2', label: 'Day 2' },
-      { id: 'day3', label: 'Day 3' },
-      { id: 'day4', label: 'Day 4' },
-      { id: 'day5', label: 'Day 5' },
-      { id: 'day6', label: 'Day 6' },
-      { id: 'day7', label: 'Day 7' }
+      { id: 'day1', label: 'Day 1 (五)' },
+      { id: 'day2', label: 'Day 2 (六)' },
+      { id: 'day3', label: 'Day 3 (日)' },
+      { id: 'day4', label: 'Day 4 (一)' },
+      { id: 'day5', label: 'Day 5 (二)' },
+      { id: 'day6', label: 'Day 6 (三)' },
+      { id: 'day7', label: 'Day 7 (四)' }
     ]
 
     // 旅行資訊
@@ -898,10 +909,13 @@ export default {
 
     const watchActiveDay = () => {
       if (showMap.value && activeDay.value !== 'overview') {
-        if (!map.value) {
-          initializeMap()
-        }
-        updateMapMarkers()
+        // 使用 nextTick 確保 DOM 已經更新
+        nextTick(() => {
+          if (!map.value) {
+            initializeMap()
+          }
+          updateMapMarkers()
+        })
       }
     }
 
@@ -948,7 +962,40 @@ export default {
     }
 
     // 監視 activeDay 和 showMap 的變化
-    watchActiveDay()
+    watch([activeDay, showMap], () => {
+      watchActiveDay()
+    })
+
+    // Touch swipe handlers
+    const handleTouchStart = (e) => {
+      touchStartX = e.changedTouches[0].screenX
+    }
+
+    const handleTouchEnd = (e) => {
+      touchEndX = e.changedTouches[0].screenX
+      handleSwipe()
+    }
+
+    const handleSwipe = () => {
+      const swipeThreshold = 50 // minimum distance for swipe
+      const diff = touchStartX - touchEndX
+
+      if (Math.abs(diff) > swipeThreshold) {
+        const currentIndex = days.findIndex(day => day.id === activeDay.value)
+        
+        if (diff > 0) {
+          // Swiped left, go to next day
+          if (currentIndex < days.length - 1) {
+            activeDay.value = days[currentIndex + 1].id
+          }
+        } else {
+          // Swiped right, go to previous day
+          if (currentIndex > 0) {
+            activeDay.value = days[currentIndex - 1].id
+          }
+        }
+      }
+    }
 
     return {
       activeDay,
@@ -961,6 +1008,8 @@ export default {
       getCurrentDayItinerary,
       openDetailModal,
       closeDetailModal,
+      handleTouchStart,
+      handleTouchEnd,
       openExternalLink
     }
   }
