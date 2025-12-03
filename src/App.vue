@@ -5,7 +5,7 @@
       <div class="container mx-auto px-4 py-3">
         <div class="flex items-center justify-between">
           <div>
-            <h1 class="text-2xl font-bold text-primary">🇯🇵 京都大阪七天六夜之旅</h1>
+            <h1 class="text-2xl font-bold text-primary">🇯🇵 關西三代同堂・七天六夜親子孝親之旅</h1>
             <p class="text-sm text-gray-600">2026年1月16日 - 1月22日</p>
           </div>
           <div class="text-right">
@@ -215,343 +215,241 @@ export default {
     const itineraryData = {
       day1: [
         {
-          time: '08:00',
-          title: '桃園機場集合',
-          description: '集合時間請準時到達，逾時不候',
-          transport: '桃園機場 → 關西機場',
-          location: '桃園機場',
-          duration: '飛行約3小時',
-          coordinates: [25.0779, 121.2320]
-        },
-        {
-          time: '11:30',
-          title: '抵達成田機場',
-          description: '辦理入境手續，領取行李',
-          location: '成田機場',
-          duration: '約1小時',
-          coordinates: [35.7720, 140.3929]
-        },
-        {
-          time: '13:00',
-          title: '轉乘JR HARUKA',
-          description: '從成田機場搭乘JR HARUKA前往京都',
-          transport: 'JR HARUKA',
-          location: '京都站',
+          time: '08:00-15:00',
+          title: '機場移動至京都',
+          description: '關西機場 → 京都車站 → 飯店 Check-in',
+          transport: 'JR HARUKA 特急電車',
+          location: '關西機場 → 京都車站',
           duration: '約2.5小時',
+          coordinates: [34.4320, 135.2304]
+        },
+        {
+          time: '15:30-17:30',
+          title: '京都車站周邊探險',
+          description: '京都塔或Yodobashi Camera 3F玩具區',
+          transport: '走路',
+          location: '京都車站',
+          duration: '約2小時',
           coordinates: [34.9854, 135.7581]
         },
         {
-          time: '15:30',
-          title: '入住京都飯店',
-          description: '休息調整時差，熟悉周邊環境',
-          location: '京都飯店',
-          duration: '休息2小時',
-          coordinates: [35.0116, 135.7681]
-        },
-        {
-          time: '17:30',
-          title: '祇園散策',
-          description: '漫步祇園花見小路，感受京都古都風情',
-          location: '祇園',
-          duration: '約2小時',
-          coordinates: [35.0044, 135.7740]
-        },
-        {
-          time: '19:30',
+          time: '18:00-20:00',
           title: '晚餐',
-          description: '品嚐京都特色料理',
-          location: '祇園餐廳',
-          duration: '約1小時',
-          coordinates: [35.0044, 135.7740]
+          description: '東洋亭 (Porta 地下街)',
+          location: '京都車站 Porta 地下街',
+          duration: '約2小時',
+          coordinates: [34.9854, 135.7581]
         }
       ],
       day2: [
         {
-          time: '08:00',
-          title: '早餐',
-          description: '飯店早餐',
-          location: '京都飯店',
-          duration: '30分鐘',
-          coordinates: [35.0116, 135.7681]
-        },
-        {
-          time: '09:00',
-          title: '清水寺',
-          description: '參觀世界遺產清水寺，俯瞰京都全景',
-          transport: '公車',
+          time: '09:00-12:00',
+          title: '清水寺與和服體驗',
+          description: '清水寺(仁王門)參觀',
+          transport: '計程車',
           location: '清水寺',
-          duration: '約2小時',
+          duration: '約3小時',
           coordinates: [34.9949, 135.7850]
         },
         {
-          time: '11:30',
-          title: '金閣寺',
-          description: '參觀金閣寺，欣賞金色建築之美',
-          transport: '公車',
-          location: '金閣寺',
-          duration: '約1.5小時',
-          coordinates: [35.0394, 135.7292]
-        },
-        {
-          time: '13:30',
-          title: '午餐',
-          description: '京都懷石料理',
-          location: '金閣寺附近',
-          duration: '1小時',
-          coordinates: [35.0394, 135.7292]
-        },
-        {
-          time: '15:00',
-          title: '伏見稻荷大社',
-          description: '參觀千本鳥居，拍攝經典照片',
-          transport: '地鐵',
-          location: '伏見稻荷大社',
+          time: '12:00-14:00',
+          title: '二三年坂散策',
+          description: '沿著石板路慢慢往下走，午餐：奧丹清水或藤菜美',
+          transport: '走路',
+          location: '二三年坂',
           duration: '約2小時',
-          coordinates: [34.9671, 135.7727]
+          coordinates: [35.0064, 135.7850]
         },
         {
-          time: '18:00',
-          title: '返回飯店',
-          description: '休息準備晚餐',
-          transport: '地鐵',
-          location: '京都飯店',
-          duration: '30分鐘',
-          coordinates: [35.0116, 135.7681]
+          time: '14:30-16:00',
+          title: 'Mipig Cafe 迷你豬體驗',
+          description: '親子療癒體驗，與可愛迷你豬互動',
+          transport: '計程車',
+          location: 'Mipig Cafe 京都店',
+          duration: '約1.5小時',
+          coordinates: [35.0080, 135.7680]
+        },
+        {
+          time: '16:30-18:30',
+          title: '錦市場 & 祇園',
+          description: '逛錦市場美食街，漫步祇園花見小路',
+          transport: '走路',
+          location: '錦市場 & 祇園',
+          duration: '約2小時',
+          coordinates: [35.0044, 135.7740]
         },
         {
           time: '19:00',
           title: '晚餐',
-          description: '京都特色料理',
-          location: '飯店附近',
-          duration: '1小時',
-          coordinates: [35.0116, 135.7681]
+          description: '柚子元 (柚子鍋) 或河原町周邊餐廳',
+          location: '祇園',
+          duration: '約1小時',
+          coordinates: [35.0044, 135.7740]
         }
       ],
       day3: [
         {
-          time: '08:00',
-          title: '早餐',
-          description: '飯店早餐',
-          location: '京都飯店',
-          duration: '30分鐘',
-          coordinates: [35.0116, 135.7681]
-        },
-        {
-          time: '09:00',
-          title: '京都御所',
-          description: '參觀京都御所，了解日本皇室歷史',
-          transport: '公車',
-          location: '京都御所',
-          duration: '約1.5小時',
-          coordinates: [35.0254, 135.7621]
-        },
-        {
-          time: '11:00',
-          title: '二條城',
-          description: '參觀二條城，世界遺產建築',
-          transport: '公車',
-          location: '二條城',
-          duration: '約2小時',
-          coordinates: [35.0142, 135.7483]
-        },
-        {
-          time: '13:30',
-          title: '午餐',
-          description: '京都料理',
-          location: '二條城附近',
-          duration: '1小時',
-          coordinates: [35.0142, 135.7483]
-        },
-        {
-          time: '15:00',
-          title: '京都藝伎體驗',
-          description: '體驗京都藝伎文化，學習傳統舞蹈',
+          time: '07:30-08:00',
+          title: '前往京都車站集合',
+          description: '飯店出發前往京都車站八條口 Avanti 前',
           transport: '計程車',
-          location: '祇園',
-          duration: '約3小時',
-          coordinates: [35.0044, 135.7740]
+          location: '京都車站八條口',
+          duration: '約30分鐘',
+          coordinates: [34.9854, 135.7581]
         },
         {
-          time: '19:00',
-          title: '晚餐',
-          description: '藝伎區特色料理',
-          location: '祇園',
-          duration: '1小時',
-          coordinates: [35.0044, 135.7740]
+          time: '08:00-19:00',
+          title: 'KKday 關西精華一日遊',
+          description: '嵐山、金閣寺、伏見稻荷、奈良一日遊',
+          transport: '觀光遊覽車',
+          location: '嵐山 → 金閣寺 → 奈良 → 大阪',
+          duration: '約11小時',
+          coordinates: [35.0142, 135.7483]
+        },
+        {
+          time: '19:00-20:00',
+          title: '抵達大阪飯店',
+          description: '難波解散點 → Hotel Sobial Namba Daikokucho',
+          transport: '計程車',
+          location: 'Hotel Sobial Namba Daikokucho',
+          duration: '約1小時',
+          coordinates: [34.6544, 135.5063]
         }
       ],
       day4: [
         {
-          time: '08:00',
-          title: '早餐',
-          description: '飯店早餐',
-          location: '京都飯店',
-          duration: '30分鐘',
-          coordinates: [35.0116, 135.7681]
+          time: '09:30-10:30',
+          title: '難波八阪神社',
+          description: '參觀大阪知名神社',
+          transport: '走路',
+          location: '難波八阪神社',
+          duration: '約1小時',
+          coordinates: [34.6628, 135.5011]
         },
         {
-          time: '09:00',
-          title: '轉往大阪',
-          description: '搭乘JR前往大阪',
-          transport: 'JR',
-          location: '大阪站',
-          duration: '約30分鐘',
-          coordinates: [34.7024, 135.4959]
-        },
-        {
-          time: '10:00',
-          title: '入住大阪飯店',
-          description: '休息調整',
-          location: '大阪飯店',
-          duration: '1小時',
-          coordinates: [34.7024, 135.4959]
-        },
-        {
-          time: '11:00',
-          title: '大阪城',
-          description: '參觀大阪城，了解日本歷史',
+          time: '11:00-13:00',
+          title: '大阪城公園',
+          description: '參觀大阪城，搭小火車遊園',
           transport: '地鐵',
-          location: '大阪城',
+          location: '大阪城公園',
           duration: '約2小時',
           coordinates: [34.6873, 135.5262]
         },
         {
-          time: '14:00',
-          title: '午餐',
-          description: '大阪章魚燒',
-          location: '大阪城附近',
-          duration: '1小時',
-          coordinates: [34.6873, 135.5262]
+          time: '13:30-15:30',
+          title: '黑門市場 & 午餐',
+          description: '大阪知名市場，品嚐新鮮海鮮',
+          transport: '計程車',
+          location: '黑門市場',
+          duration: '約2小時',
+          coordinates: [34.6686, 135.5011]
         },
         {
-          time: '15:30',
-          title: '心齋橋購物',
-          description: '大阪知名購物區，血拼時間',
-          transport: '地鐵',
-          location: '心齋橋',
+          time: '16:00-19:00',
+          title: '心齋橋 PARCO & 大丸',
+          description: '購物血拼，參觀寶可夢中心、任天堂商店',
+          transport: '走路/地鐵',
+          location: '心齋橋 PARCO & 大丸',
           duration: '約3小時',
           coordinates: [34.6739, 135.5011]
         },
         {
           time: '19:00',
-          title: '晚餐',
-          description: '大阪美食',
+          title: '晚餐：燒肉',
+          description: '國產牛燒肉放題 Aburiya',
           location: '心齋橋',
-          duration: '1小時',
+          duration: '約1小時',
           coordinates: [34.6739, 135.5011]
         }
       ],
       day5: [
         {
-          time: '08:00',
-          title: '早餐',
-          description: '飯店早餐',
-          location: '大阪飯店',
-          duration: '30分鐘',
-          coordinates: [34.7024, 135.4959]
+          time: '07:00-07:30',
+          title: '退房與寄放行李',
+          description: '退房，將行李寄放在 Hotel Sobial 櫃檯',
+          location: 'Hotel Sobial Namba Daikokucho',
+          duration: '約30分鐘',
+          coordinates: [34.6544, 135.5063]
         },
         {
-          time: '09:00',
-          title: '環球影城',
-          description: '刺激的遊樂園體驗',
-          transport: 'JR',
-          location: '環球影城',
-          duration: '全天',
-          coordinates: [34.6654, 135.4323]
+          time: '07:30-07:45',
+          title: '前往集合地點',
+          description: '前往大阪蟹道樂道頓堀東店集合',
+          transport: '計程車',
+          location: '大阪蟹道樂道頓堀東店',
+          duration: '約15分鐘',
+          coordinates: [34.6686, 135.5011]
         },
         {
-          time: '18:00',
-          title: '返回飯店',
-          description: '休息',
-          transport: 'JR',
-          location: '大阪飯店',
-          duration: '30分鐘',
-          coordinates: [34.7024, 135.4959]
+          time: '08:00-18:30',
+          title: 'KKday 丹後紅松號一日遊',
+          description: '天橋立、餵海鷗、紅松號列車體驗',
+          transport: '丹後紅松號列車',
+          location: '天橋立',
+          duration: '約10.5小時',
+          coordinates: [35.5667, 135.1833]
         },
         {
-          time: '19:00',
-          title: '晚餐',
-          description: '環球影城附近美食',
-          location: '環球影城',
-          duration: '1小時',
+          time: '19:00-20:30',
+          title: '返回飯店拿行李',
+          description: '返回大阪飯店拿行李，移動至環球影城飯店',
+          transport: '地鐵 + 計程車',
+          location: 'The Singulari Hotel & Skyspa',
+          duration: '約1.5小時',
           coordinates: [34.6654, 135.4323]
         }
       ],
       day6: [
         {
-          time: '08:00',
-          title: '早餐',
-          description: '飯店早餐',
-          location: '大阪飯店',
-          duration: '30分鐘',
-          coordinates: [34.7024, 135.4959]
-        },
-        {
-          time: '09:00',
-          title: '天橋立',
-          description: '一日遊：搭乘丹後紅松號鐵道前往天橋立',
-          transport: '丹後紅松號',
-          location: '天橋立',
-          duration: '全天',
-          coordinates: [35.5667, 135.1833]
-        },
-        {
-          time: '18:00',
-          title: '返回大阪',
-          description: '返回大阪飯店',
-          transport: '丹後紅松號',
-          location: '大阪飯店',
-          duration: '約2小時',
-          coordinates: [34.7024, 135.4959]
+          time: '08:30-20:00',
+          title: '大阪環球影城全日遊',
+          description: '任天堂世界、哈利波特、小小兵等精彩設施',
+          transport: '走路',
+          location: '環球影城',
+          duration: '約11.5小時',
+          coordinates: [34.6654, 135.4323]
         },
         {
           time: '20:00',
-          title: '晚餐',
-          description: '大阪美食',
-          location: '大阪飯店附近',
-          duration: '1小時',
-          coordinates: [34.7024, 135.4959]
+          title: 'CityWalk 晚餐',
+          description: '環球影城 CityWalk 區享用晚餐',
+          location: '環球影城 CityWalk',
+          duration: '約1小時',
+          coordinates: [34.6654, 135.4323]
         }
       ],
       day7: [
         {
-          time: '08:00',
-          title: '早餐',
-          description: '飯店早餐',
-          location: '大阪飯店',
-          duration: '30分鐘',
-          coordinates: [34.7024, 135.4959]
+          time: '10:00',
+          title: '退房與移動',
+          description: '推行李步行至巴士總站',
+          transport: '走路',
+          location: '環球影城巴士總站',
+          duration: '約30分鐘',
+          coordinates: [34.6654, 135.4323]
         },
         {
-          time: '09:00',
-          title: '自由活動',
-          description: '大阪最後的購物時間',
-          location: '大阪市區',
-          duration: '約3小時',
-          coordinates: [34.7024, 135.4959]
-        },
-        {
-          time: '12:00',
-          title: '午餐',
-          description: '大阪美食',
-          location: '大阪市區',
-          duration: '1小時',
-          coordinates: [34.7024, 135.4959]
-        },
-        {
-          time: '14:00',
-          title: '前往關西機場',
-          description: '準備返程',
-          transport: 'JR HARUKA',
+          time: '10:27-11:30',
+          title: '搭乘利木津巴士',
+          description: '前往關西機場',
+          transport: '利木津巴士',
           location: '關西機場',
           duration: '約1小時',
           coordinates: [34.4320, 135.2304]
         },
         {
-          time: '16:00',
+          time: '12:00-14:00',
+          title: '關西機場',
+          description: '辦理登機手續，準備返程',
+          location: '關西機場',
+          duration: '約2小時',
+          coordinates: [34.4320, 135.2304]
+        },
+        {
+          time: '14:30',
           title: '返程',
           description: '搭機返回台灣',
-          transport: '飛機',
+          transport: '中華航空 CI153',
           location: '關西機場 → 桃園機場',
           duration: '飛行約3小時',
           coordinates: [34.4320, 135.2304]
@@ -561,13 +459,13 @@ export default {
 
     const getCurrentDayTitle = () => {
       const dayMap = {
-        day1: 'Day 1 - 桃園 → 京都',
-        day2: 'Day 2 - 京都景點巡禮',
-        day3: 'Day 3 - 京都文化體驗',
-        day4: 'Day 4 - 京都 → 大阪',
-        day5: 'Day 5 - 環球影城',
-        day6: 'Day 6 - 天橋立一日遊',
-        day7: 'Day 7 - 大阪 → 返程'
+        day1: 'Day 1 - 抵達京都・鐵道與溫泉放鬆',
+        day2: 'Day 2 - 京都經典：清水寺・小豬療癒・祇園',
+        day3: 'Day 3 - 關西精華一日遊 (移動日)',
+        day4: 'Day 4 - 大阪市區：寶可夢與歷史交錯',
+        day5: 'Day 5 - 海之京都：丹後紅松號・天橋立絕景',
+        day6: 'Day 6 - 大阪環球影城 (USJ)',
+        day7: 'Day 7 - 輕鬆返台'
       }
       return dayMap[activeDay.value] || '行程總覽'
     }

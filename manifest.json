@@ -1,7 +1,7 @@
 {
-  "name": "京都大阪七天六夜之旅",
-  "short_name": "京阪旅遊",
-  "description": "2026年1月16日至22日京都大阪旅遊行程規劃，包含交通、住宿、景點、美食等完整資訊",
+  "name": "關西三代同堂・七天六夜親子孝親之旅",
+  "short_name": "關西親子旅遊",
+  "description": "2026年1月16日至22日關西三代同堂親子孝親之旅，包含京都清水寺、小豬療癒、大阪環球影城、天橋立絕景等完整行程",
   "start_url": "/kyotoTravel/index.html",
   "scope": "/kyotoTravel/",
   "display": "standalone",
