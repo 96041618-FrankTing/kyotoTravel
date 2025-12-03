@@ -4,10 +4,10 @@ const DYNAMIC_CACHE = 'kyoto-travel-dynamic-v1.0.0';
 
 // Resources to cache immediately
 const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/offline.html'
+  '/kyotoTravel/',
+  '/kyotoTravel/index.html',
+  '/kyotoTravel/manifest.json',
+  '/kyotoTravel/offline.html'
 ];
 
 // Install event - cache static resources
@@ -64,12 +64,12 @@ self.addEventListener('fetch', event => {
   // Handle navigation requests
   if (request.mode === 'navigate') {
     event.respondWith(
-      caches.match('/index.html')
+      caches.match('/kyotoTravel/index.html')
         .then(response => {
           return response || fetch(request);
         })
         .catch(() => {
-          return caches.match('/offline.html');
+          return caches.match('/kyotoTravel/offline.html');
         })
     );
     return;
