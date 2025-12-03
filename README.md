@@ -2,6 +2,36 @@
 
 一個現代化的旅遊行程應用，使用Vue.js和Tailwind CSS打造，具備地圖導航功能。
 
+## 🚀 快速開始
+
+### 方法1：開發模式（推薦）
+
+```bash
+# 安裝依賴
+npm install
+
+# 啟動開發服務器
+npm run dev
+```
+
+然後在瀏覽器中訪問：**http://localhost:3000/kyotoTravel/**
+
+### 方法2：生產模式
+
+```bash
+# 建置生產版本
+npm run build
+
+# 使用本地服務器提供dist文件夾
+npx serve dist
+```
+
+### ⚠️ 重要提醒
+
+**請勿直接雙擊 `index.html` 文件開啟！** 這樣會導致空白頁面。
+
+必須通過開發服務器或生產版本的本地服務器來運行應用，因為Vue應用需要模塊解析和正確的資源路徑。
+
 ## iOS 相容性 ✅
 
 本應用完全支援iPhone和iPad，包括：

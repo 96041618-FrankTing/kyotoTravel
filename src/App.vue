@@ -136,6 +136,61 @@
             </div>
           </div>
         </div>
+
+        <!-- 旅行資訊 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- 班機資訊 -->
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-xl font-bold text-dark mb-4">✈️ 班機資訊</h3>
+            <div class="space-y-4">
+              <div v-for="flight in travelInfo.flights" :key="flight.date" class="border-l-4 border-blue-400 pl-4">
+                <div class="font-semibold text-primary">{{ flight.airline }}</div>
+                <div class="text-sm text-gray-600">{{ flight.date }}</div>
+                <div class="text-sm mt-1">
+                  <div>🛫 出發: {{ flight.departure }}</div>
+                  <div>🛬 抵達: {{ flight.arrival }}</div>
+                  <div>⏱️ 飛行時間: {{ flight.duration }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 住宿資訊 -->
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-xl font-bold text-dark mb-4">🏨 住宿資訊</h3>
+            <div class="space-y-4">
+              <div v-for="hotel in travelInfo.hotels" :key="hotel.name" class="border-l-4 border-green-400 pl-4">
+                <div class="font-semibold text-dark">{{ hotel.name }}</div>
+                <div class="text-sm text-gray-600">{{ hotel.dates }}</div>
+                <div class="space-y-1">
+                  <button @click="openExternalLink(hotel.link)" class="text-sm text-blue-600 hover:text-blue-800 underline bg-transparent border-none cursor-pointer text-left">
+                    查看飯店詳情 →
+                  </button>
+                  <div class="text-xs text-gray-500">
+                    <span class="font-mono bg-white px-1 py-0.5 rounded text-xs">{{ hotel.link }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 費用估算 -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <h3 class="text-xl font-bold text-dark mb-4">💰 費用估算 (4人總計)</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div v-for="cost in travelInfo.costs" :key="cost.item" class="flex justify-between items-center p-3 bg-gray-50 rounded">
+              <span class="text-sm">{{ cost.item }}</span>
+              <span class="font-semibold text-primary">{{ cost.amount }}</span>
+            </div>
+          </div>
+          <div class="mt-4 pt-4 border-t border-gray-200">
+            <div class="flex justify-between items-center text-lg font-bold">
+              <span>總計預估費用</span>
+              <span class="text-primary">NT$ {{ (63317 + 23236 + 11790 + 15282 + 4832 + 12476).toLocaleString() }}</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Day Sections with Map -->
@@ -161,7 +216,8 @@
           <div
             v-for="(item, index) in getCurrentDayItinerary()"
             :key="index"
-            class="bg-white rounded-lg shadow-md p-4"
+            class="bg-white rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg transition-shadow duration-200"
+            @click="openDetailModal(item)"
           >
             <div class="flex items-start space-x-4">
               <div class="flex-shrink-0">
@@ -176,6 +232,70 @@
                   <span v-if="item.transport">🚄 {{ item.transport }}</span>
                   <span v-if="item.location">📍 {{ item.location }}</span>
                   <span v-if="item.duration">⏱️ {{ item.duration }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detail Modal -->
+      <div v-if="showDetailModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" @click="closeDetailModal">
+        <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" @click.stop>
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-4">
+              <h3 class="text-2xl font-bold text-dark">{{ selectedItinerary?.title }}</h3>
+              <button @click="closeDetailModal" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+            </div>
+
+            <div class="space-y-4">
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h4 class="font-semibold text-lg mb-2">📅 時間</h4>
+                <p>{{ selectedItinerary?.time }}</p>
+              </div>
+
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h4 class="font-semibold text-lg mb-2">📝 詳細描述</h4>
+                <p>{{ selectedItinerary?.description }}</p>
+              </div>
+
+              <div v-if="selectedItinerary?.transport" class="bg-gray-50 p-4 rounded-lg">
+                <h4 class="font-semibold text-lg mb-2">🚄 交通方式</h4>
+                <p>{{ selectedItinerary?.transport }}</p>
+              </div>
+
+              <div v-if="selectedItinerary?.location" class="bg-gray-50 p-4 rounded-lg">
+                <h4 class="font-semibold text-lg mb-2">📍 地點</h4>
+                <p>{{ selectedItinerary?.location }}</p>
+              </div>
+
+              <div v-if="selectedItinerary?.duration" class="bg-gray-50 p-4 rounded-lg">
+                <h4 class="font-semibold text-lg mb-2">⏱️ 預計時間</h4>
+                <p>{{ selectedItinerary?.duration }}</p>
+              </div>
+
+              <div v-if="selectedItinerary?.details?.japaneseInfo" class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
+                <h4 class="font-semibold text-lg mb-2 text-blue-800">🇯🇵 日文乘車資訊 (給司機看)</h4>
+                <div class="bg-white p-3 rounded border font-mono text-sm whitespace-pre-line">
+                  {{ selectedItinerary.details.japaneseInfo }}
+                </div>
+              </div>
+
+              <div v-if="selectedItinerary?.details?.notes" class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-400">
+                <h4 class="font-semibold text-lg mb-2 text-yellow-800">📋 重要備註</h4>
+                <p>{{ selectedItinerary.details.notes }}</p>
+              </div>
+
+              <div v-if="selectedItinerary?.details?.kkdayLink" class="bg-green-50 p-4 rounded-lg border-l-4 border-green-400">
+                <h4 class="font-semibold text-lg mb-2 text-green-800">🎫 KKday 行程連結</h4>
+                <div class="space-y-2">
+                  <button @click="openExternalLink(selectedItinerary.details.kkdayLink)" class="text-green-600 hover:text-green-800 underline cursor-pointer bg-transparent border-none text-left">
+                    🔗 點擊前往KKday預訂頁面
+                  </button>
+                  <div class="text-xs text-gray-500 mt-1">
+                    如果連結無法打開，請複製以下網址至瀏覽器：<br>
+                    <span class="font-mono bg-white px-1 py-0.5 rounded">{{ selectedItinerary.details.kkdayLink }}</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -199,6 +319,8 @@ export default {
     const map = ref(null)
     const markers = ref([])
     const userMarker = ref(null)
+    const selectedItinerary = ref(null)
+    const showDetailModal = ref(false)
 
     const days = [
       { id: 'overview', label: '總覽' },
@@ -211,6 +333,51 @@ export default {
       { id: 'day7', label: 'Day 7' }
     ]
 
+    // 旅行資訊
+    const travelInfo = {
+      flights: [
+        {
+          date: '2026/01/16 (五)',
+          airline: '星宇航空 JX822',
+          departure: '09:20 桃園機場 T1',
+          arrival: '12:50 關西機場 T1',
+          duration: '2小時30分鐘'
+        },
+        {
+          date: '2026/01/22 (四)',
+          airline: '中華航空 CI153',
+          departure: '14:30 關西機場 T1',
+          arrival: '16:45 桃園機場 T2',
+          duration: '3小時15分鐘'
+        }
+      ],
+      hotels: [
+        {
+          name: 'Onyado Nono Kyoto Shichijo Natural Hot Spring',
+          dates: '01/16~01/18 (住兩晚)',
+          link: 'https://www.booking.com/hotel/jp/onyado-nono-kyoto-shichijo.zh-tw.html'
+        },
+        {
+          name: 'Hotel Sobial Namba Daikokucho',
+          dates: '01/18~01/20 (住兩晚)',
+          link: 'https://www.booking.com/hotel/jp/hotel-sobial-namba-daikokucho.zh-tw.html'
+        },
+        {
+          name: 'THE SINGULARI HOTEL & SKYSPA at UNIVERSAL STUDIOS JAPAN',
+          dates: '01/20~01/22 (住兩晚)',
+          link: 'https://www.booking.com/hotel/jp/singulari-hotel-skyspa-at-universal-studios-japan.zh-tw.html'
+        }
+      ],
+      costs: [
+        { item: '來回機票 x4人 (ezTravel訂購)', amount: 'NT$63,317' },
+        { item: '住宿 Onyado Nono Kyoto Shichijo 兩晚', amount: 'NT$23,236' },
+        { item: '住宿 Hotel Sobial Namba Daikokucho 兩晚', amount: 'NT$11,790' },
+        { item: '住宿 THE SINGULARI HOTEL 兩晚', amount: 'NT$15,282' },
+        { item: 'KKDAY京都行程 x4', amount: 'NT$4,832' },
+        { item: 'KKDAY天橋立行程 x4', amount: 'NT$12,476' }
+      ]
+    }
+
     // 行程資料
     const itineraryData = {
       day1: [
@@ -221,7 +388,12 @@ export default {
           transport: 'JR HARUKA 特急電車',
           location: '關西機場 → 京都車站',
           duration: '約2.5小時',
-          coordinates: [34.4320, 135.2304]
+          coordinates: [34.4320, 135.2304],
+          details: {
+            japaneseInfo: '天然温泉 蓮花の湯 御宿 野乃 京都七条 までお願いします。\n(住所: 京都市下京区材木町491番地)',
+            notes: '有3個大行李，建議分2台車',
+            kkdayLink: null
+          }
         },
         {
           time: '15:30-17:30',
@@ -230,7 +402,12 @@ export default {
           transport: '走路',
           location: '京都車站',
           duration: '約2小時',
-          coordinates: [34.9854, 135.7581]
+          coordinates: [34.9854, 135.7581],
+          details: {
+            japaneseInfo: null,
+            notes: '分流活動：A組京都塔，B組玩具區',
+            kkdayLink: null
+          }
         },
         {
           time: '18:00-20:00',
@@ -238,7 +415,12 @@ export default {
           description: '東洋亭 (Porta 地下街)',
           location: '京都車站 Porta 地下街',
           duration: '約2小時',
-          coordinates: [34.9854, 135.7581]
+          coordinates: [34.9854, 135.7581],
+          details: {
+            japaneseInfo: null,
+            notes: '京都車站地下街美食',
+            kkdayLink: null
+          }
         }
       ],
       day2: [
@@ -249,7 +431,12 @@ export default {
           transport: '計程車',
           location: '清水寺',
           duration: '約3小時',
-          coordinates: [34.9949, 135.7850]
+          coordinates: [34.9949, 135.7850],
+          details: {
+            japaneseInfo: '清水寺の近くの「七味家本舗（しちみやほんぽ）」の前までお願いします。\n(坂道を上がりきったところです)',
+            notes: '4人搭1台，請司機停在「七味家本舖」前，這是離清水寺最近的下車點',
+            kkdayLink: null
+          }
         },
         {
           time: '12:00-14:00',
@@ -258,7 +445,12 @@ export default {
           transport: '走路',
           location: '二三年坂',
           duration: '約2小時',
-          coordinates: [35.0064, 135.7850]
+          coordinates: [35.0064, 135.7850],
+          details: {
+            japaneseInfo: null,
+            notes: '午餐選擇：奧丹清水或藤菜美',
+            kkdayLink: null
+          }
         },
         {
           time: '14:30-16:00',
@@ -267,7 +459,12 @@ export default {
           transport: '計程車',
           location: 'Mipig Cafe 京都店',
           duration: '約1.5小時',
-          coordinates: [35.0080, 135.7680]
+          coordinates: [35.0080, 135.7680],
+          details: {
+            japaneseInfo: '「mipig cafe（マイピッグカフェ）京都店」までお願いします。\n(住所: 京都市中京区新京極通四条上る中之町560-2)\n※錦市場の近くです。',
+            notes: '親子大推！迷你豬療癒體驗',
+            kkdayLink: null
+          }
         },
         {
           time: '16:30-18:30',
@@ -276,7 +473,12 @@ export default {
           transport: '走路',
           location: '錦市場 & 祇園',
           duration: '約2小時',
-          coordinates: [35.0044, 135.7740]
+          coordinates: [35.0044, 135.7740],
+          details: {
+            japaneseInfo: null,
+            notes: '美食街散策，體驗京都傳統街道',
+            kkdayLink: null
+          }
         },
         {
           time: '19:00',
@@ -284,7 +486,12 @@ export default {
           description: '柚子元 (柚子鍋) 或河原町周邊餐廳',
           location: '祇園',
           duration: '約1小時',
-          coordinates: [35.0044, 135.7740]
+          coordinates: [35.0044, 135.7740],
+          details: {
+            japaneseInfo: null,
+            notes: '推薦柚子鍋，溫暖又美味',
+            kkdayLink: null
+          }
         }
       ],
       day3: [
@@ -295,7 +502,12 @@ export default {
           transport: '計程車',
           location: '京都車站八條口',
           duration: '約30分鐘',
-          coordinates: [34.9854, 135.7581]
+          coordinates: [34.9854, 135.7581],
+          details: {
+            japaneseInfo: '京都駅八条口の「京都アバンティ（Avanti）」前までお願いします。',
+            notes: '有大行李，分2台車',
+            kkdayLink: 'https://www.kkday.com/zh-tw/product/279525'
+          }
         },
         {
           time: '08:00-19:00',
@@ -304,7 +516,12 @@ export default {
           transport: '觀光遊覽車',
           location: '嵐山 → 金閣寺 → 奈良 → 大阪',
           duration: '約11小時',
-          coordinates: [35.0142, 135.7483]
+          coordinates: [35.0142, 135.7483],
+          details: {
+            japaneseInfo: null,
+            notes: 'KKday一日遊行程，包含嵐山、金閣寺、伏見稻荷、奈良',
+            kkdayLink: 'https://www.kkday.com/zh-tw/product/279525'
+          }
         },
         {
           time: '19:00-20:00',
@@ -313,7 +530,12 @@ export default {
           transport: '計程車',
           location: 'Hotel Sobial Namba Daikokucho',
           duration: '約1小時',
-          coordinates: [34.6544, 135.5063]
+          coordinates: [34.6544, 135.5063],
+          details: {
+            japaneseInfo: null,
+            notes: '有大行李，分2台車',
+            kkdayLink: null
+          }
         }
       ],
       day4: [
@@ -369,7 +591,12 @@ export default {
           description: '退房，將行李寄放在 Hotel Sobial 櫃檯',
           location: 'Hotel Sobial Namba Daikokucho',
           duration: '約30分鐘',
-          coordinates: [34.6544, 135.5063]
+          coordinates: [34.6544, 135.5063],
+          details: {
+            japaneseInfo: null,
+            notes: '將行李寄放在飯店櫃檯',
+            kkdayLink: null
+          }
         },
         {
           time: '07:30-07:45',
@@ -378,7 +605,12 @@ export default {
           transport: '計程車',
           location: '大阪蟹道樂道頓堀東店',
           duration: '約15分鐘',
-          coordinates: [34.6686, 135.5011]
+          coordinates: [34.6686, 135.5011],
+          details: {
+            japaneseInfo: '「かに道楽 道頓堀東店（ひがしてん）」の前までお願いします。\n(住所: 大阪市中央区道頓堀1-1-3)\n※日本橋駅の近く、堺筋沿いです。',
+            notes: 'KKday丹後紅松號一日遊集合點',
+            kkdayLink: 'https://www.kkday.com/zh-tw/product/163483'
+          }
         },
         {
           time: '08:00-18:30',
@@ -387,7 +619,12 @@ export default {
           transport: '丹後紅松號列車',
           location: '天橋立',
           duration: '約10.5小時',
-          coordinates: [35.5667, 135.1833]
+          coordinates: [35.5667, 135.1833],
+          details: {
+            japaneseInfo: null,
+            notes: '天橋立、餵海鷗、紅松號列車體驗',
+            kkdayLink: 'https://www.kkday.com/zh-tw/product/163483'
+          }
         },
         {
           time: '19:00-20:30',
@@ -396,7 +633,12 @@ export default {
           transport: '地鐵 + 計程車',
           location: 'The Singulari Hotel & Skyspa',
           duration: '約1.5小時',
-          coordinates: [34.6654, 135.4323]
+          coordinates: [34.6654, 135.4323],
+          details: {
+            japaneseInfo: 'ユニバーサルシティ駅の「ザ・シンギュラリホテル & スカイスパ」までお願いします。\n(住所: 大阪市此花区島屋6丁目2-25)',
+            notes: '叫2台計程車，有大行李',
+            kkdayLink: null
+          }
         }
       ],
       day6: [
@@ -426,7 +668,12 @@ export default {
           transport: '走路',
           location: '環球影城巴士總站',
           duration: '約30分鐘',
-          coordinates: [34.6654, 135.4323]
+          coordinates: [34.6654, 135.4323],
+          details: {
+            japaneseInfo: null,
+            notes: '推行李步行約10分鐘至巴士總站',
+            kkdayLink: null
+          }
         },
         {
           time: '10:27-11:30',
@@ -435,7 +682,12 @@ export default {
           transport: '利木津巴士',
           location: '關西機場',
           duration: '約1小時',
-          coordinates: [34.4320, 135.2304]
+          coordinates: [34.4320, 135.2304],
+          details: {
+            japaneseInfo: '関西空港行きのリムジンバス乗り場はどこですか？\n(請問往關西機場的利木津巴士乘車處在哪裡？)',
+            notes: '利木津巴士從環球影城直達關西機場',
+            kkdayLink: null
+          }
         },
         {
           time: '12:00-14:00',
@@ -443,7 +695,12 @@ export default {
           description: '辦理登機手續，準備返程',
           location: '關西機場',
           duration: '約2小時',
-          coordinates: [34.4320, 135.2304]
+          coordinates: [34.4320, 135.2304],
+          details: {
+            japaneseInfo: null,
+            notes: '中華航空CI153：14:30關西機場T1 / 16:45桃園機場T2',
+            kkdayLink: null
+          }
         },
         {
           time: '14:30',
@@ -452,7 +709,12 @@ export default {
           transport: '中華航空 CI153',
           location: '關西機場 → 桃園機場',
           duration: '飛行約3小時',
-          coordinates: [34.4320, 135.2304]
+          coordinates: [34.4320, 135.2304],
+          details: {
+            japaneseInfo: null,
+            notes: '星宇航空JX822：09:20桃園機場T1 / 12:50關西機場T1 (去程)',
+            kkdayLink: null
+          }
         }
       ]
     }
@@ -474,8 +736,81 @@ export default {
       return itineraryData[activeDay.value] || []
     }
 
+    const openDetailModal = (item) => {
+      selectedItinerary.value = item
+      showDetailModal.value = true
+    }
+
+    const closeDetailModal = () => {
+      showDetailModal.value = false
+      selectedItinerary.value = null
+    }
+
+    const openExternalLink = (url) => {
+      if (!url) return
+
+      try {
+        // 檢查是否在PWA模式
+        const isPWA = window.navigator.standalone ||
+                      window.matchMedia('(display-mode: standalone)').matches ||
+                      window.matchMedia('(display-mode: fullscreen)').matches
+
+        if (isPWA) {
+          // PWA模式：嘗試多種方法打開外部連結
+          let opened = false
+
+          // 方法1: 使用window.open
+          try {
+            const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
+            if (newWindow) {
+              newWindow.focus()
+              opened = true
+            }
+          } catch (e) {
+            console.log('window.open failed:', e)
+          }
+
+          // 方法2: 如果失敗，使用location.href
+          if (!opened) {
+            try {
+              window.location.href = url
+              opened = true
+            } catch (e) {
+              console.log('location.href failed:', e)
+            }
+          }
+
+          // 方法3: 如果都失敗，創建一個臨時的a標籤
+          if (!opened) {
+            const link = document.createElement('a')
+            link.href = url
+            link.target = '_blank'
+            link.rel = 'noopener noreferrer'
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link)
+          }
+        } else {
+          // 普通瀏覽器模式
+          window.open(url, '_blank', 'noopener,noreferrer')
+        }
+      } catch (error) {
+        console.error('Failed to open external link:', error)
+        // 最後的備用方案
+        window.location.href = url
+      }
+    }
+
     const initializeMap = () => {
       if (map.value) return
+
+      // 修復Leaflet默認圖標路徑問題
+      delete L.Icon.Default.prototype._getIconUrl
+      L.Icon.Default.mergeOptions({
+        iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
+        iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png'
+      })
 
       // iOS Safari 需要特殊的處理
       const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
@@ -618,9 +953,15 @@ export default {
     return {
       activeDay,
       showMap,
+      selectedItinerary,
+      showDetailModal,
+      travelInfo,
       days,
       getCurrentDayTitle,
-      getCurrentDayItinerary
+      getCurrentDayItinerary,
+      openDetailModal,
+      closeDetailModal,
+      openExternalLink
     }
   }
 }

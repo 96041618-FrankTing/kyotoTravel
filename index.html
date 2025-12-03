@@ -32,11 +32,53 @@
     <link rel="icon" type="image/png" href="icon-192.png">
 </head>
 <body>
-    <div id="app"></div>
+    <div id="app">
+      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; font-family: Arial, sans-serif; background: linear-gradient(135deg, #F1FAEE 0%, #A8DADC 100%); color: #1D3557;">
+        <div style="text-align: center; max-width: 600px; padding: 2rem;">
+          <h1 style="font-size: 2rem; margin-bottom: 1rem; color: #E63946;">🚧 應用載入中...</h1>
+          <p style="font-size: 1.1rem; margin-bottom: 2rem; line-height: 1.6;">
+            如果您看到此頁面，表示應用尚未正確載入。
+          </p>
+
+          <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); margin-bottom: 2rem;">
+            <h2 style="color: #E63946; margin-bottom: 1rem;">📱 正確的開啟方式</h2>
+            <div style="text-align: left;">
+              <h3 style="color: #457B9D;">方法1：使用開發服務器（推薦）</h3>
+              <pre style="background: #f8f9fa; padding: 1rem; border-radius: 5px; margin: 0.5rem 0; font-size: 0.9rem;">cd kyotoTravel
+npm run dev</pre>
+              <p style="margin-bottom: 1rem;">然後在瀏覽器中訪問：<strong>http://localhost:3000/kyotoTravel/</strong></p>
+
+              <h3 style="color: #457B9D;">方法2：使用生產版本</h3>
+              <pre style="background: #f8f9fa; padding: 1rem; border-radius: 5px; margin: 0.5rem 0; font-size: 0.9rem;">cd kyotoTravel
+npm run build</pre>
+              <p>然後使用本地服務器提供dist文件夾中的內容</p>
+            </div>
+          </div>
+
+          <div style="background: #FFF3CD; border: 1px solid #FFEAA7; padding: 1rem; border-radius: 5px;">
+            <strong>💡 提示：</strong>直接雙擊index.html文件無法正確載入Vue應用，因為需要模塊解析和開發服務器。
+          </div>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.js"></script>
 
     <!-- iOS-specific script for better PWA experience -->
     <script>
+      // Check if we're in the correct environment
+      const isViteDevServer = window.location.hostname === 'localhost' && window.location.port === '3000';
+      const isProductionBuild = window.location.pathname.includes('/kyotoTravel/') || window.location.pathname.includes('/dist/');
+      const isLocalTest = window.location.hostname === 'localhost' && window.location.pathname.includes('/dist/');
+      const isFileProtocol = window.location.protocol === 'file:';
+
+      if (isFileProtocol || (!isViteDevServer && !isProductionBuild && !isLocalTest)) {
+        // Show instructions for incorrect environment (file:// protocol or incorrect web environment)
+        document.getElementById('app').style.display = 'block';
+      } else {
+        // Load Vue app normally
+        document.getElementById('app').innerHTML = '<div style="display: flex; align-items: center; justify-content: center; min-height: 100vh;"><div>載入中...</div></div>';
+      }
+
       // Prevent zoom on input focus for iOS
       if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
         document.addEventListener('focusin', function(e) {
