@@ -72,11 +72,22 @@ window.addEventListener('appinstalled', () => {
 });
 
 // Service Worker Registration
+let refreshing = false; // Flag to prevent infinite refresh loop
+
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('./service-worker.js')
             .then(registration => {
                 console.log('Service Worker registered successfully:', registration.scope);
+
+                // Listen for controller change to auto-refresh the page
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    if (!refreshing) {
+                        refreshing = true;
+                        console.log('New Service Worker activated, refreshing page...');
+                        window.location.reload();
+                    }
+                });
             })
             .catch(error => {
                 console.log('Service Worker registration failed:', error);
