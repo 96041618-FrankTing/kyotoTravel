@@ -214,7 +214,7 @@
         </div>
 
         <!-- Map Section -->
-        <div v-if="showMap" class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div v-show="showMap" class="bg-white rounded-lg shadow-md overflow-hidden">
           <div id="map" class="h-96 w-full"></div>
         </div>
 
@@ -968,9 +968,11 @@ export default {
             initializeMap()
           } else {
             // 地圖已存在，確保正確調整大小和更新標記
-            map.value.invalidateSize()
+            setTimeout(() => {
+              map.value.invalidateSize()
+              updateMapMarkers()
+            }, 100)
           }
-          updateMapMarkers()
         })
       }
     }
