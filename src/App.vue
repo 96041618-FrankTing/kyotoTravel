@@ -9,8 +9,15 @@
             <p class="text-sm text-gray-600">2026年1月16日 - 1月22日</p>
           </div>
           <div class="text-right">
-            <div id="header-weather" class="text-sm text-gray-600">
-              <div class="weather-loading">載入天氣中...</div>
+            <div class="text-sm text-gray-600">
+              <div v-if="currentWeather" class="flex items-center justify-end space-x-2">
+                <span class="text-lg">{{ currentWeather.icon }}</span>
+                <div class="text-right">
+                  <div class="font-semibold">{{ currentWeather.location }}</div>
+                  <div class="text-xs">{{ currentWeather.temp }}</div>
+                </div>
+              </div>
+              <div v-else class="weather-loading">載入天氣中...</div>
             </div>
             <div id="countdown" class="text-xs text-gray-500 mt-1">
               <div class="countdown-label">距離出發還有</div>
@@ -62,8 +69,10 @@
       <!-- Touch Swipe Container -->
       <div 
         @touchstart="handleTouchStart"
+        @touchmove="handleTouchMove"
         @touchend="handleTouchEnd"
-        class="touch-container"
+        class="touch-container relative overflow-hidden"
+        :style="{ transform: `translateX(${touchOffset}px)`, transition: touchTransition }"
       >
       <!-- Overview Section -->
       <div v-if="activeDay === 'overview'" class="space-y-6">
@@ -201,11 +210,35 @@
 
       <!-- Day Sections with Map -->
       <div v-else class="space-y-6">
+        <!-- Weather Forecast -->
+        <div v-if="currentWeather" class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg shadow-md p-4">
+          <h3 class="text-lg font-bold text-dark mb-3 flex items-center">
+            <span class="text-2xl mr-2">{{ currentWeather.icon }}</span>
+            <span>{{ currentWeather.location }}天氣預報</span>
+          </h3>
+          <div class="grid grid-cols-3 gap-3">
+            <div 
+              v-for="day in currentWeather.forecast" 
+              :key="day.date"
+              class="bg-white rounded-lg p-3 text-center"
+            >
+              <div class="text-xs text-gray-600 mb-1">{{ day.date }}</div>
+              <div class="text-3xl mb-1">{{ day.icon }}</div>
+              <div class="text-xs text-gray-700 mb-2">{{ day.desc }}</div>
+              <div class="flex justify-center items-center space-x-2 text-sm">
+                <span class="text-red-500 font-semibold">{{ day.high }}°</span>
+                <span class="text-gray-400">/</span>
+                <span class="text-blue-500">{{ day.low }}°</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="flex items-center justify-between">
-          <h2 class="text-2xl font-bold text-dark">{{ getCurrentDayTitle() }}</h2>
+          <h2 class="text-2xl font-bold text-dark flex-1">{{ getCurrentDayTitle() }}</h2>
           <button
             @click="showMap = !showMap"
-            class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors duration-200 flex items-center space-x-2"
+            class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors duration-200 flex items-center space-x-2 flex-shrink-0 w-32"
           >
             <span>🗺️</span>
             <span>{{ showMap ? '隱藏地圖' : '顯示地圖' }}</span>
@@ -328,20 +361,24 @@ export default {
     const userMarker = ref(null)
     const selectedItinerary = ref(null)
     const showDetailModal = ref(false)
+    const currentWeather = ref(null)
     
     // Touch swipe variables
     let touchStartX = 0
     let touchEndX = 0
+    let touchCurrentX = 0
+    const touchOffset = ref(0)
+    const touchTransition = ref('none')
 
     const days = [
-      { id: 'overview', label: '總覽' },
-      { id: 'day1', label: 'Day 1 (五)' },
-      { id: 'day2', label: 'Day 2 (六)' },
-      { id: 'day3', label: 'Day 3 (日)' },
-      { id: 'day4', label: 'Day 4 (一)' },
-      { id: 'day5', label: 'Day 5 (二)' },
-      { id: 'day6', label: 'Day 6 (三)' },
-      { id: 'day7', label: 'Day 7 (四)' }
+      { id: 'overview', label: '總覽', location: '京都', coords: [35.0116, 135.7681] },
+      { id: 'day1', label: 'Day 1 (五)', location: '京都', coords: [35.0116, 135.7681] },
+      { id: 'day2', label: 'Day 2 (六)', location: '京都', coords: [35.0116, 135.7681] },
+      { id: 'day3', label: 'Day 3 (日)', location: '關西', coords: [34.6937, 135.5023] },
+      { id: 'day4', label: 'Day 4 (一)', location: '大阪', coords: [34.6937, 135.5023] },
+      { id: 'day5', label: 'Day 5 (二)', location: '天橋立', coords: [35.5667, 135.1833] },
+      { id: 'day6', label: 'Day 6 (三)', location: '大阪', coords: [34.6937, 135.5023] },
+      { id: 'day7', label: 'Day 7 (四)', location: '關西機場', coords: [34.4320, 135.2304] }
     ]
 
     // 旅行資訊
@@ -813,7 +850,13 @@ export default {
     }
 
     const initializeMap = () => {
-      if (map.value) return
+      if (map.value) {
+        // 如果地圖已存在，確保它正確渲染
+        nextTick(() => {
+          map.value.invalidateSize()
+        })
+        return
+      }
 
       // 修復Leaflet默認圖標路徑問題
       delete L.Icon.Default.prototype._getIconUrl
@@ -913,6 +956,9 @@ export default {
         nextTick(() => {
           if (!map.value) {
             initializeMap()
+          } else {
+            // 地圖已存在，確保正確調整大小和更新標記
+            map.value.invalidateSize()
           }
           updateMapMarkers()
         })
@@ -950,15 +996,89 @@ export default {
       setInterval(updateCountdown, 1000)
     }
 
+    const updateWeather = async () => {
+      const currentDay = days.find(day => day.id === activeDay.value)
+      if (!currentDay || !currentDay.coords) {
+        currentWeather.value = null
+        return
+      }
+
+      try {
+        // 使用 Open-Meteo API (免費且無需 API key)
+        const [lat, lon] = currentDay.coords
+        const response = await fetch(
+          `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=Asia/Tokyo&forecast_days=3`
+        )
+        const data = await response.json()
+
+        // Weather code 到圖示和描述的映射
+        const getWeatherInfo = (code) => {
+          const weatherMap = {
+            0: { icon: '☀️', desc: '晴天' },
+            1: { icon: '🌤️', desc: '晴朗' },
+            2: { icon: '⛅', desc: '多雲' },
+            3: { icon: '☁️', desc: '陰天' },
+            45: { icon: '🌫️', desc: '霧' },
+            48: { icon: '🌫️', desc: '濃霧' },
+            51: { icon: '🌦️', desc: '小雨' },
+            53: { icon: '🌧️', desc: '中雨' },
+            55: { icon: '🌧️', desc: '大雨' },
+            61: { icon: '🌧️', desc: '小雨' },
+            63: { icon: '🌧️', desc: '中雨' },
+            65: { icon: '⛈️', desc: '大雨' },
+            71: { icon: '🌨️', desc: '小雪' },
+            73: { icon: '🌨️', desc: '中雪' },
+            75: { icon: '❄️', desc: '大雪' },
+            77: { icon: '🌨️', desc: '雪' },
+            80: { icon: '🌦️', desc: '陣雨' },
+            81: { icon: '🌧️', desc: '陣雨' },
+            82: { icon: '⛈️', desc: '暴雨' },
+            85: { icon: '🌨️', desc: '陣雪' },
+            86: { icon: '❄️', desc: '暴雪' },
+            95: { icon: '⛈️', desc: '雷雨' },
+            96: { icon: '⛈️', desc: '雷雨冰雹' },
+            99: { icon: '⛈️', desc: '強雷雨' }
+          }
+          return weatherMap[code] || { icon: '🌤️', desc: '未知' }
+        }
+
+        const currentWeatherInfo = getWeatherInfo(data.current.weather_code)
+        
+        currentWeather.value = {
+          location: currentDay.location,
+          temp: `${Math.round(data.current.temperature_2m)}°C`,
+          icon: currentWeatherInfo.icon,
+          description: currentWeatherInfo.desc,
+          forecast: data.daily.time.slice(0, 3).map((date, index) => {
+            const weatherInfo = getWeatherInfo(data.daily.weather_code[index])
+            return {
+              date: index === 0 ? '今天' : index === 1 ? '明天' : '後天',
+              icon: weatherInfo.icon,
+              desc: weatherInfo.desc,
+              high: Math.round(data.daily.temperature_2m_max[index]),
+              low: Math.round(data.daily.temperature_2m_min[index])
+            }
+          })
+        }
+      } catch (error) {
+        console.error('Failed to fetch weather:', error)
+        // 使用預設天氣資料
+        currentWeather.value = {
+          location: currentDay.location,
+          temp: '8°C',
+          icon: '🌤️',
+          description: '多雲',
+          forecast: [
+            { date: '今天', icon: '🌤️', desc: '多雲', high: 12, low: 5 },
+            { date: '明天', icon: '☀️', desc: '晴天', high: 14, low: 6 },
+            { date: '後天', icon: '⛅', desc: '多雲', high: 11, low: 4 }
+          ]
+        }
+      }
+    }
+
     const initializeWeather = () => {
-      // 模擬天氣資料
-      const weatherElement = document.getElementById('header-weather')
-      weatherElement.innerHTML = `
-        <div class="flex items-center space-x-2">
-          <span class="text-lg">🌤️</span>
-          <span class="text-sm">京都 8°C</span>
-        </div>
-      `
+      updateWeather()
     }
 
     // 監視 activeDay 和 showMap 的變化
@@ -966,14 +1086,42 @@ export default {
       watchActiveDay()
     })
 
+    // 監視 activeDay 變化以更新天氣
+    watch(activeDay, () => {
+      updateWeather()
+    })
+
     // Touch swipe handlers
     const handleTouchStart = (e) => {
       touchStartX = e.changedTouches[0].screenX
+      touchCurrentX = touchStartX
+      touchTransition.value = 'none'
+    }
+
+    const handleTouchMove = (e) => {
+      touchCurrentX = e.changedTouches[0].screenX
+      const diff = touchCurrentX - touchStartX
+      
+      // 限制滑動距離，避免滑動過遠
+      const maxOffset = 100
+      if (Math.abs(diff) <= maxOffset) {
+        touchOffset.value = diff
+      } else {
+        touchOffset.value = diff > 0 ? maxOffset : -maxOffset
+      }
     }
 
     const handleTouchEnd = (e) => {
       touchEndX = e.changedTouches[0].screenX
+      touchTransition.value = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+      
       handleSwipe()
+      
+      // 動畫結束後重置
+      setTimeout(() => {
+        touchOffset.value = 0
+        touchTransition.value = 'none'
+      }, 300)
     }
 
     const handleSwipe = () => {
@@ -1009,8 +1157,12 @@ export default {
       openDetailModal,
       closeDetailModal,
       handleTouchStart,
+      handleTouchMove,
       handleTouchEnd,
-      openExternalLink
+      openExternalLink,
+      currentWeather,
+      touchOffset,
+      touchTransition
     }
   }
 }
