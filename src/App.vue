@@ -5,12 +5,12 @@
       <div class="container mx-auto px-4 py-3">
         <div class="flex items-center justify-between">
           <div>
-            <h1 class="text-lg sm:text-2xl font-bold text-primary">🇯🇵 關西親子孝親之旅</h1>
+            <h1 class="text-lg sm:text-2xl font-bold text-primary">🇯🇵 京阪古都七日散策之旅</h1>
             <p class="text-sm text-gray-600">2026年1月16日 - 1月22日</p>
           </div>
           <div class="text-right">
             <div class="text-sm text-gray-600">
-              <div v-if="currentWeather" class="flex items-center justify-end space-x-2">
+              <div v-if="currentWeather" class="flex items-center justify-end space-x-2 cursor-pointer hover:bg-gray-100 rounded-lg p-2 transition-colors" @click="showWeatherModal = true">
                 <span class="text-lg">{{ currentWeather.icon }}</span>
                 <div class="text-right">
                   <div class="font-semibold">{{ currentWeather.location }}</div>
@@ -66,14 +66,6 @@
 
     <!-- Main Content -->
     <main class="container mx-auto px-4 py-6">
-      <!-- Touch Swipe Container -->
-      <div 
-        @touchstart="handleTouchStart"
-        @touchmove="handleTouchMove"
-        @touchend="handleTouchEnd"
-        class="touch-container relative overflow-hidden"
-        :style="{ transform: `translateX(${touchOffset}px)`, transition: touchTransition }"
-      >
       <!-- Overview Section -->
       <div v-if="activeDay === 'overview'" class="space-y-6">
         <h2 class="text-2xl font-bold text-dark mb-6">行程總覽</h2>
@@ -210,30 +202,6 @@
 
       <!-- Day Sections with Map -->
       <div v-else class="space-y-6">
-        <!-- Weather Forecast -->
-        <div v-if="currentWeather" class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg shadow-md p-4">
-          <h3 class="text-lg font-bold text-dark mb-3 flex items-center">
-            <span class="text-2xl mr-2">{{ currentWeather.icon }}</span>
-            <span>{{ currentWeather.location }}天氣預報</span>
-          </h3>
-          <div class="grid grid-cols-3 gap-3">
-            <div 
-              v-for="day in currentWeather.forecast" 
-              :key="day.date"
-              class="bg-white rounded-lg p-3 text-center"
-            >
-              <div class="text-xs text-gray-600 mb-1">{{ day.date }}</div>
-              <div class="text-3xl mb-1">{{ day.icon }}</div>
-              <div class="text-xs text-gray-700 mb-2">{{ day.desc }}</div>
-              <div class="flex justify-center items-center space-x-2 text-sm">
-                <span class="text-red-500 font-semibold">{{ day.high }}°</span>
-                <span class="text-gray-400">/</span>
-                <span class="text-blue-500">{{ day.low }}°</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <div class="flex items-center justify-between">
           <h2 class="text-2xl font-bold text-dark flex-1">{{ getCurrentDayTitle() }}</h2>
           <button
@@ -341,6 +309,54 @@
           </div>
         </div>
       </div>
+
+      <!-- Weather Modal -->
+      <div v-if="showWeatherModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" @click="showWeatherModal = false">
+        <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg shadow-xl max-w-md w-full" @click.stop>
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-4">
+              <div class="flex items-center">
+                <span class="text-3xl mr-2">{{ currentWeather?.icon }}</span>
+                <h3 class="text-2xl font-bold text-dark">{{ currentWeather?.location }}天氣</h3>
+              </div>
+              <button @click="showWeatherModal = false" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+            </div>
+
+            <div v-if="currentWeather" class="space-y-4">
+              <!-- 當前天氣 -->
+              <div class="bg-white rounded-lg p-4 shadow-md">
+                <div class="text-center">
+                  <div class="text-5xl mb-2">{{ currentWeather.icon }}</div>
+                  <div class="text-3xl font-bold text-dark mb-1">{{ currentWeather.temp }}</div>
+                  <div class="text-gray-600">{{ currentWeather.description }}</div>
+                </div>
+              </div>
+
+              <!-- 三天預報 -->
+              <div class="space-y-2">
+                <h4 class="text-sm font-semibold text-gray-700 px-2">未來三天預報</h4>
+                <div 
+                  v-for="day in currentWeather.forecast" 
+                  :key="day.date"
+                  class="bg-white rounded-lg p-3 shadow-sm flex items-center justify-between"
+                >
+                  <div class="flex items-center space-x-3">
+                    <div class="text-2xl">{{ day.icon }}</div>
+                    <div>
+                      <div class="font-semibold text-gray-800">{{ day.date }}</div>
+                      <div class="text-xs text-gray-600">{{ day.desc }}</div>
+                    </div>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <span class="text-red-500 font-semibold">{{ day.high }}°</span>
+                    <span class="text-gray-400">/</span>
+                    <span class="text-blue-500">{{ day.low }}°</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
   </div>
@@ -361,17 +377,11 @@ export default {
     const userMarker = ref(null)
     const selectedItinerary = ref(null)
     const showDetailModal = ref(false)
+    const showWeatherModal = ref(false)
     const currentWeather = ref(null)
-    
-    // Touch swipe variables
-    let touchStartX = 0
-    let touchEndX = 0
-    let touchCurrentX = 0
-    const touchOffset = ref(0)
-    const touchTransition = ref('none')
 
     const days = [
-      { id: 'overview', label: '總覽', location: '京都', coords: [35.0116, 135.7681] },
+      { id: 'overview', label: '總覽', location: '台灣', coords: [25.0330, 121.5654] },
       { id: 'day1', label: 'Day 1 (五)', location: '京都', coords: [35.0116, 135.7681] },
       { id: 'day2', label: 'Day 2 (六)', location: '京都', coords: [35.0116, 135.7681] },
       { id: 'day3', label: 'Day 3 (日)', location: '關西', coords: [34.6937, 135.5023] },
@@ -1006,8 +1016,10 @@ export default {
       try {
         // 使用 Open-Meteo API (免費且無需 API key)
         const [lat, lon] = currentDay.coords
+        // 根據地點選擇時區
+        const timezone = currentDay.id === 'overview' ? 'Asia/Taipei' : 'Asia/Tokyo'
         const response = await fetch(
-          `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=Asia/Tokyo&forecast_days=3`
+          `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=${timezone}&forecast_days=3`
         )
         const data = await response.json()
 
@@ -1091,78 +1103,20 @@ export default {
       updateWeather()
     })
 
-    // Touch swipe handlers
-    const handleTouchStart = (e) => {
-      touchStartX = e.changedTouches[0].screenX
-      touchCurrentX = touchStartX
-      touchTransition.value = 'none'
-    }
-
-    const handleTouchMove = (e) => {
-      touchCurrentX = e.changedTouches[0].screenX
-      const diff = touchCurrentX - touchStartX
-      
-      // 限制滑動距離，避免滑動過遠
-      const maxOffset = 100
-      if (Math.abs(diff) <= maxOffset) {
-        touchOffset.value = diff
-      } else {
-        touchOffset.value = diff > 0 ? maxOffset : -maxOffset
-      }
-    }
-
-    const handleTouchEnd = (e) => {
-      touchEndX = e.changedTouches[0].screenX
-      touchTransition.value = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-      
-      handleSwipe()
-      
-      // 動畫結束後重置
-      setTimeout(() => {
-        touchOffset.value = 0
-        touchTransition.value = 'none'
-      }, 300)
-    }
-
-    const handleSwipe = () => {
-      const swipeThreshold = 50 // minimum distance for swipe
-      const diff = touchStartX - touchEndX
-
-      if (Math.abs(diff) > swipeThreshold) {
-        const currentIndex = days.findIndex(day => day.id === activeDay.value)
-        
-        if (diff > 0) {
-          // Swiped left, go to next day
-          if (currentIndex < days.length - 1) {
-            activeDay.value = days[currentIndex + 1].id
-          }
-        } else {
-          // Swiped right, go to previous day
-          if (currentIndex > 0) {
-            activeDay.value = days[currentIndex - 1].id
-          }
-        }
-      }
-    }
-
     return {
       activeDay,
       showMap,
       selectedItinerary,
       showDetailModal,
+      showWeatherModal,
       travelInfo,
       days,
       getCurrentDayTitle,
       getCurrentDayItinerary,
       openDetailModal,
       closeDetailModal,
-      handleTouchStart,
-      handleTouchMove,
-      handleTouchEnd,
       openExternalLink,
-      currentWeather,
-      touchOffset,
-      touchTransition
+      currentWeather
     }
   }
 }
