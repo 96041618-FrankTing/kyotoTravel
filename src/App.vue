@@ -960,23 +960,6 @@ export default {
       }
     }
 
-    const watchActiveDay = () => {
-      if (showMap.value && activeDay.value !== 'overview') {
-        // 使用 nextTick 確保 DOM 已經更新
-        nextTick(() => {
-          if (!map.value) {
-            initializeMap()
-          } else {
-            // 地圖已存在，確保正確調整大小和更新標記
-            setTimeout(() => {
-              map.value.invalidateSize()
-              updateMapMarkers()
-            }, 100)
-          }
-        })
-      }
-    }
-
     onMounted(() => {
       // 初始化倒計時
       initializeCountdown()
@@ -1095,14 +1078,38 @@ export default {
       updateWeather()
     }
 
-    // 監視 activeDay 和 showMap 的變化
-    watch([activeDay, showMap], () => {
-      watchActiveDay()
+    // 監視 activeDay 的變化
+    watch(activeDay, () => {
+      // 更新天氣
+      updateWeather()
+      // 如果切換到非總覽頁面且地圖正在顯示，更新地圖
+      if (activeDay.value !== 'overview' && showMap.value) {
+        nextTick(() => {
+          if (map.value) {
+            setTimeout(() => {
+              map.value.invalidateSize()
+              updateMapMarkers()
+            }, 100)
+          }
+        })
+      }
     })
 
-    // 監視 activeDay 變化以更新天氣
-    watch(activeDay, () => {
-      updateWeather()
+    // 監視 showMap 的變化（顯示/隱藏地圖按鈕）
+    watch(showMap, (newValue) => {
+      if (newValue && activeDay.value !== 'overview') {
+        // 當地圖從隱藏變為顯示時
+        nextTick(() => {
+          if (!map.value) {
+            initializeMap()
+          } else {
+            setTimeout(() => {
+              map.value.invalidateSize()
+              updateMapMarkers()
+            }, 100)
+          }
+        })
+      }
     })
 
     return {
