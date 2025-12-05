@@ -200,8 +200,13 @@
         </div>
       </div>
 
+      <!-- Map Container (always in DOM) -->
+      <div v-show="activeDay !== 'overview' && showMap" class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+        <div id="map" class="h-96 w-full"></div>
+      </div>
+
       <!-- Day Sections with Map -->
-      <div v-else class="space-y-6">
+      <div v-if="activeDay !== 'overview'" class="space-y-6">
         <div class="flex items-center justify-between">
           <h2 class="text-2xl font-bold text-dark flex-1">{{ getCurrentDayTitle() }}</h2>
           <button
@@ -211,11 +216,6 @@
             <span>🗺️</span>
             <span>{{ showMap ? '隱藏地圖' : '顯示地圖' }}</span>
           </button>
-        </div>
-
-        <!-- Map Section -->
-        <div v-show="showMap" class="bg-white rounded-lg shadow-md overflow-hidden">
-          <div id="map" class="h-96 w-full"></div>
         </div>
 
         <!-- Itinerary Section -->
@@ -1079,11 +1079,28 @@ export default {
     }
 
     // 監視 activeDay 的變化
-    watch(activeDay, () => {
+    watch(activeDay, (newValue, oldValue) => {
       // 更新天氣
       updateWeather()
-      // 如果切換到非總覽頁面且地圖正在顯示，更新地圖
-      if (activeDay.value !== 'overview' && showMap.value) {
+      
+      // 如果從總覽切換到非總覽頁面且地圖應該顯示
+      if (newValue !== 'overview' && oldValue === 'overview' && showMap.value) {
+        nextTick(() => {
+          setTimeout(() => {
+            if (!map.value) {
+              // 第一次顯示地圖，需要初始化
+              initializeMap()
+            } else {
+              // 地圖已存在，只需調整大小並更新標記
+              map.value.invalidateSize()
+              updateMapMarkers()
+            }
+          }, 150)
+        })
+      }
+      
+      // 如果在不同 Day 之間切換且地圖正在顯示，更新地圖
+      if (newValue !== 'overview' && oldValue !== 'overview' && showMap.value) {
         nextTick(() => {
           if (map.value) {
             setTimeout(() => {
