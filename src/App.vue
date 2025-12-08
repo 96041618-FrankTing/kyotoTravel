@@ -384,6 +384,7 @@
       :show="showDevSettings" 
       @close="showDevSettings = false"
       @settings-changed="onSettingsChanged"
+      @user-info-changed="onUserInfoChanged"
     />
   </div>
 </template>
@@ -1270,6 +1271,12 @@ export default {
         console.log('📞 Voice call disabled - Firebase and PeerJS will not initialize')
       }
     }
+    
+    // 開發者模式：用戶資訊變更回調
+    const onUserInfoChanged = (newUserInfo) => {
+      console.log('👤 User info changed:', newUserInfo)
+      // 用戶資訊已儲存在 localStorage，VoiceCall 和 LocationShare 會自動讀取
+    }
 
     // 在組件掛載時載入設定
     onMounted(() => {
@@ -1294,7 +1301,8 @@ export default {
       showDevSettings,
       devSettings,
       handleTitleClick,
-      onSettingsChanged
+      onSettingsChanged,
+      onUserInfoChanged
     }
   }
 }

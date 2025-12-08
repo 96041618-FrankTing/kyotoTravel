@@ -7,6 +7,48 @@
       </div>
 
       <div class="panel-content">
+        <!-- 用戶資訊設定 -->
+        <section class="settings-section user-info-section">
+          <h3 class="section-title">👤 用戶資訊</h3>
+          
+          <div class="user-info-form">
+            <div class="form-group">
+              <label class="form-label">顯示名稱</label>
+              <input 
+                v-model="userInfo.displayName" 
+                @input="saveUserInfo"
+                type="text" 
+                class="form-input" 
+                placeholder="請輸入您的名稱"
+                maxlength="20"
+              >
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">選擇 Emoji</label>
+              <div class="emoji-grid">
+                <button
+                  v-for="emoji in emojiList"
+                  :key="emoji"
+                  @click="selectEmoji(emoji)"
+                  class="emoji-btn"
+                  :class="{ active: userInfo.emoji === emoji }"
+                >
+                  {{ emoji }}
+                </button>
+              </div>
+            </div>
+            
+            <div class="user-preview">
+              <div class="preview-label">預覽：</div>
+              <div class="preview-display">
+                <span class="preview-emoji">{{ userInfo.emoji }}</span>
+                <span class="preview-name">{{ userInfo.displayName || '未設定' }}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <!-- 功能開關 -->
         <section class="settings-section">
           <h3 class="section-title">🎛️ 功能開關</h3>
@@ -132,7 +174,7 @@ export default {
       default: false
     }
   },
-  emits: ['close', 'settings-changed'],
+  emits: ['close', 'settings-changed', 'user-info-changed'],
   setup(props, { emit }) {
     const showSettings = ref(props.show)
     const settings = ref({
@@ -142,6 +184,19 @@ export default {
       enableDebugLog: false,
       enablePerformanceMonitor: false
     })
+    
+    // 用戶資訊
+    const userInfo = ref({
+      displayName: '',
+      emoji: '👤'
+    })
+    
+    // Emoji 列表
+    const emojiList = [
+      '👤', '😀', '😎', '🤠', '👨', '👩', '👦', '👧',
+      '🧑', '👶', '🧓', '👴', '👵', '🙋', '🙋‍♂️', '🙋‍♀️',
+      '🏃', '🏃‍♂️', '🏃‍♀️', '🚶', '🚶‍♂️', '🚶‍♀️', '🧍', '🧍‍♂️'
+    ]
 
     // 載入設定
     const loadSettings = () => {
@@ -155,12 +210,37 @@ export default {
         }
       }
     }
+    
+    // 載入用戶資訊
+    const loadUserInfo = () => {
+      const savedName = localStorage.getItem('myDisplayName')
+      const savedEmoji = localStorage.getItem('myEmoji')
+      
+      if (savedName) userInfo.value.displayName = savedName
+      if (savedEmoji) userInfo.value.emoji = savedEmoji
+      
+      console.log('📱 User info loaded:', userInfo.value)
+    }
 
     // 儲存設定
     const saveSettings = () => {
       localStorage.setItem('devSettings', JSON.stringify(settings.value))
       emit('settings-changed', settings.value)
       console.log('✅ Dev settings saved:', settings.value)
+    }
+    
+    // 儲存用戶資訊
+    const saveUserInfo = () => {
+      localStorage.setItem('myDisplayName', userInfo.value.displayName)
+      localStorage.setItem('myEmoji', userInfo.value.emoji)
+      emit('user-info-changed', userInfo.value)
+      console.log('✅ User info saved:', userInfo.value)
+    }
+    
+    // 選擇 Emoji
+    const selectEmoji = (emoji) => {
+      userInfo.value.emoji = emoji
+      saveUserInfo()
     }
 
     // 關閉面板
@@ -221,6 +301,7 @@ export default {
 
     onMounted(() => {
       loadSettings()
+      loadUserInfo()
     })
 
     // 監聽 props 變化
@@ -231,7 +312,11 @@ export default {
     return {
       showSettings,
       settings,
+      userInfo,
+      emojiList,
       saveSettings,
+      saveUserInfo,
+      selectEmoji,
       closeSettings,
       clearAllData,
       resetSettings,
@@ -355,6 +440,110 @@ export default {
   margin: 0 0 16px 0;
   padding-bottom: 8px;
   border-bottom: 2px solid #e5e7eb;
+}
+
+/* 用戶資訊表單 */
+.user-info-section {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.user-info-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.form-input {
+  padding: 10px 14px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s;
+  background: white;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.emoji-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 8px;
+}
+
+.emoji-btn {
+  width: 44px;
+  height: 44px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  background: white;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emoji-btn:hover {
+  border-color: #667eea;
+  transform: scale(1.1);
+}
+
+.emoji-btn.active {
+  border-color: #667eea;
+  background: #ede9fe;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.user-preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: white;
+  border-radius: 8px;
+  border: 2px dashed #cbd5e1;
+}
+
+.preview-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.preview-display {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.preview-emoji {
+  font-size: 32px;
+}
+
+.preview-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
 }
 
 .setting-item {
