@@ -58,21 +58,6 @@
           <p class="name-hint">💡 設定後其他人會看到你的名稱而非長 ID</p>
         </div>
 
-        <!-- 切換標籤 -->
-        <div v-if="myDisplayName" class="tab-buttons">
-          <button 
-            @click="activeTab = 'contacts'" 
-            :class="['tab-btn', { active: activeTab === 'contacts' }]"
-          >
-            📋 通訊錄
-          </button>
-          <button 
-            @click="activeTab = 'discover'" 
-            :class="['tab-btn', { active: activeTab === 'discover' }]"
-          >
-            � 發現
-          </button>
-        </div>
 
         <!-- 我的資訊 -->
         <div v-if="myDisplayName" class="my-info-section">
@@ -86,10 +71,10 @@
           </div>
         </div>
 
-        <!-- 通訊錄標籤 -->
-        <div v-if="activeTab === 'contacts'" class="contacts-section">
+        <!-- 主要通訊錄區域 -->
+        <div v-if="myDisplayName" class="contacts-section">
           <div class="contacts-header">
-            <h4 class="contacts-title">聯絡人</h4>
+            <h4 class="contacts-title">📋 聯絡人</h4>
             <button @click="showAddContact = true" class="add-contact-btn">+ 新增</button>
           </div>
 
@@ -127,24 +112,33 @@
           </div>
           <div v-else class="empty-contacts">
             <p>📭 尚無聯絡人</p>
-            <p class="empty-hint">點擊「+ 新增」來加入聯絡人</p>
+            <p class="empty-hint">點擊「+ 新增」手動輸入 ID，或點擊下方「發現在線用戶」</p>
           </div>
-        </div>
 
-        <!-- 發現標籤 - 在線用戶 -->
-        <div v-if="activeTab === 'discover'" class="discover-section">
-          <div class="discover-header">
-            <h4 class="discover-title">🌐 在線用戶</h4>
+          <!-- 發現功能 - 摺疊式設計 -->
+          <div class="discover-section-compact">
             <button 
-              @click="refreshOnlineUsers" 
-              class="refresh-btn"
-              :disabled="isRefreshing"
+              @click="showDiscover = !showDiscover" 
+              class="discover-toggle-btn"
             >
-              {{ isRefreshing ? '⏳' : '🔄' }}
+              <span>{{ showDiscover ? '▼' : '▶' }}</span>
+              <span>發現在線用戶</span>
+              <span v-if="onlineUsers.length > 0" class="online-badge">{{ onlineUsers.length }}</span>
             </button>
-          </div>
 
-          <!-- 在線用戶列表 -->
+            <div v-if="showDiscover" class="discover-content">
+              <div class="discover-header-compact">
+                <p class="discover-hint">🌐 顯示附近同時在線的用戶</p>
+                <button 
+                  @click="refreshOnlineUsers" 
+                  class="refresh-btn-compact"
+                  :disabled="isRefreshing"
+                >
+                  {{ isRefreshing ? '⏳' : '🔄' }}
+                </button>
+              </div>
+
+              <!-- 在線用戶列表 -->
           <div v-if="onlineUsers.length > 0" class="online-users-list">
             <div 
               v-for="user in onlineUsers" 
@@ -176,9 +170,10 @@
               </div>
             </div>
           </div>
-          <div v-else class="empty-online">
-            <p>🔍 目前沒有其他在線用戶</p>
-            <p class="empty-hint">等待其他人上線...</p>
+              <div v-else class="empty-online-compact">
+                <p>🔍 目前沒有其他在線用戶</p>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -334,7 +329,7 @@ export default {
   setup() {
     // 狀態變數
     const showPanel = ref(false)
-    const activeTab = ref('contacts')
+    const showDiscover = ref(false)
     const myPeerId = ref('')
     const myDisplayName = ref('')
     const myEmoji = ref('👤')
@@ -1130,7 +1125,7 @@ export default {
 
     return {
       showPanel,
-      activeTab,
+      showDiscover,
       myPeerId,
       myDisplayName,
       myEmoji,
@@ -1535,6 +1530,7 @@ export default {
 }
 
 /* 標籤按鈕 */
+/* 舊的標籤按鈕樣式（已廢棄，改用摺疊式設計）
 .tab-buttons {
   display: flex;
   gap: 8px;
@@ -1563,6 +1559,7 @@ export default {
   border-color: #667eea;
   background: #f3f4f6;
 }
+*/
 
 /* ID 區域 */
 .id-section {
@@ -1793,7 +1790,96 @@ export default {
   color: #9ca3af;
 }
 
-/* 發現標籤 */
+/* 發現功能 - 摺疊式設計 */
+.discover-section-compact {
+  margin-top: 16px;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 12px;
+}
+
+.discover-toggle-btn {
+  width: 100%;
+  padding: 10px 12px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.discover-toggle-btn:hover {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.online-badge {
+  margin-left: auto;
+  background: #10b981;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.discover-content {
+  margin-top: 12px;
+  padding: 12px;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.discover-header-compact {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.discover-hint {
+  font-size: 12px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.refresh-btn-compact {
+  padding: 4px 10px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.refresh-btn-compact:hover:not(:disabled) {
+  background: #5568d3;
+}
+
+.refresh-btn-compact:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+}
+
+.empty-online-compact {
+  text-align: center;
+  padding: 16px;
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+.empty-online-compact p {
+  margin: 0;
+}
+
+/* 舊的發現標籤樣式（保留兼容性）*/
 .discover-section {
   margin-bottom: 16px;
 }
