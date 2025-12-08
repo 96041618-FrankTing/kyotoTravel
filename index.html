@@ -4,16 +4,20 @@
     <meta charset="UTF-8">
     <!-- 
       viewport 設定說明 (針對 iPhone/iOS):
-      - user-scalable=yes: 允許雙指縮放
-      - maximum-scale=5.0: 最大縮放 5 倍
+      - user-scalable=no: 完全禁止所有縮放（包括雙指縮放）
+      - maximum-scale=1.0: 鎖定最大縮放倍數為 1.0
+      - minimum-scale=1.0: 鎖定最小縮放倍數為 1.0
       - viewport-fit=cover: 適應瀏海屏幕
       
-      這個設定會:
-      ✅ 禁止雙擊放大 (Safari 預設行為被 CSS touch-action 覆蓋)
-      ✅ 允許雙指縮放 (pinch-zoom)
-      ✅ 固定初始畫面大小
+      這個設定會讓 PWA 行為像原生 APP:
+      ✅ 完全禁止雙擊放大
+      ✅ 禁止雙指縮放
+      ✅ 畫面固定不會移動或縮放
+      ✅ 排版完全固定，如同原生 APP
+      
+      注意: 如果需要地圖縮放，地圖組件內部仍可使用 Leaflet 的縮放功能
     -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="description" content="2026關西大阪京都七天六夜之旅 - 清水寺小豬療癒、大阪環球影城、天橋立絕景、京都祇園完整行程規劃">
     <meta name="theme-color" content="#E63946">
 

@@ -17,14 +17,23 @@
 }
 
 /* 
- * 禁用雙擊放大，但保留雙指捏合縮放
- * touch-action: manipulation 會禁止雙擊縮放，但允許單擊、滾動和捏合縮放
+ * 完全禁用所有縮放功能，使 PWA 行為像原生 APP
+ * touch-action: manipulation - 禁止雙擊縮放和其他手勢縮放
+ * user-select: none - 防止長按選取文字造成的意外縮放或移動
+ * 配合 viewport meta tag 的 user-scalable=no 達到完全固定效果
  */
 html,
 body {
     touch-action: manipulation;
-    -webkit-user-select: none; /* 防止長按選取文字造成的縮放 */
+    -webkit-user-select: none;
     user-select: none;
+    -webkit-text-size-adjust: 100%; /* 防止 iOS Safari 自動調整字體大小 */
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    /* 禁止元素被拖曳 */
+    -webkit-user-drag: none;
+    /* 防止點擊高亮 */
+    -webkit-tap-highlight-color: transparent;
 }
 
 /* 允許文字輸入框可以選取文字 */
@@ -32,6 +41,14 @@ input,
 textarea {
     -webkit-user-select: text;
     user-select: text;
+    touch-action: manipulation; /* 輸入框也禁用雙擊縮放 */
+}
+
+/* 禁止所有按鈕和連結的雙擊縮放 */
+button,
+a {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -40,6 +57,9 @@ body {
     color: var(--text-dark);
     background: linear-gradient(135deg, #F1FAEE 0%, #A8DADC 100%);
     min-height: 100vh;
+    /* 固定 body 位置，防止滾動彈跳 */
+    position: relative;
+    overflow-x: hidden;
 }
 
 .container {

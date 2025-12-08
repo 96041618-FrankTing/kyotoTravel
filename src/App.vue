@@ -6,9 +6,8 @@
         <div class="flex items-center justify-between">
           <div>
             <h1 
-              class="text-lg sm:text-2xl font-bold text-primary" 
+              class="text-lg sm:text-2xl font-bold text-primary no-zoom-title" 
               @click="handleTitleClick"
-              style="user-select: none;"
             >
               🇯🇵 京阪古都七日散策之旅
             </h1>
@@ -1011,6 +1010,27 @@ export default {
       initializeCountdown()
       // 初始化天氣
       initializeWeather()
+      
+      // 防止 iOS 的手勢縮放（針對快速連點的情況）
+      document.addEventListener('gesturestart', (e) => {
+        e.preventDefault()
+      })
+      document.addEventListener('gesturechange', (e) => {
+        e.preventDefault()
+      })
+      document.addEventListener('gestureend', (e) => {
+        e.preventDefault()
+      })
+      
+      // 防止雙擊縮放（額外的 JavaScript 層保護）
+      let lastTouchEnd = 0
+      document.addEventListener('touchend', (event) => {
+        const now = Date.now()
+        if (now - lastTouchEnd <= 300) {
+          event.preventDefault()
+        }
+        lastTouchEnd = now
+      }, { passive: false })
     })
 
     const initializeCountdown = () => {
@@ -1265,6 +1285,15 @@ export default {
   font-size: 24px;
   text-align: center;
   line-height: 30px;
+}
+
+/* 防止標題連點時縮放 */
+.no-zoom-title {
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  touch-action: manipulation !important;
+  -webkit-tap-highlight-color: transparent !important;
+  cursor: pointer;
 }
 
 /* 地圖容器需要允許捏合縮放和拖曳 */
