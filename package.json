@@ -10,10 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.4.0",
-    "leaflet": "^1.9.4",
     "@vitejs/plugin-vue": "^5.0.0",
-    "vite": "^5.0.0"
+    "leaflet": "^1.9.4",
+    "peerjs": "^1.5.5",
+    "vite": "^5.0.0",
+    "vue": "^3.4.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.16",

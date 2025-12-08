@@ -359,6 +359,9 @@
         </div>
       </div>
     </main>
+
+    <!-- 語音通話組件 -->
+    <VoiceCall />
   </div>
 </template>
 
@@ -366,9 +369,13 @@
 import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import VoiceCall from './components/VoiceCall.vue'
 
 export default {
   name: 'App',
+  components: {
+    VoiceCall
+  },
   setup() {
     const activeDay = ref('overview')
     const showMap = ref(false)
