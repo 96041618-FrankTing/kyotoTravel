@@ -163,13 +163,25 @@
         <div v-if="showAddContact" class="modal-overlay" @click="cancelAddContact">
           <div class="modal-content" @click.stop>
             <h4 class="modal-title">新增聯絡人</h4>
+            
+            <div class="add-contact-hint">
+              <p>💡 <strong>如何取得對方的 Peer ID？</strong></p>
+              <ol>
+                <li>請對方打開語音通話面板</li>
+                <li>對方點擊自己的個人卡片上的 ✏️ 編輯按鈕</li>
+                <li>在彈出視窗中點擊「複製完整 ID」</li>
+                <li>透過訊息傳給你，貼到下方欄位</li>
+              </ol>
+            </div>
+
             <div class="form-group">
-              <label>名稱</label>
+              <label>名稱 <span class="required">*</span></label>
               <input 
                 v-model="newContact.name" 
                 type="text" 
                 placeholder="例如: 爸爸、媽媽、Frank"
                 class="form-input"
+                maxlength="20"
               />
             </div>
             <div class="form-group">
@@ -186,17 +198,60 @@
               </div>
             </div>
             <div class="form-group">
-              <label>Peer ID</label>
-              <input 
+              <label>Peer ID <span class="required">*</span></label>
+              <textarea 
                 v-model="newContact.peerId" 
-                type="text" 
-                placeholder="貼上對方的 Peer ID"
-                class="form-input"
-              />
+                placeholder="貼上對方的 Peer ID（長字串）"
+                class="form-textarea"
+                rows="3"
+              ></textarea>
+              <p v-if="newContact.peerId" class="id-preview">
+                預覽: {{ truncateId(newContact.peerId) }}
+              </p>
             </div>
             <div class="modal-buttons">
               <button @click="cancelAddContact" class="modal-btn cancel">取消</button>
               <button @click="saveContact" class="modal-btn save">儲存</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 編輯我的資訊彈窗 -->
+        <div v-if="showEditMyInfo" class="modal-overlay" @click="showEditMyInfo = false">
+          <div class="modal-content" @click.stop>
+            <h4 class="modal-title">我的資訊</h4>
+            
+            <div class="my-full-info">
+              <div class="info-row">
+                <span class="info-label">名稱：</span>
+                <span class="info-value">{{ myDisplayName }}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">表情：</span>
+                <span class="info-value">{{ myEmoji }}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">完整 ID：</span>
+                <div class="full-id-display">
+                  <code class="full-id">{{ myPeerId }}</code>
+                  <button @click="copyMyFullId" class="copy-full-id-btn">
+                    📋 複製完整 ID
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="edit-actions">
+              <button @click="changeMyName" class="edit-action-btn">
+                ✏️ 修改名稱
+              </button>
+              <button @click="changeMyEmoji" class="edit-action-btn">
+                😊 更換表情
+              </button>
+            </div>
+
+            <div class="modal-buttons">
+              <button @click="showEditMyInfo = false" class="modal-btn cancel">關閉</button>
             </div>
           </div>
         </div>
@@ -236,6 +291,8 @@
 <script>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import Peer from 'peerjs'
+import { database } from '../firebase.config.js'
+import { ref as dbRef, set, onValue, remove, onDisconnect } from 'firebase/database'
 
 export default {
   name: 'VoiceCall',
@@ -253,6 +310,7 @@ export default {
     const isConnecting = ref(false)
     const incomingCall = ref(null)
     const showAddContact = ref(false)
+    const showEditMyInfo = ref(false)
     const selectedContact = ref(null)
     const onlineUsers = ref([])
     const isRefreshing = ref(false)
@@ -299,10 +357,66 @@ export default {
 
     // 編輯我的資訊
     const editMyInfo = () => {
+      showEditMyInfo.value = true
+    }
+
+    const changeMyName = () => {
       const newName = prompt('修改我的名稱：', myDisplayName.value)
       if (newName && newName.trim()) {
         myDisplayName.value = newName.trim()
         localStorage.setItem('myDisplayName', myDisplayName.value)
+        
+        // 如果 Firebase 可用，更新在線狀態
+        if (database && myPeerId.value) {
+          try {
+            const myPresenceRef = dbRef(database, `presence/${myPeerId.value}`)
+            set(myPresenceRef, {
+              peerId: myPeerId.value,
+              name: myDisplayName.value,
+              emoji: myEmoji.value,
+              lastSeen: Date.now()
+            })
+          } catch (error) {
+            console.warn('Failed to update name in Firebase:', error)
+          }
+        }
+      }
+    }
+
+    const changeMyEmoji = () => {
+      showEditMyInfo.value = false
+      setTimeout(() => {
+        const newEmoji = prompt('輸入新的表情符號：', myEmoji.value)
+        if (newEmoji && newEmoji.trim()) {
+          myEmoji.value = newEmoji.trim()
+          localStorage.setItem('myEmoji', myEmoji.value)
+          
+          // 如果 Firebase 可用，更新在線狀態
+          if (database && myPeerId.value) {
+            try {
+              const myPresenceRef = dbRef(database, `presence/${myPeerId.value}`)
+              set(myPresenceRef, {
+                peerId: myPeerId.value,
+                name: myDisplayName.value,
+                emoji: myEmoji.value,
+                lastSeen: Date.now()
+              })
+            } catch (error) {
+              console.warn('Failed to update emoji in Firebase:', error)
+            }
+          }
+        }
+        showEditMyInfo.value = true
+      }, 100)
+    }
+
+    const copyMyFullId = async () => {
+      try {
+        await navigator.clipboard.writeText(myPeerId.value)
+        alert('✅ 完整 ID 已複製到剪貼簿！\n\n請透過訊息傳給對方，讓對方可以將你加入通訊錄。')
+      } catch (error) {
+        console.error('Failed to copy ID:', error)
+        alert(`請手動複製此 ID:\n\n${myPeerId.value}`)
       }
     }
 
@@ -391,19 +505,39 @@ export default {
 
     const saveContact = () => {
       if (!newContact.value.name || !newContact.value.peerId) {
-        alert('請填寫完整資料')
+        alert('❌ 請填寫名稱和 Peer ID')
+        return
+      }
+
+      // 驗證 Peer ID 格式（去除空白）
+      const cleanPeerId = newContact.value.peerId.trim()
+      if (cleanPeerId.length < 10) {
+        alert('❌ Peer ID 格式不正確，請確認是否完整複製')
+        return
+      }
+
+      // 檢查是否已存在
+      if (isInContacts(cleanPeerId)) {
+        alert('⚠️ 此聯絡人已存在於通訊錄中')
         return
       }
 
       contacts.value.push({
         id: Date.now().toString(),
-        name: newContact.value.name,
+        name: newContact.value.name.trim(),
         emoji: newContact.value.emoji,
-        peerId: newContact.value.peerId
+        peerId: cleanPeerId
       })
 
       saveContacts()
       cancelAddContact()
+      
+      callStatus.value = `✅ ${newContact.value.name} 已加入通訊錄`
+      setTimeout(() => {
+        if (!isCallActive.value) {
+          callStatus.value = '✅ 就緒 - 可以撥打或接聽'
+        }
+      }, 2000)
     }
 
     // 在線用戶操作
@@ -440,22 +574,79 @@ export default {
       }, 500)
     }
 
-    // 廣播我的存在（使用 PeerJS Data Connection）
+    // 廣播我的存在（使用 Firebase Realtime Database）
     const startBroadcast = () => {
-      if (!peer.value || !myPeerId.value || !myDisplayName.value) return
+      if (!database || !myPeerId.value || !myDisplayName.value) {
+        console.warn('⚠️ Firebase not configured or missing user info')
+        return
+      }
 
-      // 每 30 秒廣播一次我的資訊
-      broadcastInterval.value = setInterval(() => {
-        // 這裡使用 peer 的 metadata 來傳遞資訊
-        // 當其他用戶連線時會看到這些資訊
-        console.log('Broadcasting presence:', myDisplayName.value)
-      }, 30000)
+      try {
+        // 在 Firebase 註冊我的在線狀態
+        const myPresenceRef = dbRef(database, `presence/${myPeerId.value}`)
+        
+        const userData = {
+          peerId: myPeerId.value,
+          name: myDisplayName.value,
+          emoji: myEmoji.value,
+          lastSeen: Date.now()
+        }
+
+        // 設定我的在線狀態
+        set(myPresenceRef, userData)
+
+        // 當斷線時自動移除
+        onDisconnect(myPresenceRef).remove()
+
+        // 每 30 秒更新一次時間戳（保持活躍）
+        broadcastInterval.value = setInterval(() => {
+          set(myPresenceRef, {
+            ...userData,
+            lastSeen: Date.now()
+          })
+        }, 30000)
+
+        console.log('✅ Broadcasting presence:', myDisplayName.value)
+
+        // 監聽所有在線用戶
+        const presenceRef = dbRef(database, 'presence')
+        onValue(presenceRef, (snapshot) => {
+          const users = []
+          snapshot.forEach((childSnapshot) => {
+            const user = childSnapshot.val()
+            // 排除自己，只顯示其他用戶
+            if (user.peerId !== myPeerId.value) {
+              // 檢查是否在 5 分鐘內活躍
+              const fiveMinutesAgo = Date.now() - 5 * 60 * 1000
+              if (user.lastSeen > fiveMinutesAgo) {
+                users.push(user)
+              }
+            }
+          })
+          onlineUsers.value = users
+          console.log('👥 Online users updated:', users.length)
+        })
+
+      } catch (error) {
+        console.error('❌ Failed to broadcast presence:', error)
+      }
     }
 
     const stopBroadcast = () => {
       if (broadcastInterval.value) {
         clearInterval(broadcastInterval.value)
         broadcastInterval.value = null
+      }
+
+      // 從 Firebase 移除我的在線狀態
+      if (database && myPeerId.value) {
+        try {
+          const myPresenceRef = dbRef(database, `presence/${myPeerId.value}`)
+          remove(myPresenceRef)
+          console.log('✅ Removed presence from Firebase')
+        } catch (error) {
+          console.error('❌ Failed to remove presence:', error)
+        }
       }
     }
 
@@ -488,29 +679,7 @@ export default {
           }
         })
 
-        // 監聽數據連線（用於接收其他用戶的廣播）
-        peer.value.on('connection', (conn) => {
-          conn.on('data', (data) => {
-            if (data.type === 'presence') {
-              // 收到其他用戶的存在通知
-              const existingIndex = onlineUsers.value.findIndex(u => u.peerId === data.peerId)
-              const userData = {
-                peerId: data.peerId,
-                name: data.name,
-                emoji: data.emoji,
-                lastSeen: Date.now()
-              }
-              
-              if (existingIndex >= 0) {
-                onlineUsers.value[existingIndex] = userData
-              } else {
-                onlineUsers.value.push(userData)
-              }
-              
-              console.log('User online:', data.name)
-            }
-          })
-        })
+
 
         // 監聽來電
         peer.value.on('call', (call) => {
@@ -793,12 +962,6 @@ export default {
       loadMyInfo()
       loadContacts()
       initializePeer()
-
-      // 清理過期的在線用戶（超過 60 秒沒更新）
-      setInterval(() => {
-        const now = Date.now()
-        onlineUsers.value = onlineUsers.value.filter(u => now - u.lastSeen < 60000)
-      }, 10000)
     })
 
     onUnmounted(() => {
@@ -831,8 +994,12 @@ export default {
       selectedContact,
       onlineUsers,
       isRefreshing,
+      showEditMyInfo,
       saveMyDisplayName,
       editMyInfo,
+      changeMyName,
+      changeMyEmoji,
+      copyMyFullId,
       truncateId,
       getCallerName,
       isInContacts,
@@ -1488,10 +1655,34 @@ export default {
   background: white;
   border-radius: 16px;
   padding: 24px;
-  max-width: 400px;
+  max-width: 420px;
   width: 100%;
   max-height: 80vh;
   overflow-y: auto;
+}
+
+.add-contact-hint {
+  background: #fef3c7;
+  border: 2px solid #fbbf24;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+
+.add-contact-hint p {
+  margin: 0 0 8px 0;
+  color: #92400e;
+}
+
+.add-contact-hint ol {
+  margin: 0;
+  padding-left: 20px;
+  color: #78350f;
+}
+
+.add-contact-hint li {
+  margin: 4px 0;
 }
 
 .modal-title {
@@ -1513,18 +1704,38 @@ export default {
   margin-bottom: 8px;
 }
 
-.form-input {
+.form-input,
+.form-textarea {
   width: 100%;
   padding: 10px 12px;
   border: 2px solid #e5e7eb;
   border-radius: 8px;
   font-size: 14px;
   transition: border-color 0.2s;
+  font-family: inherit;
 }
 
-.form-input:focus {
+.form-input:focus,
+.form-textarea:focus {
   outline: none;
   border-color: #667eea;
+}
+
+.form-textarea {
+  resize: vertical;
+  font-family: monospace;
+  font-size: 12px;
+}
+
+.required {
+  color: #ef4444;
+}
+
+.id-preview {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #6b7280;
+  font-style: italic;
 }
 
 .emoji-picker {
@@ -1591,6 +1802,97 @@ export default {
 .modal-btn.save:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* 我的完整資訊顯示 */
+.my-full-info {
+  background: #f3f4f6;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.info-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.info-row:last-child {
+  margin-bottom: 0;
+}
+
+.info-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.info-value {
+  font-size: 16px;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.full-id-display {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.full-id {
+  display: block;
+  padding: 8px;
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 11px;
+  word-break: break-all;
+  color: #4b5563;
+}
+
+.copy-full-id-btn {
+  padding: 8px 12px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.copy-full-id-btn:hover {
+  background: #5568d3;
+  transform: scale(1.02);
+}
+
+.edit-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.edit-action-btn {
+  flex: 1;
+  padding: 10px;
+  background: #f3f4f6;
+  color: #374151;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.edit-action-btn:hover {
+  background: white;
+  border-color: #667eea;
+  color: #667eea;
+  transform: translateY(-2px);
 }
 
 /* 狀態顯示 */
