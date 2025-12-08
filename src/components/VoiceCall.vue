@@ -1133,7 +1133,10 @@ export default {
 .panel-content {
   padding: 16px;
   overflow-y: auto;
+  overflow-x: hidden; /* 防止水平滾動 */
   flex: 1;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* 名稱設定 */
@@ -1143,21 +1146,26 @@ export default {
   background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
   border-radius: 12px;
   border: 2px solid #fbbf24;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .name-input-group {
   display: flex;
   gap: 8px;
   margin-bottom: 8px;
+  width: 100%;
 }
 
 .name-input {
   flex: 1;
+  min-width: 0; /* 允許 flex item 縮小至內容以下 */
   padding: 10px 12px;
   border: 2px solid #f59e0b;
   border-radius: 8px;
   font-size: 14px;
   font-weight: 600;
+  box-sizing: border-box;
 }
 
 .name-input:focus {
@@ -1167,6 +1175,8 @@ export default {
 
 .save-name-btn {
   width: 44px;
+  min-width: 44px; /* 防止按鈕被壓縮 */
+  flex-shrink: 0; /* 不允許縮小 */
   padding: 10px;
   background: #10b981;
   color: white;
@@ -1176,6 +1186,7 @@ export default {
   font-weight: bold;
   cursor: pointer;
   transition: all 0.2s;
+  box-sizing: border-box;
 }
 
 .save-name-btn:hover {
@@ -1187,6 +1198,7 @@ export default {
   font-size: 12px;
   color: #92400e;
   margin: 0;
+  word-wrap: break-word; /* 允許文字換行 */
 }
 
 /* 我的資訊卡片 */
@@ -1299,17 +1311,20 @@ export default {
 .id-display {
   display: flex;
   gap: 8px;
+  width: 100%;
 }
 
 .id-input,
 .partner-input {
   flex: 1;
+  min-width: 0; /* 允許縮小 */
   padding: 10px 12px;
   border: 2px solid #e5e7eb;
   border-radius: 8px;
   font-size: 12px;
   font-family: monospace;
   transition: border-color 0.2s;
+  box-sizing: border-box;
 }
 
 .id-input {
@@ -1329,12 +1344,15 @@ export default {
 
 .copy-btn {
   padding: 10px 12px;
+  min-width: 44px; /* 最小寬度 */
+  flex-shrink: 0; /* 不允許縮小 */
   background: #667eea;
   border: none;
   border-radius: 8px;
   font-size: 18px;
   cursor: pointer;
   transition: all 0.2s;
+  box-sizing: border-box;
 }
 
 .copy-btn:hover {
