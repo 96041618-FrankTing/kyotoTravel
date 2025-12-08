@@ -250,6 +250,13 @@
               </button>
             </div>
 
+            <div class="id-info-hint">
+              <p>💡 你的 ID 是固定的，每次開啟都相同</p>
+              <button @click="resetPeerId" class="reset-id-btn">
+                🔄 重置 ID（進階）
+              </button>
+            </div>
+
             <div class="modal-buttons">
               <button @click="showEditMyInfo = false" class="modal-btn cancel">關閉</button>
             </div>
@@ -315,6 +322,7 @@ export default {
     const onlineUsers = ref([])
     const isRefreshing = ref(false)
     const broadcastInterval = ref(null)
+    const unsubscribePresence = ref(null) // 儲存 Firebase 監聽器的取消訂閱函數
     
     // Peer 和通話相關
     const peer = ref(null)
@@ -413,10 +421,19 @@ export default {
     const copyMyFullId = async () => {
       try {
         await navigator.clipboard.writeText(myPeerId.value)
-        alert('✅ 完整 ID 已複製到剪貼簿！\n\n請透過訊息傳給對方，讓對方可以將你加入通訊錄。')
+        alert('✅ 完整 ID 已複製到剪貼簿！\n\n請透過訊息傳給對方，讓對方可以將你加入通訊錄。\n\n💡 此 ID 是固定的，不會改變。')
       } catch (error) {
         console.error('Failed to copy ID:', error)
         alert(`請手動複製此 ID:\n\n${myPeerId.value}`)
+      }
+    }
+
+    // 重置 Peer ID（進階功能）
+    const resetPeerId = () => {
+      if (confirm('⚠️ 確定要重置 ID 嗎？\n\n重置後：\n• 你的 ID 會改變\n• 其他人通訊錄中的你會失效\n• 需要重新分享新 ID 給大家')) {
+        localStorage.removeItem('myPeerId')
+        alert('✅ ID 已重置\n\n請重新整理頁面生成新的 ID')
+        location.reload()
       }
     }
 
@@ -641,48 +658,53 @@ export default {
 
         console.log('✅ Broadcasting presence:', myDisplayName.value)
 
-        // 監聽所有在線用戶
-        const presenceRef = dbRef(database, 'presence')
-        console.log('🎧 Setting up Firebase listener for path:', 'presence')
-        
-        try {
-          onValue(presenceRef, (snapshot) => {
-            console.log('📥 Received Firebase update, snapshot exists:', snapshot.exists())
-            const users = []
-            
-            if (!snapshot.exists()) {
-              console.log('⚠️ No data in presence node')
-              onlineUsers.value = users
-              return
-            }
-
-            snapshot.forEach((childSnapshot) => {
-              const user = childSnapshot.val()
-              console.log('👤 Found user:', user)
-              // 排除自己，只顯示其他用戶
-              if (user && user.peerId !== myPeerId.value) {
-                // 檢查是否在 5 分鐘內活躍
-                const fiveMinutesAgo = Date.now() - 5 * 60 * 1000
-                if (user.lastSeen && user.lastSeen > fiveMinutesAgo) {
-                  users.push(user)
-                  console.log('✅ Added online user:', user.name)
-                } else {
-                  console.log('⏱️ User outdated:', user.name, 'last seen:', new Date(user.lastSeen))
-                }
-              } else if (user && user.peerId === myPeerId.value) {
-                console.log('👋 Skipping self:', user.name)
+        // 監聽所有在線用戶（確保只註冊一次）
+        if (!unsubscribePresence.value) {
+          const presenceRef = dbRef(database, 'presence')
+          console.log('🎧 Setting up Firebase listener for path:', 'presence')
+          
+          try {
+            // onValue 返回一個取消訂閱的函數
+            unsubscribePresence.value = onValue(presenceRef, (snapshot) => {
+              console.log('📥 Received Firebase update, snapshot exists:', snapshot.exists())
+              const users = []
+              
+              if (!snapshot.exists()) {
+                console.log('⚠️ No data in presence node')
+                onlineUsers.value = users
+                return
               }
+
+              snapshot.forEach((childSnapshot) => {
+                const user = childSnapshot.val()
+                console.log('👤 Found user:', user)
+                // 排除自己，只顯示其他用戶
+                if (user && user.peerId !== myPeerId.value) {
+                  // 檢查是否在 5 分鐘內活躍
+                  const fiveMinutesAgo = Date.now() - 5 * 60 * 1000
+                  if (user.lastSeen && user.lastSeen > fiveMinutesAgo) {
+                    users.push(user)
+                    console.log('✅ Added online user:', user.name)
+                  } else {
+                    console.log('⏱️ User outdated:', user.name, 'last seen:', new Date(user.lastSeen))
+                  }
+                } else if (user && user.peerId === myPeerId.value) {
+                  console.log('👋 Skipping self:', user.name)
+                }
+              })
+              onlineUsers.value = users
+              console.log('👥 Online users updated:', users.length, users)
+            }, (error) => {
+              console.error('❌ Firebase onValue error:', error)
+              console.error('Error code:', error.code)
+              console.error('Error message:', error.message)
             })
-            onlineUsers.value = users
-            console.log('👥 Online users updated:', users.length, users)
-          }, (error) => {
-            console.error('❌ Firebase onValue error:', error)
-            console.error('Error code:', error.code)
-            console.error('Error message:', error.message)
-          })
-          console.log('✅ Firebase listener registered successfully')
-        } catch (error) {
-          console.error('❌ Failed to register Firebase listener:', error)
+            console.log('✅ Firebase listener registered successfully')
+          } catch (error) {
+            console.error('❌ Failed to register Firebase listener:', error)
+          }
+        } else {
+          console.log('ℹ️ Firebase listener already registered, skipping')
         }
 
       } catch (error) {
@@ -697,6 +719,13 @@ export default {
         broadcastInterval.value = null
       }
 
+      // 取消訂閱 Firebase 監聽器
+      if (unsubscribePresence.value) {
+        console.log('🔇 Unsubscribing from Firebase listener')
+        unsubscribePresence.value()
+        unsubscribePresence.value = null
+      }
+
       // 從 Firebase 移除我的在線狀態
       if (database && myPeerId.value) {
         try {
@@ -709,11 +738,36 @@ export default {
       }
     }
 
+    // 產生或取得固定的 Peer ID
+    const getOrCreatePeerId = () => {
+      // 先檢查 localStorage 是否有儲存的 ID
+      let savedId = localStorage.getItem('myPeerId')
+      
+      if (savedId) {
+        console.log('📦 Found saved Peer ID:', savedId)
+        return savedId
+      }
+      
+      // 如果沒有，生成一個新的固定 ID（使用時間戳和隨機數）
+      const timestamp = Date.now().toString(36) // 轉成 36 進制縮短長度
+      const random = Math.random().toString(36).substring(2, 9)
+      savedId = `user-${timestamp}-${random}`
+      
+      // 儲存到 localStorage
+      localStorage.setItem('myPeerId', savedId)
+      console.log('🆕 Created new Peer ID:', savedId)
+      
+      return savedId
+    }
+
     // 初始化 Peer
     const initializePeer = () => {
       try {
-        // 使用 PeerJS 的預設雲端伺服器（0.peerjs.com）
-        peer.value = new Peer(undefined, {
+        // 取得或創建固定的 Peer ID
+        const fixedPeerId = getOrCreatePeerId()
+        
+        // 使用固定 ID 初始化 Peer（而不是 undefined）
+        peer.value = new Peer(fixedPeerId, {
           debug: 2,
           config: {
             iceServers: [
@@ -730,7 +784,14 @@ export default {
         peer.value.on('open', (id) => {
           myPeerId.value = id
           callStatus.value = '✅ 就緒 - 可以撥打或接聽'
-          console.log('My Peer ID:', id)
+          console.log('✅ Peer connected with ID:', id)
+          
+          // 確保 ID 已儲存到 localStorage（防止被覆蓋）
+          const savedId = localStorage.getItem('myPeerId')
+          if (savedId !== id) {
+            console.log('⚠️ Updating saved Peer ID from', savedId, 'to', id)
+            localStorage.setItem('myPeerId', id)
+          }
           
           // 如果已設定名稱，開始廣播
           if (myDisplayName.value) {
@@ -1970,6 +2031,39 @@ export default {
   border-color: #667eea;
   color: #667eea;
   transform: translateY(-2px);
+}
+
+/* ID 資訊提示 */
+.id-info-hint {
+  background: #fef3c7;
+  border: 1px solid #fbbf24;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.id-info-hint p {
+  margin: 0 0 8px 0;
+  font-size: 12px;
+  color: #92400e;
+}
+
+.reset-id-btn {
+  padding: 6px 12px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.reset-id-btn:hover {
+  background: #dc2626;
+  transform: scale(1.05);
 }
 
 /* 狀態顯示 */
