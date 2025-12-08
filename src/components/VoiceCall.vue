@@ -643,27 +643,47 @@ export default {
 
         // 監聽所有在線用戶
         const presenceRef = dbRef(database, 'presence')
-        onValue(presenceRef, (snapshot) => {
-          console.log('📥 Received Firebase update')
-          const users = []
-          snapshot.forEach((childSnapshot) => {
-            const user = childSnapshot.val()
-            console.log('👤 Found user:', user)
-            // 排除自己，只顯示其他用戶
-            if (user && user.peerId !== myPeerId.value) {
-              // 檢查是否在 5 分鐘內活躍
-              const fiveMinutesAgo = Date.now() - 5 * 60 * 1000
-              if (user.lastSeen && user.lastSeen > fiveMinutesAgo) {
-                users.push(user)
-                console.log('✅ Added online user:', user.name)
-              } else {
-                console.log('⏱️ User outdated:', user.name, 'last seen:', new Date(user.lastSeen))
-              }
+        console.log('🎧 Setting up Firebase listener for path:', 'presence')
+        
+        try {
+          onValue(presenceRef, (snapshot) => {
+            console.log('📥 Received Firebase update, snapshot exists:', snapshot.exists())
+            const users = []
+            
+            if (!snapshot.exists()) {
+              console.log('⚠️ No data in presence node')
+              onlineUsers.value = users
+              return
             }
+
+            snapshot.forEach((childSnapshot) => {
+              const user = childSnapshot.val()
+              console.log('👤 Found user:', user)
+              // 排除自己，只顯示其他用戶
+              if (user && user.peerId !== myPeerId.value) {
+                // 檢查是否在 5 分鐘內活躍
+                const fiveMinutesAgo = Date.now() - 5 * 60 * 1000
+                if (user.lastSeen && user.lastSeen > fiveMinutesAgo) {
+                  users.push(user)
+                  console.log('✅ Added online user:', user.name)
+                } else {
+                  console.log('⏱️ User outdated:', user.name, 'last seen:', new Date(user.lastSeen))
+                }
+              } else if (user && user.peerId === myPeerId.value) {
+                console.log('👋 Skipping self:', user.name)
+              }
+            })
+            onlineUsers.value = users
+            console.log('👥 Online users updated:', users.length, users)
+          }, (error) => {
+            console.error('❌ Firebase onValue error:', error)
+            console.error('Error code:', error.code)
+            console.error('Error message:', error.message)
           })
-          onlineUsers.value = users
-          console.log('👥 Online users updated:', users.length, users)
-        })
+          console.log('✅ Firebase listener registered successfully')
+        } catch (error) {
+          console.error('❌ Failed to register Firebase listener:', error)
+        }
 
       } catch (error) {
         console.error('❌ Failed to broadcast presence:', error)
