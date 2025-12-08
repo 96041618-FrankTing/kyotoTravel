@@ -15,7 +15,7 @@
     </button>
 
     <!-- 位置分享面板 -->
-    <div v-if="showLocationPanel" class="location-panel">
+    <div v-show="showLocationPanel" class="location-panel">
       <div class="panel-header">
         <h3 class="panel-title">📍 團隊位置追蹤</h3>
         <button @click="showLocationPanel = false" class="close-btn">&times;</button>
@@ -205,7 +205,31 @@ export default {
 
     // 初始化地圖
     const initializeMap = () => {
-      if (map) return
+      // 檢查地圖容器是否存在
+      const mapContainer = document.getElementById('location-map')
+      if (!mapContainer) {
+        console.warn('⚠️ Map container not found')
+        return
+      }
+
+      // 如果地圖已存在且正常，不需要重新初始化
+      if (map && map.getContainer()) {
+        console.log('ℹ️ Map already initialized')
+        return
+      }
+
+      // 如果地圖物件存在但容器被移除，需要清理
+      if (map) {
+        console.log('🔄 Cleaning up old map instance...')
+        try {
+          map.remove()
+        } catch (e) {
+          console.warn('Map cleanup error:', e)
+        }
+        map = null
+        myMarker = null
+        Object.keys(userMarkers).forEach(key => delete userMarkers[key])
+      }
 
       console.log('📍 Initializing map...')
       
@@ -501,8 +525,19 @@ export default {
     // 監聽面板顯示變化
     watch(showLocationPanel, (newVal) => {
       if (newVal && props.isLocationEnabled) {
+        // 延遲初始化以確保 DOM 已渲染
         setTimeout(() => {
           initializeMap()
+          // 如果有當前位置，更新地圖
+          if (myLocation.value) {
+            updateMyMarker(myLocation.value.lat, myLocation.value.lng)
+          }
+          // 如果有其他用戶，更新他們的 marker
+          if (otherUsers.value.length > 0) {
+            otherUsers.value.forEach(user => {
+              updateUserMarker(user)
+            })
+          }
         }, 100)
       }
     })
@@ -541,7 +576,7 @@ export default {
 <style scoped>
 /* 浮動位置按鈕 */
 .floating-location-btn {
-  position: fixed;
+  position: fixed !important;  /* 強制固定定位，確保不被覆蓋 */
   bottom: 100px;
   right: 20px;
   width: 60px;
@@ -558,7 +593,6 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
 }
 
 .floating-location-btn:hover {

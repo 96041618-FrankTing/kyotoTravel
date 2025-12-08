@@ -192,11 +192,7 @@ export default {
     })
     
     // Emoji 列表
-    const emojiList = [
-      '👤', '😀', '😎', '🤠', '👨', '👩', '👦', '👧',
-      '🧑', '👶', '🧓', '👴', '👵', '🙋', '🙋‍♂️', '🙋‍♀️',
-      '🏃', '🏃‍♂️', '🏃‍♀️', '🚶', '🚶‍♂️', '🚶‍♀️', '🧍', '🧍‍♂️'
-    ]
+    const emojiList = ['👤', '😀', '😎', '🤠', '👨']
 
     // 載入設定
     const loadSettings = () => {
@@ -484,7 +480,7 @@ export default {
 
 .emoji-grid {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 8px;
 }
 
