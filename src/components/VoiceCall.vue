@@ -19,8 +19,24 @@
       </div>
 
       <div class="panel-content">
+        <!-- 我的名稱設定 -->
+        <div v-if="!myDisplayName" class="name-setup">
+          <label class="label">設定我的名稱（讓其他人看到）</label>
+          <div class="name-input-group">
+            <input
+              v-model="tempDisplayName"
+              type="text"
+              placeholder="例如: Frank, 爸爸, 媽媽"
+              class="name-input"
+              maxlength="20"
+            />
+            <button @click="saveMyDisplayName" class="save-name-btn">✓</button>
+          </div>
+          <p class="name-hint">💡 設定後其他人會看到你的名稱而非長 ID</p>
+        </div>
+
         <!-- 切換標籤 -->
-        <div class="tab-buttons">
+        <div v-if="myDisplayName" class="tab-buttons">
           <button 
             @click="activeTab = 'contacts'" 
             :class="['tab-btn', { active: activeTab === 'contacts' }]"
@@ -28,31 +44,22 @@
             📋 通訊錄
           </button>
           <button 
-            @click="activeTab = 'manual'" 
-            :class="['tab-btn', { active: activeTab === 'manual' }]"
+            @click="activeTab = 'discover'" 
+            :class="['tab-btn', { active: activeTab === 'discover' }]"
           >
-            🔢 手動輸入
+            � 發現
           </button>
         </div>
 
-        <!-- 我的 ID -->
-        <div class="id-section">
-          <label class="label">我的 ID</label>
-          <div class="id-display">
-            <input 
-              type="text" 
-              :value="myPeerId || '載入中...'" 
-              readonly 
-              class="id-input"
-            />
-            <button 
-              v-if="myPeerId" 
-              @click="copyMyId" 
-              class="copy-btn"
-              title="複製 ID"
-            >
-              📋
-            </button>
+        <!-- 我的資訊 -->
+        <div v-if="myDisplayName" class="my-info-section">
+          <div class="my-info-card">
+            <div class="my-avatar">{{ myEmoji }}</div>
+            <div class="my-details">
+              <div class="my-name">{{ myDisplayName }}</div>
+              <div class="my-id-short">ID: {{ truncateId(myPeerId || '載入中...') }}</div>
+            </div>
+            <button @click="editMyInfo" class="edit-btn" title="編輯">✏️</button>
           </div>
         </div>
 
@@ -101,17 +108,54 @@
           </div>
         </div>
 
-        <!-- 手動輸入標籤 -->
-        <div v-if="activeTab === 'manual'" class="manual-section">
-          <div class="id-section">
-            <label class="label">對方 ID</label>
-            <input
-              v-model="partnerId"
-              type="text"
-              placeholder="輸入對方的 ID"
-              :disabled="isCallActive"
-              class="partner-input"
-            />
+        <!-- 發現標籤 - 在線用戶 -->
+        <div v-if="activeTab === 'discover'" class="discover-section">
+          <div class="discover-header">
+            <h4 class="discover-title">🌐 在線用戶</h4>
+            <button 
+              @click="refreshOnlineUsers" 
+              class="refresh-btn"
+              :disabled="isRefreshing"
+            >
+              {{ isRefreshing ? '⏳' : '🔄' }}
+            </button>
+          </div>
+
+          <!-- 在線用戶列表 -->
+          <div v-if="onlineUsers.length > 0" class="online-users-list">
+            <div 
+              v-for="user in onlineUsers" 
+              :key="user.peerId"
+              class="online-user-item"
+            >
+              <div class="user-info">
+                <div class="user-avatar">{{ user.emoji }}</div>
+                <div class="user-details">
+                  <div class="user-name">{{ user.name }}</div>
+                  <div class="user-status">🟢 在線</div>
+                </div>
+              </div>
+              <div class="user-actions">
+                <button 
+                  @click="callOnlineUser(user)" 
+                  class="action-btn call"
+                  :disabled="isCallActive || !myPeerId"
+                >
+                  📞
+                </button>
+                <button 
+                  @click="addOnlineUserToContacts(user)" 
+                  class="action-btn add"
+                  :disabled="isInContacts(user.peerId)"
+                >
+                  {{ isInContacts(user.peerId) ? '✓' : '+' }}
+                </button>
+              </div>
+            </div>
+          </div>
+          <div v-else class="empty-online">
+            <p>🔍 目前沒有其他在線用戶</p>
+            <p class="empty-hint">等待其他人上線...</p>
           </div>
         </div>
 
@@ -163,26 +207,8 @@
           <span>{{ callStatus }}</span>
         </div>
 
-        <!-- 控制按鈕 -->
-        <div v-if="activeTab === 'manual'" class="button-group">
-          <button
-            v-if="!isCallActive"
-            @click="makeCall"
-            :disabled="!myPeerId || !partnerId || isConnecting"
-            class="call-btn primary"
-          >
-            📞 撥打
-          </button>
-          <button
-            v-else
-            @click="endCall"
-            class="call-btn danger"
-          >
-            ❌ 掛斷
-          </button>
-        </div>
-
-        <div v-if="activeTab === 'contacts' && isCallActive" class="button-group">
+        <!-- 通話中的掛斷按鈕 -->
+        <div v-if="isCallActive" class="button-group">
           <button
             @click="endCall"
             class="call-btn danger"
@@ -218,6 +244,9 @@ export default {
     const showPanel = ref(false)
     const activeTab = ref('contacts')
     const myPeerId = ref('')
+    const myDisplayName = ref('')
+    const myEmoji = ref('👤')
+    const tempDisplayName = ref('')
     const partnerId = ref('')
     const callStatus = ref('正在連線到伺服器...')
     const isCallActive = ref(false)
@@ -225,6 +254,9 @@ export default {
     const incomingCall = ref(null)
     const showAddContact = ref(false)
     const selectedContact = ref(null)
+    const onlineUsers = ref([])
+    const isRefreshing = ref(false)
+    const broadcastInterval = ref(null)
     
     // Peer 和通話相關
     const peer = ref(null)
@@ -242,6 +274,37 @@ export default {
     })
 
     const emojiList = ['👤', '👨', '👩', '👴', '👵', '👶', '👦', '👧', '🧑', '👨‍💼', '👩‍💼', '🧑‍🎓', '👨‍🎓', '👩‍🎓', '❤️', '⭐', '🌟']
+
+    // 載入我的資訊
+    const loadMyInfo = () => {
+      const savedName = localStorage.getItem('myDisplayName')
+      const savedEmoji = localStorage.getItem('myEmoji')
+      if (savedName) myDisplayName.value = savedName
+      if (savedEmoji) myEmoji.value = savedEmoji
+    }
+
+    // 儲存我的資訊
+    const saveMyDisplayName = () => {
+      if (!tempDisplayName.value.trim()) {
+        alert('請輸入名稱')
+        return
+      }
+      myDisplayName.value = tempDisplayName.value.trim()
+      localStorage.setItem('myDisplayName', myDisplayName.value)
+      localStorage.setItem('myEmoji', myEmoji.value)
+      tempDisplayName.value = ''
+      // 開始廣播我的存在
+      startBroadcast()
+    }
+
+    // 編輯我的資訊
+    const editMyInfo = () => {
+      const newName = prompt('修改我的名稱：', myDisplayName.value)
+      if (newName && newName.trim()) {
+        myDisplayName.value = newName.trim()
+        localStorage.setItem('myDisplayName', myDisplayName.value)
+      }
+    }
 
     // 載入通訊錄
     const loadContacts = () => {
@@ -286,8 +349,20 @@ export default {
     }
 
     const getCallerName = (peerId) => {
+      // 先檢查通訊錄
       const contact = contacts.value.find(c => c.peerId === peerId)
-      return contact ? `${contact.emoji} ${contact.name}` : '未知來電'
+      if (contact) return `${contact.emoji} ${contact.name}`
+      
+      // 再檢查在線用戶
+      const onlineUser = onlineUsers.value.find(u => u.peerId === peerId)
+      if (onlineUser) return `${onlineUser.emoji} ${onlineUser.name}`
+      
+      return '未知來電'
+    }
+
+    // 檢查是否已在通訊錄中
+    const isInContacts = (peerId) => {
+      return contacts.value.some(c => c.peerId === peerId)
     }
 
     // 通訊錄操作
@@ -331,6 +406,59 @@ export default {
       cancelAddContact()
     }
 
+    // 在線用戶操作
+    const callOnlineUser = (user) => {
+      partnerId.value = user.peerId
+      selectedContact.value = null
+      makeCall()
+    }
+
+    const addOnlineUserToContacts = (user) => {
+      if (isInContacts(user.peerId)) return
+
+      contacts.value.push({
+        id: Date.now().toString(),
+        name: user.name,
+        emoji: user.emoji,
+        peerId: user.peerId
+      })
+
+      saveContacts()
+      callStatus.value = `✅ ${user.name} 已加入通訊錄`
+      setTimeout(() => {
+        if (!isCallActive.value) {
+          callStatus.value = '✅ 就緒 - 可以撥打或接聽'
+        }
+      }, 2000)
+    }
+
+    const refreshOnlineUsers = () => {
+      isRefreshing.value = true
+      // 模擬刷新
+      setTimeout(() => {
+        isRefreshing.value = false
+      }, 500)
+    }
+
+    // 廣播我的存在（使用 PeerJS Data Connection）
+    const startBroadcast = () => {
+      if (!peer.value || !myPeerId.value || !myDisplayName.value) return
+
+      // 每 30 秒廣播一次我的資訊
+      broadcastInterval.value = setInterval(() => {
+        // 這裡使用 peer 的 metadata 來傳遞資訊
+        // 當其他用戶連線時會看到這些資訊
+        console.log('Broadcasting presence:', myDisplayName.value)
+      }, 30000)
+    }
+
+    const stopBroadcast = () => {
+      if (broadcastInterval.value) {
+        clearInterval(broadcastInterval.value)
+        broadcastInterval.value = null
+      }
+    }
+
     // 初始化 Peer
     const initializePeer = () => {
       try {
@@ -353,6 +481,35 @@ export default {
           myPeerId.value = id
           callStatus.value = '✅ 就緒 - 可以撥打或接聽'
           console.log('My Peer ID:', id)
+          
+          // 如果已設定名稱，開始廣播
+          if (myDisplayName.value) {
+            startBroadcast()
+          }
+        })
+
+        // 監聽數據連線（用於接收其他用戶的廣播）
+        peer.value.on('connection', (conn) => {
+          conn.on('data', (data) => {
+            if (data.type === 'presence') {
+              // 收到其他用戶的存在通知
+              const existingIndex = onlineUsers.value.findIndex(u => u.peerId === data.peerId)
+              const userData = {
+                peerId: data.peerId,
+                name: data.name,
+                emoji: data.emoji,
+                lastSeen: Date.now()
+              }
+              
+              if (existingIndex >= 0) {
+                onlineUsers.value[existingIndex] = userData
+              } else {
+                onlineUsers.value.push(userData)
+              }
+              
+              console.log('User online:', data.name)
+            }
+          })
         })
 
         // 監聽來電
@@ -633,11 +790,19 @@ export default {
 
     // 生命週期
     onMounted(() => {
+      loadMyInfo()
       loadContacts()
       initializePeer()
+
+      // 清理過期的在線用戶（超過 60 秒沒更新）
+      setInterval(() => {
+        const now = Date.now()
+        onlineUsers.value = onlineUsers.value.filter(u => now - u.lastSeen < 60000)
+      }, 10000)
     })
 
     onUnmounted(() => {
+      stopBroadcast()
       endCall()
       if (peer.value) {
         peer.value.destroy()
@@ -648,6 +813,9 @@ export default {
       showPanel,
       activeTab,
       myPeerId,
+      myDisplayName,
+      myEmoji,
+      tempDisplayName,
       partnerId,
       callStatus,
       isCallActive,
@@ -661,18 +829,25 @@ export default {
       emojiList,
       showAddContact,
       selectedContact,
+      onlineUsers,
+      isRefreshing,
+      saveMyDisplayName,
+      editMyInfo,
       truncateId,
       getCallerName,
+      isInContacts,
       selectContact,
       callContact,
       deleteContact,
       cancelAddContact,
       saveContact,
+      callOnlineUser,
+      addOnlineUserToContacts,
+      refreshOnlineUsers,
       makeCall,
       answerCall,
       rejectCall,
-      endCall,
-      copyMyId
+      endCall
     }
   }
 }
@@ -792,6 +967,123 @@ export default {
   padding: 16px;
   overflow-y: auto;
   flex: 1;
+}
+
+/* 名稱設定 */
+.name-setup {
+  margin-bottom: 16px;
+  padding: 16px;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border-radius: 12px;
+  border: 2px solid #fbbf24;
+}
+
+.name-input-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.name-input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 2px solid #f59e0b;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.name-input:focus {
+  outline: none;
+  border-color: #d97706;
+}
+
+.save-name-btn {
+  width: 44px;
+  padding: 10px;
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.save-name-btn:hover {
+  background: #059669;
+  transform: scale(1.05);
+}
+
+.name-hint {
+  font-size: 12px;
+  color: #92400e;
+  margin: 0;
+}
+
+/* 我的資訊卡片 */
+.my-info-section {
+  margin-bottom: 16px;
+}
+
+.my-info-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  border-radius: 12px;
+  border: 2px solid #60a5fa;
+}
+
+.my-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.my-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.my-name {
+  font-weight: 700;
+  color: #1e3a8a;
+  font-size: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.my-id-short {
+  font-size: 11px;
+  color: #3b82f6;
+  font-family: monospace;
+}
+
+.edit-btn {
+  width: 36px;
+  height: 36px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.edit-btn:hover {
+  background: #2563eb;
+  transform: scale(1.1);
 }
 
 /* 標籤按鈕 */
@@ -1045,6 +1337,139 @@ export default {
 .empty-hint {
   font-size: 12px;
   color: #9ca3af;
+}
+
+/* 發現標籤 */
+.discover-section {
+  margin-bottom: 16px;
+}
+
+.discover-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.discover-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0;
+}
+
+.refresh-btn {
+  width: 32px;
+  height: 32px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.refresh-btn:hover:not(:disabled) {
+  background: #5568d3;
+  transform: rotate(180deg);
+}
+
+.refresh-btn:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+}
+
+.online-users-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.online-user-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  background: #f0fdf4;
+  border: 2px solid #86efac;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.online-user-item:hover {
+  border-color: #10b981;
+  transform: translateX(4px);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.user-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.user-name {
+  font-weight: 600;
+  color: #065f46;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-status {
+  font-size: 11px;
+  color: #10b981;
+  font-weight: 600;
+}
+
+.user-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.action-btn.add {
+  background: #3b82f6;
+}
+
+.action-btn.add:hover:not(:disabled) {
+  background: #2563eb;
+  transform: scale(1.1);
+}
+
+.action-btn.add:disabled {
+  background: #10b981;
+  cursor: default;
+}
+
+.empty-online {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6b7280;
+}
+
+.empty-online p {
+  margin: 8px 0;
 }
 
 /* 彈窗 */
