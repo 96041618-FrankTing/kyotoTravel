@@ -8,6 +8,7 @@
             <h1 
               class="text-lg sm:text-2xl font-bold text-primary no-zoom-title" 
               @click="handleTitleClick"
+              @touchend.prevent="handleTitleClick"
             >
               🇯🇵 京阪古都七日散策之旅
             </h1>
@@ -1023,10 +1024,18 @@ export default {
       })
       
       // 防止雙擊縮放（額外的 JavaScript 層保護）
+      // 但排除標題元素，允許連點開啟開發者面板
       let lastTouchEnd = 0
       document.addEventListener('touchend', (event) => {
         const now = Date.now()
-        if (now - lastTouchEnd <= 300) {
+        
+        // 檢查是否點擊標題元素（允許連點）
+        const target = event.target
+        const isTitleClick = target.classList.contains('no-zoom-title') || 
+                            target.closest('.no-zoom-title')
+        
+        // 如果不是標題，且是快速連續點擊，則阻止（防止縮放）
+        if (!isTitleClick && now - lastTouchEnd <= 300) {
           event.preventDefault()
         }
         lastTouchEnd = now
@@ -1210,8 +1219,14 @@ export default {
     }
 
     // 開發者模式：標題連點5次
-    const handleTitleClick = () => {
+    const handleTitleClick = (event) => {
+      // 阻止事件冒泡，避免被其他處理器攔截
+      if (event) {
+        event.stopPropagation()
+      }
+      
       titleClickCount.value++
+      console.log(`🔨 Title clicked ${titleClickCount.value} times`)
       
       // 清除之前的計時器
       if (titleClickTimer.value) {
@@ -1220,16 +1235,22 @@ export default {
 
       // 設定新的計時器（2秒內無動作則重置計數）
       titleClickTimer.value = setTimeout(() => {
+        console.log('⏰ Timer reset')
         titleClickCount.value = 0
       }, 2000)
+
+      // 每次點擊都給震動反饋（如果支援）
+      if (navigator.vibrate) {
+        navigator.vibrate(30)
+      }
 
       // 如果點擊5次
       if (titleClickCount.value === 5) {
         titleClickCount.value = 0
         showDevSettings.value = true
-        console.log('🛠️ Dev settings opened')
+        console.log('🛠️ Dev settings opened!')
         
-        // 震動反饋（如果支援）
+        // 成功震動反饋（如果支援）
         if (navigator.vibrate) {
           navigator.vibrate([50, 100, 50])
         }
@@ -1292,8 +1313,13 @@ export default {
   -webkit-user-select: none !important;
   user-select: none !important;
   touch-action: manipulation !important;
-  -webkit-tap-highlight-color: transparent !important;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1) !important; /* 給一點回饋 */
   cursor: pointer;
+  /* 確保點擊事件能正常觸發 */
+  pointer-events: auto !important;
+  /* 添加點擊區域 */
+  padding: 4px 0;
+  margin: -4px 0;
 }
 
 /* 地圖容器需要允許捏合縮放和拖曳 */
