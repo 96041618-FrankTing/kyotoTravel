@@ -5,7 +5,13 @@
       <div class="container mx-auto px-4 py-3">
         <div class="flex items-center justify-between">
           <div>
-            <h1 class="text-lg sm:text-2xl font-bold text-primary">🇯🇵 京阪古都七日散策之旅</h1>
+            <h1 
+              class="text-lg sm:text-2xl font-bold text-primary" 
+              @click="handleTitleClick"
+              style="user-select: none;"
+            >
+              🇯🇵 京阪古都七日散策之旅
+            </h1>
             <p class="text-sm text-gray-600">2026年1月16日 - 1月22日</p>
           </div>
           <div class="text-right">
@@ -360,8 +366,15 @@
       </div>
     </main>
 
-    <!-- 語音通話組件 -->
-    <VoiceCall />
+    <!-- 語音通話組件（根據開發者設定決定是否顯示）-->
+    <VoiceCall v-if="devSettings.enableVoiceCall" />
+
+    <!-- 開發者設定面板 -->
+    <DevSettings 
+      :show="showDevSettings" 
+      @close="showDevSettings = false"
+      @settings-changed="onSettingsChanged"
+    />
   </div>
 </template>
 
@@ -370,15 +383,29 @@ import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import VoiceCall from './components/VoiceCall.vue'
+import DevSettings from './components/DevSettings.vue'
 
 export default {
   name: 'App',
   components: {
-    VoiceCall
+    VoiceCall,
+    DevSettings
   },
   setup() {
     const activeDay = ref('overview')
     const showMap = ref(false)
+    
+    // 開發者模式相關
+    const showDevSettings = ref(false)
+    const titleClickCount = ref(0)
+    const titleClickTimer = ref(null)
+    const devSettings = ref({
+      enableVoiceCall: true,
+      enableWeather: true,
+      enableMap: true,
+      enableDebugLog: false,
+      enablePerformanceMonitor: false
+    })
     const map = ref(null)
     const markers = ref([])
     const userMarker = ref(null)
@@ -1136,6 +1163,66 @@ export default {
       }
     })
 
+    // 開發者模式：載入設定
+    const loadDevSettings = () => {
+      const saved = localStorage.getItem('devSettings')
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved)
+          devSettings.value = { ...devSettings.value, ...parsed }
+          console.log('📱 Dev settings loaded:', devSettings.value)
+        } catch (error) {
+          console.error('Failed to load dev settings:', error)
+        }
+      }
+    }
+
+    // 開發者模式：標題連點5次
+    const handleTitleClick = () => {
+      titleClickCount.value++
+      
+      // 清除之前的計時器
+      if (titleClickTimer.value) {
+        clearTimeout(titleClickTimer.value)
+      }
+
+      // 設定新的計時器（2秒內無動作則重置計數）
+      titleClickTimer.value = setTimeout(() => {
+        titleClickCount.value = 0
+      }, 2000)
+
+      // 如果點擊5次
+      if (titleClickCount.value === 5) {
+        titleClickCount.value = 0
+        showDevSettings.value = true
+        console.log('🛠️ Dev settings opened')
+        
+        // 震動反饋（如果支援）
+        if (navigator.vibrate) {
+          navigator.vibrate([50, 100, 50])
+        }
+      } else if (titleClickCount.value === 3) {
+        // 點擊3次時給個提示
+        console.log(`🔨 再點 ${5 - titleClickCount.value} 次開啟開發者模式`)
+      }
+    }
+
+    // 開發者模式：設定變更回調
+    const onSettingsChanged = (newSettings) => {
+      devSettings.value = newSettings
+      console.log('⚙️ Settings changed:', newSettings)
+      
+      // 如果關閉了語音通話，提示需要重新載入
+      if (!newSettings.enableVoiceCall) {
+        console.log('📞 Voice call disabled - Firebase and PeerJS will not initialize')
+      }
+    }
+
+    // 在組件掛載時載入設定
+    onMounted(() => {
+      loadDevSettings()
+    })
+
     return {
       activeDay,
       showMap,
@@ -1149,7 +1236,12 @@ export default {
       openDetailModal,
       closeDetailModal,
       openExternalLink,
-      currentWeather
+      currentWeather,
+      // 開發者模式
+      showDevSettings,
+      devSettings,
+      handleTitleClick,
+      onSettingsChanged
     }
   }
 }

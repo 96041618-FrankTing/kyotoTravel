@@ -1110,6 +1110,25 @@ export default {
 
     // 生命週期
     onMounted(() => {
+      // 檢查開發者設定
+      const devSettingsStr = localStorage.getItem('devSettings')
+      let isVoiceCallEnabled = true
+      
+      if (devSettingsStr) {
+        try {
+          const devSettings = JSON.parse(devSettingsStr)
+          isVoiceCallEnabled = devSettings.enableVoiceCall !== false
+        } catch (error) {
+          console.error('Failed to parse dev settings:', error)
+        }
+      }
+
+      if (!isVoiceCallEnabled) {
+        console.log('🚫 Voice call is disabled in dev settings')
+        callStatus.value = '🔧 語音通話功能已在開發者設定中關閉'
+        return
+      }
+
       loadMyInfo()
       loadContacts()
       initializePeer()
