@@ -19,6 +19,22 @@
       </div>
 
       <div class="panel-content">
+        <!-- 切換標籤 -->
+        <div class="tab-buttons">
+          <button 
+            @click="activeTab = 'contacts'" 
+            :class="['tab-btn', { active: activeTab === 'contacts' }]"
+          >
+            📋 通訊錄
+          </button>
+          <button 
+            @click="activeTab = 'manual'" 
+            :class="['tab-btn', { active: activeTab === 'manual' }]"
+          >
+            🔢 手動輸入
+          </button>
+        </div>
+
         <!-- 我的 ID -->
         <div class="id-section">
           <label class="label">我的 ID</label>
@@ -40,16 +56,105 @@
           </div>
         </div>
 
-        <!-- 對方 ID -->
-        <div class="id-section">
-          <label class="label">對方 ID</label>
-          <input
-            v-model="partnerId"
-            type="text"
-            placeholder="輸入對方的 ID"
-            :disabled="isCallActive"
-            class="partner-input"
-          />
+        <!-- 通訊錄標籤 -->
+        <div v-if="activeTab === 'contacts'" class="contacts-section">
+          <div class="contacts-header">
+            <h4 class="contacts-title">聯絡人</h4>
+            <button @click="showAddContact = true" class="add-contact-btn">+ 新增</button>
+          </div>
+
+          <!-- 聯絡人列表 -->
+          <div v-if="contacts.length > 0" class="contacts-list">
+            <div 
+              v-for="contact in contacts" 
+              :key="contact.id"
+              class="contact-item"
+              :class="{ 'selected': selectedContact?.id === contact.id }"
+            >
+              <div class="contact-info" @click="selectContact(contact)">
+                <div class="contact-avatar">{{ contact.emoji }}</div>
+                <div class="contact-details">
+                  <div class="contact-name">{{ contact.name }}</div>
+                  <div class="contact-id-preview">{{ truncateId(contact.peerId) }}</div>
+                </div>
+              </div>
+              <div class="contact-actions">
+                <button 
+                  @click="callContact(contact)" 
+                  class="action-btn call"
+                  :disabled="isCallActive || !myPeerId"
+                >
+                  📞
+                </button>
+                <button 
+                  @click="deleteContact(contact)" 
+                  class="action-btn delete"
+                >
+                  🗑️
+                </button>
+              </div>
+            </div>
+          </div>
+          <div v-else class="empty-contacts">
+            <p>📭 尚無聯絡人</p>
+            <p class="empty-hint">點擊「+ 新增」來加入聯絡人</p>
+          </div>
+        </div>
+
+        <!-- 手動輸入標籤 -->
+        <div v-if="activeTab === 'manual'" class="manual-section">
+          <div class="id-section">
+            <label class="label">對方 ID</label>
+            <input
+              v-model="partnerId"
+              type="text"
+              placeholder="輸入對方的 ID"
+              :disabled="isCallActive"
+              class="partner-input"
+            />
+          </div>
+        </div>
+
+        <!-- 新增聯絡人彈窗 -->
+        <div v-if="showAddContact" class="modal-overlay" @click="cancelAddContact">
+          <div class="modal-content" @click.stop>
+            <h4 class="modal-title">新增聯絡人</h4>
+            <div class="form-group">
+              <label>名稱</label>
+              <input 
+                v-model="newContact.name" 
+                type="text" 
+                placeholder="例如: 爸爸、媽媽、Frank"
+                class="form-input"
+              />
+            </div>
+            <div class="form-group">
+              <label>表情符號</label>
+              <div class="emoji-picker">
+                <button 
+                  v-for="emoji in emojiList" 
+                  :key="emoji"
+                  @click="newContact.emoji = emoji"
+                  :class="['emoji-btn', { selected: newContact.emoji === emoji }]"
+                >
+                  {{ emoji }}
+                </button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Peer ID</label>
+              <input 
+                v-model="newContact.peerId" 
+                type="text" 
+                placeholder="貼上對方的 Peer ID"
+                class="form-input"
+              />
+            </div>
+            <div class="modal-buttons">
+              <button @click="cancelAddContact" class="modal-btn cancel">取消</button>
+              <button @click="saveContact" class="modal-btn save">儲存</button>
+            </div>
+          </div>
         </div>
 
         <!-- 狀態顯示 -->
@@ -59,7 +164,7 @@
         </div>
 
         <!-- 控制按鈕 -->
-        <div class="button-group">
+        <div v-if="activeTab === 'manual'" class="button-group">
           <button
             v-if="!isCallActive"
             @click="makeCall"
@@ -77,9 +182,18 @@
           </button>
         </div>
 
+        <div v-if="activeTab === 'contacts' && isCallActive" class="button-group">
+          <button
+            @click="endCall"
+            class="call-btn danger"
+          >
+            ❌ 掛斷
+          </button>
+        </div>
+
         <!-- 來電提示 -->
         <div v-if="incomingCall && !isCallActive" class="incoming-call">
-          <p class="incoming-text">📞 收到來電...</p>
+          <p class="incoming-text">📞 {{ getCallerName(incomingCall.peer) }} 來電中...</p>
           <div class="incoming-buttons">
             <button @click="answerCall" class="answer-btn">✅ 接聽</button>
             <button @click="rejectCall" class="reject-btn">❌ 拒絕</button>
@@ -102,12 +216,15 @@ export default {
   setup() {
     // 狀態變數
     const showPanel = ref(false)
+    const activeTab = ref('contacts')
     const myPeerId = ref('')
     const partnerId = ref('')
-    const callStatus = ref('等待初始化...')
+    const callStatus = ref('正在連線到伺服器...')
     const isCallActive = ref(false)
     const isConnecting = ref(false)
     const incomingCall = ref(null)
+    const showAddContact = ref(false)
+    const selectedContact = ref(null)
     
     // Peer 和通話相關
     const peer = ref(null)
@@ -116,11 +233,40 @@ export default {
     const remoteAudio = ref(null)
     const wakeLock = ref(null)
 
+    // 通訊錄
+    const contacts = ref([])
+    const newContact = ref({
+      name: '',
+      emoji: '👤',
+      peerId: ''
+    })
+
+    const emojiList = ['👤', '👨', '👩', '👴', '👵', '👶', '👦', '👧', '🧑', '👨‍💼', '👩‍💼', '🧑‍🎓', '👨‍🎓', '👩‍🎓', '❤️', '⭐', '🌟']
+
+    // 載入通訊錄
+    const loadContacts = () => {
+      const saved = localStorage.getItem('voiceCallContacts')
+      if (saved) {
+        try {
+          contacts.value = JSON.parse(saved)
+        } catch (error) {
+          console.error('Failed to load contacts:', error)
+          contacts.value = []
+        }
+      }
+    }
+
+    // 儲存通訊錄
+    const saveContacts = () => {
+      localStorage.setItem('voiceCallContacts', JSON.stringify(contacts.value))
+    }
+
     // 計算屬性
     const statusClass = computed(() => {
       if (isCallActive.value) return 'status-active'
       if (isConnecting.value) return 'status-connecting'
       if (incomingCall.value) return 'status-incoming'
+      if (!myPeerId.value) return 'status-loading'
       return 'status-idle'
     })
 
@@ -128,19 +274,76 @@ export default {
       if (isCallActive.value) return '🟢'
       if (isConnecting.value) return '🟡'
       if (incomingCall.value) return '🔔'
-      return '⚪'
+      if (!myPeerId.value) return '⏳'
+      return '🟢'
     })
+
+    // 輔助函數
+    const truncateId = (id) => {
+      if (!id) return ''
+      if (id.length <= 12) return id
+      return id.substring(0, 6) + '...' + id.substring(id.length - 6)
+    }
+
+    const getCallerName = (peerId) => {
+      const contact = contacts.value.find(c => c.peerId === peerId)
+      return contact ? `${contact.emoji} ${contact.name}` : '未知來電'
+    }
+
+    // 通訊錄操作
+    const selectContact = (contact) => {
+      selectedContact.value = contact
+      partnerId.value = contact.peerId
+    }
+
+    const callContact = (contact) => {
+      partnerId.value = contact.peerId
+      selectedContact.value = contact
+      makeCall()
+    }
+
+    const deleteContact = (contact) => {
+      if (confirm(`確定要刪除 ${contact.name} 嗎？`)) {
+        contacts.value = contacts.value.filter(c => c.id !== contact.id)
+        saveContacts()
+      }
+    }
+
+    const cancelAddContact = () => {
+      showAddContact.value = false
+      newContact.value = { name: '', emoji: '👤', peerId: '' }
+    }
+
+    const saveContact = () => {
+      if (!newContact.value.name || !newContact.value.peerId) {
+        alert('請填寫完整資料')
+        return
+      }
+
+      contacts.value.push({
+        id: Date.now().toString(),
+        name: newContact.value.name,
+        emoji: newContact.value.emoji,
+        peerId: newContact.value.peerId
+      })
+
+      saveContacts()
+      cancelAddContact()
+    }
 
     // 初始化 Peer
     const initializePeer = () => {
       try {
-        // 使用 Google 免費 STUN Server
-        peer.value = new Peer({
+        // 使用 PeerJS 的預設雲端伺服器（0.peerjs.com）
+        peer.value = new Peer(undefined, {
+          debug: 2,
           config: {
             iceServers: [
               { urls: 'stun:stun.l.google.com:19302' },
               { urls: 'stun:stun1.l.google.com:19302' },
-              { urls: 'stun:stun2.l.google.com:19302' }
+              { urls: 'stun:stun2.l.google.com:19302' },
+              { urls: 'stun:stun3.l.google.com:19302' },
+              { urls: 'stun:stun4.l.google.com:19302' }
             ]
           }
         })
@@ -148,7 +351,7 @@ export default {
         // 監聽 Peer 開啟事件
         peer.value.on('open', (id) => {
           myPeerId.value = id
-          callStatus.value = '就緒 - 可以撥打或接聽'
+          callStatus.value = '✅ 就緒 - 可以撥打或接聽'
           console.log('My Peer ID:', id)
         })
 
@@ -156,24 +359,51 @@ export default {
         peer.value.on('call', (call) => {
           console.log('Incoming call from:', call.peer)
           incomingCall.value = call
-          callStatus.value = '有來電...'
+          const callerName = getCallerName(call.peer)
+          callStatus.value = `📞 ${callerName} 來電中...`
         })
 
         // 監聽錯誤
         peer.value.on('error', (err) => {
           console.error('Peer error:', err)
-          callStatus.value = `錯誤: ${err.type}`
+          if (err.type === 'peer-unavailable') {
+            callStatus.value = '❌ 對方不在線上'
+          } else if (err.type === 'network') {
+            callStatus.value = '❌ 網路錯誤，請檢查連線'
+          } else if (err.type === 'disconnected') {
+            callStatus.value = '⚠️ 已斷線，正在重新連線...'
+            // 嘗試重新連線
+            setTimeout(() => {
+              if (peer.value && peer.value.disconnected) {
+                peer.value.reconnect()
+              }
+            }, 2000)
+          } else {
+            callStatus.value = `❌ 錯誤: ${err.type}`
+          }
         })
 
         // 監聽斷線
         peer.value.on('disconnected', () => {
-          callStatus.value = '連線中斷'
-          console.log('Peer disconnected')
+          callStatus.value = '⚠️ 連線中斷，正在重連...'
+          console.log('Peer disconnected, attempting to reconnect...')
+          // 自動重新連線
+          setTimeout(() => {
+            if (peer.value && !peer.value.destroyed) {
+              peer.value.reconnect()
+            }
+          }, 1000)
+        })
+
+        // 監聽關閉
+        peer.value.on('close', () => {
+          callStatus.value = '連線已關閉'
+          console.log('Peer connection closed')
         })
 
       } catch (error) {
         console.error('Failed to initialize Peer:', error)
-        callStatus.value = '初始化失敗'
+        callStatus.value = '❌ 初始化失敗，請重新整理'
       }
     }
 
@@ -192,7 +422,7 @@ export default {
         return stream
       } catch (error) {
         console.error('Failed to get microphone:', error)
-        callStatus.value = '無法取得麥克風權限'
+        callStatus.value = '❌ 無法取得麥克風權限'
         throw error
       }
     }
@@ -228,13 +458,23 @@ export default {
     // 撥打電話
     const makeCall = async () => {
       if (!partnerId.value || !peer.value) {
-        callStatus.value = '請輸入對方 ID'
+        callStatus.value = '❌ 請輸入對方 ID 或選擇聯絡人'
+        return
+      }
+
+      if (peer.value.disconnected) {
+        callStatus.value = '⚠️ 正在重新連線...'
+        peer.value.reconnect()
+        setTimeout(() => makeCall(), 2000)
         return
       }
 
       try {
         isConnecting.value = true
-        callStatus.value = '正在連線...'
+        const targetName = selectedContact.value 
+          ? `${selectedContact.value.emoji} ${selectedContact.value.name}` 
+          : '對方'
+        callStatus.value = `📞 正在撥打給 ${targetName}...`
 
         // 取得麥克風
         const stream = await getMicrophone()
@@ -251,7 +491,7 @@ export default {
           }
           isConnecting.value = false
           isCallActive.value = true
-          callStatus.value = '通話中...'
+          callStatus.value = `🟢 通話中 - ${targetName}`
           
           // 請求 Wake Lock
           requestWakeLock()
@@ -265,14 +505,14 @@ export default {
 
         call.on('error', (err) => {
           console.error('Call error:', err)
-          callStatus.value = '通話錯誤'
+          callStatus.value = '❌ 通話錯誤'
           endCall()
         })
 
       } catch (error) {
         console.error('Failed to make call:', error)
         isConnecting.value = false
-        callStatus.value = '撥打失敗'
+        callStatus.value = '❌ 撥打失敗'
       }
     }
 
@@ -281,7 +521,8 @@ export default {
       if (!incomingCall.value) return
 
       try {
-        callStatus.value = '接聽中...'
+        const callerName = getCallerName(incomingCall.value.peer)
+        callStatus.value = `✅ 接聽中 - ${callerName}`
 
         // 取得麥克風
         const stream = await getMicrophone()
@@ -298,7 +539,7 @@ export default {
             remoteAudio.value.srcObject = remoteStream
           }
           isCallActive.value = true
-          callStatus.value = '通話中...'
+          callStatus.value = `🟢 通話中 - ${callerName}`
           incomingCall.value = null
           
           // 請求 Wake Lock
@@ -313,13 +554,13 @@ export default {
 
         call.on('error', (err) => {
           console.error('Call error:', err)
-          callStatus.value = '通話錯誤'
+          callStatus.value = '❌ 通話錯誤'
           endCall()
         })
 
       } catch (error) {
         console.error('Failed to answer call:', error)
-        callStatus.value = '接聽失敗'
+        callStatus.value = '❌ 接聽失敗'
         incomingCall.value = null
       }
     }
@@ -330,6 +571,11 @@ export default {
         incomingCall.value.close()
         incomingCall.value = null
         callStatus.value = '已拒絕來電'
+        setTimeout(() => {
+          if (!isCallActive.value) {
+            callStatus.value = '✅ 就緒 - 可以撥打或接聽'
+          }
+        }, 2000)
       }
     }
 
@@ -359,11 +605,12 @@ export default {
       isCallActive.value = false
       isConnecting.value = false
       incomingCall.value = null
+      selectedContact.value = null
       callStatus.value = '通話已結束'
 
       setTimeout(() => {
         if (!isCallActive.value) {
-          callStatus.value = '就緒 - 可以撥打或接聽'
+          callStatus.value = '✅ 就緒 - 可以撥打或接聽'
         }
       }, 2000)
     }
@@ -373,17 +620,20 @@ export default {
       try {
         await navigator.clipboard.writeText(myPeerId.value)
         const originalStatus = callStatus.value
-        callStatus.value = '✅ ID 已複製'
+        callStatus.value = '✅ ID 已複製到剪貼簿'
         setTimeout(() => {
           callStatus.value = originalStatus
         }, 2000)
       } catch (error) {
         console.error('Failed to copy ID:', error)
+        // 備用方案：顯示 ID 讓用戶手動複製
+        alert(`請複製此 ID: ${myPeerId.value}`)
       }
     }
 
     // 生命週期
     onMounted(() => {
+      loadContacts()
       initializePeer()
     })
 
@@ -396,6 +646,7 @@ export default {
 
     return {
       showPanel,
+      activeTab,
       myPeerId,
       partnerId,
       callStatus,
@@ -405,6 +656,18 @@ export default {
       remoteAudio,
       statusClass,
       statusIcon,
+      contacts,
+      newContact,
+      emojiList,
+      showAddContact,
+      selectedContact,
+      truncateId,
+      getCallerName,
+      selectContact,
+      callContact,
+      deleteContact,
+      cancelAddContact,
+      saveContact,
       makeCall,
       answerCall,
       rejectCall,
@@ -477,13 +740,16 @@ export default {
   position: fixed;
   bottom: 90px;
   right: 20px;
-  width: 340px;
+  width: 380px;
   max-width: calc(100vw - 40px);
+  max-height: calc(100vh - 120px);
   background: white;
   border-radius: 16px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
   z-index: 1000;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .panel-header {
@@ -493,6 +759,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .panel-title {
@@ -522,7 +789,39 @@ export default {
 }
 
 .panel-content {
-  padding: 20px;
+  padding: 16px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* 標籤按鈕 */
+.tab-buttons {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 10px;
+  border: 2px solid #e5e7eb;
+  background: white;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tab-btn.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: transparent;
+}
+
+.tab-btn:hover:not(.active) {
+  border-color: #667eea;
+  background: #f3f4f6;
 }
 
 /* ID 區域 */
@@ -549,7 +848,7 @@ export default {
   padding: 10px 12px;
   border: 2px solid #e5e7eb;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 12px;
   font-family: monospace;
   transition: border-color 0.2s;
 }
@@ -588,12 +887,293 @@ export default {
   transform: scale(0.95);
 }
 
+/* 通訊錄 */
+.contacts-section {
+  margin-bottom: 16px;
+}
+
+.contacts-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.contacts-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0;
+}
+
+.add-contact-btn {
+  padding: 6px 12px;
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.add-contact-btn:hover {
+  background: #059669;
+  transform: scale(1.05);
+}
+
+.contacts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  background: #f9fafb;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.contact-item.selected {
+  border-color: #667eea;
+  background: #eef2ff;
+}
+
+.contact-item:hover {
+  border-color: #667eea;
+}
+
+.contact-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  cursor: pointer;
+}
+
+.contact-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.contact-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.contact-name {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.contact-id-preview {
+  font-size: 11px;
+  color: #6b7280;
+  font-family: monospace;
+}
+
+.contact-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.action-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-btn.call {
+  background: #10b981;
+}
+
+.action-btn.call:hover:not(:disabled) {
+  background: #059669;
+  transform: scale(1.1);
+}
+
+.action-btn.call:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+}
+
+.action-btn.delete {
+  background: #ef4444;
+}
+
+.action-btn.delete:hover {
+  background: #dc2626;
+  transform: scale(1.1);
+}
+
+.empty-contacts {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6b7280;
+}
+
+.empty-contacts p {
+  margin: 8px 0;
+}
+
+.empty-hint {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* 彈窗 */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 20px;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 400px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0 0 20px 0;
+  color: #1f2937;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.emoji-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.emoji-btn {
+  width: 44px;
+  height: 44px;
+  border: 2px solid #e5e7eb;
+  background: white;
+  border-radius: 8px;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emoji-btn:hover {
+  border-color: #667eea;
+  transform: scale(1.1);
+}
+
+.emoji-btn.selected {
+  border-color: #667eea;
+  background: #eef2ff;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.modal-btn {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.modal-btn.cancel {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.modal-btn.cancel:hover {
+  background: #d1d5db;
+}
+
+.modal-btn.save {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.modal-btn.save:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
 /* 狀態顯示 */
 .status-display {
   padding: 12px;
   border-radius: 8px;
   margin-bottom: 16px;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -602,8 +1182,13 @@ export default {
 }
 
 .status-idle {
-  background: #f3f4f6;
-  color: #6b7280;
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-loading {
+  background: #fef3c7;
+  color: #92400e;
 }
 
 .status-connecting {
@@ -745,7 +1330,7 @@ export default {
 /* 響應式設計 */
 @media (max-width: 640px) {
   .call-panel {
-    bottom: 90px;
+    bottom: 80px;
     right: 10px;
     left: 10px;
     width: auto;
@@ -758,6 +1343,10 @@ export default {
     width: 56px;
     height: 56px;
     font-size: 24px;
+  }
+
+  .contacts-list {
+    max-height: 200px;
   }
 }
 </style>
