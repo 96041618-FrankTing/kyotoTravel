@@ -5,18 +5,19 @@
       v-if="!showLocationPanel"
       @click="showLocationPanel = true"
       class="floating-location-btn"
-      :class="{ 'sharing': isSharingLocation, 'receiving': isReceivingLocation }"
+      :class="{ 'sharing': isSharingLocation, 'viewing': otherUsers.length > 0 }"
     >
-      <span v-if="isSharingLocation && isReceivingLocation">📍🔄</span>
+      <span v-if="isSharingLocation && otherUsers.length > 0">📍👥</span>
       <span v-else-if="isSharingLocation">📍</span>
-      <span v-else-if="isReceivingLocation">📍📥</span>
+      <span v-else-if="otherUsers.length > 0">👁️</span>
       <span v-else>📍</span>
+      <span v-if="otherUsers.length > 0" class="user-count-badge">{{ otherUsers.length }}</span>
     </button>
 
     <!-- 位置分享面板 -->
     <div v-if="showLocationPanel" class="location-panel">
       <div class="panel-header">
-        <h3 class="panel-title">📍 即時位置分享</h3>
+        <h3 class="panel-title">📍 團隊位置追蹤</h3>
         <button @click="showLocationPanel = false" class="close-btn">&times;</button>
       </div>
 
@@ -27,9 +28,13 @@
             <span class="status-icon">{{ isSharingLocation ? '🟢' : '🔴' }}</span>
             <span class="status-text">我的位置: {{ locationStatus }}</span>
           </div>
-          <div v-if="partnerLocation" class="status-item">
-            <span class="status-icon">🟢</span>
-            <span class="status-text">對方位置: 已接收</span>
+          <div class="status-item">
+            <span class="status-icon">👥</span>
+            <span class="status-text">線上成員: {{ otherUsers.length }} 人</span>
+          </div>
+          <div v-if="lastUpdateTime" class="status-item">
+            <span class="status-icon">🕐</span>
+            <span class="status-text">更新頻率: 每 30 秒</span>
           </div>
         </div>
 
@@ -40,27 +45,28 @@
             class="control-btn"
             :class="{ 'active': isSharingLocation }"
           >
-            {{ isSharingLocation ? '🛑 停止分享' : '▶️ 開始分享' }}
-          </button>
-          
-          <button 
-            v-if="selectedContactForLocation"
-            @click="disconnectLocation" 
-            class="control-btn disconnect"
-          >
-            🔌 中斷連線
+            {{ isSharingLocation ? '🛑 停止分享我的位置' : '▶️ 開始分享我的位置' }}
           </button>
         </div>
 
-        <!-- 聯絡人選擇 -->
-        <div class="contact-select-section">
-          <label class="section-label">選擇分享對象：</label>
-          <select v-model="selectedContactForLocation" @change="onContactSelected" class="contact-select">
-            <option :value="null">-- 請選擇聯絡人 --</option>
-            <option v-for="contact in contacts" :key="contact.id" :value="contact">
-              {{ contact.emoji }} {{ contact.name }}
-            </option>
-          </select>
+        <!-- 在線成員列表 -->
+        <div v-if="otherUsers.length > 0" class="users-list-section">
+          <label class="section-label">👥 在線成員位置：</label>
+          <div class="users-list">
+            <div 
+              v-for="user in otherUsers" 
+              :key="user.id"
+              class="user-item"
+              @click="centerMapOnUser(user)"
+            >
+              <span class="user-emoji">{{ user.emoji }}</span>
+              <div class="user-info">
+                <div class="user-name">{{ user.name }}</div>
+                <div class="user-distance" v-if="user.distance">{{ user.distance }}</div>
+              </div>
+              <span class="user-time">{{ formatTimeAgo(user.timestamp) }}</span>
+            </div>
+          </div>
         </div>
 
         <!-- 地圖容器 -->
@@ -68,19 +74,15 @@
           <div id="location-map" ref="mapContainer"></div>
         </div>
 
-        <!-- 座標資訊 -->
+        <!-- 詳細資訊 -->
         <div v-if="myLocation" class="coord-info">
           <div class="coord-item">
             <span class="coord-label">我的座標:</span>
             <span class="coord-value">{{ myLocation.lat.toFixed(6) }}, {{ myLocation.lng.toFixed(6) }}</span>
           </div>
-          <div v-if="partnerLocation" class="coord-item">
-            <span class="coord-label">對方座標:</span>
-            <span class="coord-value">{{ partnerLocation.lat.toFixed(6) }}, {{ partnerLocation.lng.toFixed(6) }}</span>
-          </div>
-          <div v-if="distance" class="coord-item">
-            <span class="coord-label">距離:</span>
-            <span class="coord-value">{{ distance }}</span>
+          <div class="coord-item">
+            <span class="coord-label">精度:</span>
+            <span class="coord-value">{{ myLocation.accuracy ? myLocation.accuracy.toFixed(0) + 'm' : 'N/A' }}</span>
           </div>
         </div>
       </div>
@@ -90,9 +92,21 @@
 
 <script>
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
-import Peer from 'peerjs'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import { initializeApp } from 'firebase/app'
+import { getDatabase, ref as dbRef, set, onValue, remove, onDisconnect } from 'firebase/database'
+
+// Firebase 配置（與 VoiceCall 相同）
+const firebaseConfig = {
+  apiKey: "AIzaSyDSHN9_78NQ_Ty77IUG7bLjbAhOTt3x94Y",
+  authDomain: "kyoto-osaka-2026.firebaseapp.com",
+  databaseURL: "https://kyoto-osaka-2026-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "kyoto-osaka-2026",
+  storageBucket: "kyoto-osaka-2026.firebasestorage.app",
+  messagingSenderId: "611690952256",
+  appId: "1:611690952256:web:3b3aae81ab2c5aeb09ce4f"
+}
 
 export default {
   name: 'LocationShare',
@@ -103,91 +117,65 @@ export default {
     }
   },
   setup(props) {
+    // Firebase 相關
+    let firebaseApp = null
+    let database = null
+    
     // 狀態變數
     const showLocationPanel = ref(false)
     const isSharingLocation = ref(false)
-    const isReceivingLocation = ref(false)
     const locationStatus = ref('未開始')
     const myLocation = ref(null)
-    const partnerLocation = ref(null)
-    const selectedContactForLocation = ref(null)
+    const otherUsers = ref([])
+    const lastUpdateTime = ref(null)
     
     // 地圖相關
     const mapContainer = ref(null)
     let map = null
     let myMarker = null
-    let partnerMarker = null
+    const userMarkers = {} // 儲存其他用戶的 marker
     let watchId = null
+    let updateIntervalId = null
     
-    // PeerJS 相關
-    const peer = ref(null)
-    let dataConnection = ref(null)
-    
-    // 通訊錄
-    const contacts = ref([])
+    // 用戶資訊
+    const myUserId = ref(null)
+    const myUserInfo = ref(null)
 
-    // 初始化 Peer（使用與 VoiceCall 相同的 ID）
-    const initializePeer = () => {
-      // 從 localStorage 讀取 VoiceCall 使用的 Peer ID
-      const savedPeerId = localStorage.getItem('myPeerId')
-      
-      if (!savedPeerId) {
-        console.error('❌ No Peer ID found. Please enable Voice Call first.')
-        locationStatus.value = '請先啟用語音通話功能'
-        return
-      }
-
-      console.log('📍 Initializing LocationShare with Peer ID:', savedPeerId)
-
+    // 初始化 Firebase
+    const initializeFirebase = () => {
       try {
-        peer.value = new Peer(savedPeerId, {
-          debug: 1,
-          config: {
-            iceServers: [
-              { urls: 'stun:stun.l.google.com:19302' },
-              { urls: 'stun:stun1.l.google.com:19302' }
-            ]
-          }
-        })
-
-        peer.value.on('open', (id) => {
-          console.log('✅ LocationShare Peer connected with ID:', id)
-        })
-
-        peer.value.on('error', (err) => {
-          console.error('❌ LocationShare Peer error:', err)
-        })
-
-        // 監聽來自對方的連線
-        listenForIncomingConnections()
-
+        firebaseApp = initializeApp(firebaseConfig)
+        database = getDatabase(firebaseApp)
+        console.log('✅ Firebase initialized for LocationShare')
       } catch (error) {
-        console.error('Failed to initialize peer:', error)
+        console.error('❌ Firebase initialization error:', error)
       }
     }
 
-    // 載入通訊錄
-    const loadContacts = () => {
-      const saved = localStorage.getItem('voiceCallContacts')
-      if (saved) {
-        try {
-          contacts.value = JSON.parse(saved)
-        } catch (error) {
-          console.error('Failed to load contacts:', error)
-          contacts.value = []
-        }
-      }
-    }
-
-    // 計算距離
-    const distance = computed(() => {
-      if (!myLocation.value || !partnerLocation.value) return null
+    // 載入用戶資訊
+    const loadUserInfo = () => {
+      const peerId = localStorage.getItem('myPeerId')
+      const name = localStorage.getItem('myDisplayName') || '匿名用戶'
+      const emoji = localStorage.getItem('myEmoji') || '👤'
       
+      if (!peerId) {
+        console.error('❌ No Peer ID found.')
+        locationStatus.value = '請先設定個人資訊'
+        return false
+      }
+
+      myUserId.value = peerId
+      myUserInfo.value = { id: peerId, name, emoji }
+      return true
+    }
+
+    // 計算兩點間距離
+    const calculateDistance = (lat1, lng1, lat2, lng2) => {
       const R = 6371e3 // 地球半徑（米）
-      const φ1 = myLocation.value.lat * Math.PI / 180
-      const φ2 = partnerLocation.value.lat * Math.PI / 180
-      const Δφ = (partnerLocation.value.lat - myLocation.value.lat) * Math.PI / 180
-      const Δλ = (partnerLocation.value.lng - myLocation.value.lng) * Math.PI / 180
+      const φ1 = lat1 * Math.PI / 180
+      const φ2 = lat2 * Math.PI / 180
+      const Δφ = (lat2 - lat1) * Math.PI / 180
+      const Δλ = (lng2 - lng1) * Math.PI / 180
 
       const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
                 Math.cos(φ1) * Math.cos(φ2) *
@@ -197,11 +185,23 @@ export default {
       const d = R * c // 距離（米）
       
       if (d < 1000) {
-        return `${d.toFixed(0)} 公尺`
+        return `${d.toFixed(0)}m`
       } else {
-        return `${(d / 1000).toFixed(2)} 公里`
+        return `${(d / 1000).toFixed(2)}km`
       }
-    })
+    }
+
+    // 格式化時間
+    const formatTimeAgo = (timestamp) => {
+      if (!timestamp) return ''
+      const now = Date.now()
+      const diff = now - timestamp
+      const seconds = Math.floor(diff / 1000)
+      
+      if (seconds < 60) return `${seconds}秒前`
+      if (seconds < 3600) return `${Math.floor(seconds / 60)}分鐘前`
+      return `${Math.floor(seconds / 3600)}小時前`
+    }
 
     // 初始化地圖
     const initializeMap = () => {
@@ -236,7 +236,7 @@ export default {
         map.remove()
         map = null
         myMarker = null
-        partnerMarker = null
+        Object.keys(userMarkers).forEach(key => delete userMarkers[key])
       }
     }
 
@@ -252,118 +252,220 @@ export default {
           color: '#3b82f6',
           fillColor: '#60a5fa',
           fillOpacity: 0.8,
-          radius: 10,
+          radius: 12,
           weight: 3
         }).addTo(map)
-        myMarker.bindPopup('📍 我的位置').openPopup()
-      }
-
-      // 如果沒有對方位置，則將地圖中心設在自己位置
-      if (!partnerLocation.value) {
+        
+        const popupContent = `<div style="text-align: center;">
+          <div style="font-size: 20px;">${myUserInfo.value.emoji}</div>
+          <div><strong>${myUserInfo.value.name}</strong></div>
+          <div style="font-size: 12px; color: #666;">我的位置</div>
+        </div>`
+        myMarker.bindPopup(popupContent).openPopup()
+        
         map.setView([lat, lng], 15)
-      } else {
-        // 如果有對方位置，調整視野包含雙方
-        const bounds = L.latLngBounds([
-          [lat, lng],
-          [partnerLocation.value.lat, partnerLocation.value.lng]
-        ])
-        map.fitBounds(bounds, { padding: [50, 50] })
       }
     }
 
-    // 更新對方位置 Marker
-    const updatePartnerMarker = (lat, lng) => {
-      if (!map) return
+    // 更新其他用戶 Marker
+    const updateUserMarker = (user) => {
+      if (!map || !user.lat || !user.lng) return
 
-      if (partnerMarker) {
-        partnerMarker.setLatLng([lat, lng])
+      const markerId = user.id
+      
+      if (userMarkers[markerId]) {
+        // 更新現有 marker
+        userMarkers[markerId].setLatLng([user.lat, user.lng])
       } else {
-        // 使用紅色圓形 Marker
-        partnerMarker = L.circleMarker([lat, lng], {
-          color: '#ef4444',
-          fillColor: '#f87171',
-          fillOpacity: 0.8,
+        // 創建新 marker（使用不同顏色）
+        const colors = ['#ef4444', '#f59e0b', '#10b981', '#8b5cf6', '#ec4899']
+        const colorIndex = Object.keys(userMarkers).length % colors.length
+        
+        userMarkers[markerId] = L.circleMarker([user.lat, user.lng], {
+          color: colors[colorIndex],
+          fillColor: colors[colorIndex],
+          fillOpacity: 0.6,
           radius: 10,
           weight: 3
         }).addTo(map)
-        const name = selectedContactForLocation.value ? selectedContactForLocation.value.name : '對方'
-        partnerMarker.bindPopup(`📍 ${name}的位置`).openPopup()
+        
+        const popupContent = `<div style="text-align: center;">
+          <div style="font-size: 20px;">${user.emoji}</div>
+          <div><strong>${user.name}</strong></div>
+          <div style="font-size: 12px; color: #666;">${formatTimeAgo(user.timestamp)}</div>
+        </div>`
+        userMarkers[markerId].bindPopup(popupContent)
       }
+    }
 
-      // 調整視野包含雙方
-      if (myLocation.value) {
-        const bounds = L.latLngBounds([
-          [myLocation.value.lat, myLocation.value.lng],
-          [lat, lng]
-        ])
-        map.fitBounds(bounds, { padding: [50, 50] })
+    // 移除用戶 Marker
+    const removeUserMarker = (userId) => {
+      if (userMarkers[userId]) {
+        map.removeLayer(userMarkers[userId])
+        delete userMarkers[userId]
       }
     }
 
     // 開始位置分享
     const startLocationSharing = () => {
       if (!navigator.geolocation) {
-        alert('❌ 您的裝置不支援定位功能')
+        alert('您的瀏覽器不支援地理定位功能')
         return
       }
 
-      console.log('📍 Starting location sharing...')
-      locationStatus.value = '定位中...'
+      locationStatus.value = '正在獲取位置...'
+      
+      const options = {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0
+      }
 
-      // 開始監聽 GPS
+      // 使用 watchPosition 持續監聽位置
       watchId = navigator.geolocation.watchPosition(
         (position) => {
-          const lat = position.coords.latitude
-          const lng = position.coords.longitude
+          const { latitude, longitude, accuracy } = position.coords
           
-          myLocation.value = { lat, lng }
+          myLocation.value = {
+            lat: latitude,
+            lng: longitude,
+            accuracy: accuracy
+          }
+
           locationStatus.value = '分享中'
-          isSharingLocation.value = true
-
-          console.log('📍 My location:', lat, lng)
-
-          // 更新地圖
-          if (map) {
-            updateMyMarker(lat, lng)
-          }
-
-          // 如果有資料連線，發送位置
-          if (dataConnection.value && dataConnection.value.open) {
-            sendLocation(lat, lng)
-          }
+          updateMyMarker(latitude, longitude)
+          
+          console.log('📍 My location:', latitude, longitude, 'Accuracy:', accuracy)
         },
         (error) => {
-          console.error('GPS error:', error)
+          console.error('❌ Geolocation error:', error)
           locationStatus.value = '定位失敗'
-          
-          switch(error.code) {
-            case error.PERMISSION_DENIED:
-              alert('❌ 請允許瀏覽器存取您的位置')
-              break
-            case error.POSITION_UNAVAILABLE:
-              alert('❌ 無法取得位置資訊')
-              break
-            case error.TIMEOUT:
-              alert('❌ 定位逾時')
-              break
-          }
+          alert(`定位失敗: ${error.message}`)
         },
-        {
-          enableHighAccuracy: true,
-          timeout: 10000,
-          maximumAge: 0
-        }
+        options
       )
+
+      // 設定定時上傳位置（每 30 秒）
+      updateIntervalId = setInterval(() => {
+        if (myLocation.value && database && myUserId.value) {
+          uploadLocationToFirebase()
+        }
+      }, 30000) // 30 秒更新一次
+
+      // 立即上傳一次
+      setTimeout(() => {
+        if (myLocation.value) {
+          uploadLocationToFirebase()
+        }
+      }, 2000)
     }
 
     // 停止位置分享
     const stopLocationSharing = () => {
-      if (watchId !== null) {
-        console.log('🛑 Stopping location sharing...')
+      if (watchId) {
         navigator.geolocation.clearWatch(watchId)
         watchId = null
-        isSharingLocation.value = false
-        locationStatus.value = '已停止'
+      }
+
+      if (updateIntervalId) {
+        clearInterval(updateIntervalId)
+        updateIntervalId = null
+      }
+
+      // 從 Firebase 移除我的位置
+      if (database && myUserId.value) {
+        const myLocationRef = dbRef(database, `locations/${myUserId.value}`)
+        remove(myLocationRef)
+      }
+
+      locationStatus.value = '未開始'
+      console.log('🛑 Location sharing stopped')
+    }
+
+    // 上傳位置到 Firebase
+    const uploadLocationToFirebase = () => {
+      if (!myLocation.value || !database || !myUserId.value) return
+
+      const locationData = {
+        id: myUserId.value,
+        name: myUserInfo.value.name,
+        emoji: myUserInfo.value.emoji,
+        lat: myLocation.value.lat,
+        lng: myLocation.value.lng,
+        accuracy: myLocation.value.accuracy,
+        timestamp: Date.now()
+      }
+
+      const myLocationRef = dbRef(database, `locations/${myUserId.value}`)
+      set(myLocationRef, locationData)
+        .then(() => {
+          lastUpdateTime.value = Date.now()
+          console.log('✅ Location uploaded to Firebase')
+        })
+        .catch((error) => {
+          console.error('❌ Failed to upload location:', error)
+        })
+
+      // 設定斷線時自動刪除
+      onDisconnect(myLocationRef).remove()
+    }
+
+    // 監聽所有用戶位置
+    const listenToAllLocations = () => {
+      if (!database) return
+
+      const locationsRef = dbRef(database, 'locations')
+      
+      onValue(locationsRef, (snapshot) => {
+        const data = snapshot.val()
+        if (!data) {
+          otherUsers.value = []
+          return
+        }
+
+        // 過濾掉自己，只顯示其他用戶
+        const users = Object.values(data).filter(user => user.id !== myUserId.value)
+        
+        // 計算距離
+        if (myLocation.value) {
+          users.forEach(user => {
+            user.distance = calculateDistance(
+              myLocation.value.lat,
+              myLocation.value.lng,
+              user.lat,
+              user.lng
+            )
+          })
+        }
+
+        otherUsers.value = users
+
+        // 更新地圖上的 markers
+        const currentUserIds = users.map(u => u.id)
+        
+        // 移除不再存在的用戶 marker
+        Object.keys(userMarkers).forEach(userId => {
+          if (!currentUserIds.includes(userId)) {
+            removeUserMarker(userId)
+          }
+        })
+
+        // 更新或添加用戶 marker
+        users.forEach(user => {
+          updateUserMarker(user)
+        })
+
+        console.log(`👥 ${users.length} other users online`)
+      })
+    }
+
+    // 點擊用戶，地圖移到該用戶位置
+    const centerMapOnUser = (user) => {
+      if (map && user.lat && user.lng) {
+        map.setView([user.lat, user.lng], 16)
+        if (userMarkers[user.id]) {
+          userMarkers[user.id].openPopup()
+        }
       }
     }
 
@@ -371,178 +473,28 @@ export default {
     const toggleLocationSharing = () => {
       if (isSharingLocation.value) {
         stopLocationSharing()
+        isSharingLocation.value = false
       } else {
-        startLocationSharing()
-      }
-    }
-
-    // 建立資料連線
-    const setupDataConnection = (peerId) => {
-      if (!peer.value || !peerId) {
-        console.error('❌ Peer or peerId not available')
-        return
-      }
-
-      console.log('🔌 Setting up data connection to:', peerId)
-
-      try {
-        dataConnection.value = peer.value.connect(peerId, {
-          reliable: true,
-          serialization: 'json'
-        })
-
-        dataConnection.value.on('open', () => {
-          console.log('✅ Data connection opened')
-          
-          // 如果正在分享位置，立即發送當前位置
-          if (myLocation.value) {
-            sendLocation(myLocation.value.lat, myLocation.value.lng)
-          }
-        })
-
-        dataConnection.value.on('data', (data) => {
-          console.log('📥 Received data:', data)
-          
-          if (data.type === 'location') {
-            partnerLocation.value = { lat: data.lat, lng: data.lng }
-            isReceivingLocation.value = true
-            
-            // 更新對方的 Marker
-            if (map) {
-              updatePartnerMarker(data.lat, data.lng)
-            }
-          }
-        })
-
-        dataConnection.value.on('close', () => {
-          console.log('🔌 Data connection closed')
-          isReceivingLocation.value = false
-          partnerLocation.value = null
-          if (partnerMarker && map) {
-            map.removeLayer(partnerMarker)
-            partnerMarker = null
-          }
-        })
-
-        dataConnection.value.on('error', (err) => {
-          console.error('❌ Data connection error:', err)
-        })
-
-      } catch (error) {
-        console.error('Failed to setup data connection:', error)
-      }
-    }
-
-    // 監聽來自對方的連線
-    const listenForIncomingConnections = () => {
-      if (!peer.value) return
-
-      peer.value.on('connection', (conn) => {
-        console.log('📥 Incoming data connection from:', conn.peer)
-        
-        dataConnection.value = conn
-
-        conn.on('open', () => {
-          console.log('✅ Incoming data connection opened')
-          
-          // 如果正在分享位置，立即發送當前位置
-          if (myLocation.value) {
-            sendLocation(myLocation.value.lat, myLocation.value.lng)
-          }
-        })
-
-        conn.on('data', (data) => {
-          console.log('📥 Received data:', data)
-          
-          if (data.type === 'location') {
-            partnerLocation.value = { lat: data.lat, lng: data.lng }
-            isReceivingLocation.value = true
-            
-            // 更新對方的 Marker
-            if (map) {
-              updatePartnerMarker(data.lat, data.lng)
-            }
-          }
-        })
-
-        conn.on('close', () => {
-          console.log('🔌 Incoming data connection closed')
-          isReceivingLocation.value = false
-          partnerLocation.value = null
-          if (partnerMarker && map) {
-            map.removeLayer(partnerMarker)
-            partnerMarker = null
-          }
-        })
-      })
-    }
-
-    // 發送位置
-    const sendLocation = (lat, lng) => {
-      if (dataConnection.value && dataConnection.value.open) {
-        const data = {
-          type: 'location',
-          lat: lat,
-          lng: lng,
-          timestamp: Date.now()
+        if (!loadUserInfo()) {
+          alert('請先在語音通話功能中設定個人資訊')
+          return
         }
-        dataConnection.value.send(data)
-        console.log('📤 Sent location:', data)
-      }
-    }
-
-    // 聯絡人選擇變更
-    const onContactSelected = () => {
-      if (selectedContactForLocation.value) {
-        console.log('Selected contact:', selectedContactForLocation.value)
-        setupDataConnection(selectedContactForLocation.value.peerId)
-      }
-    }
-
-    // 中斷連線
-    const disconnectLocation = () => {
-      if (dataConnection.value) {
-        dataConnection.value.close()
-        dataConnection.value = null
-      }
-      selectedContactForLocation.value = null
-      isReceivingLocation.value = false
-      partnerLocation.value = null
-      
-      if (partnerMarker && map) {
-        map.removeLayer(partnerMarker)
-        partnerMarker = null
+        startLocationSharing()
+        isSharingLocation.value = true
       }
     }
 
     // 監聽 isLocationEnabled 變化
     watch(() => props.isLocationEnabled, (newVal) => {
-      console.log('📍 Location enabled changed to:', newVal)
-      
       if (newVal) {
-        // 開啟位置分享功能
-        loadContacts()
-        initializePeer()
-        
-        // 等待面板顯示後初始化地圖
-        if (showLocationPanel.value) {
-          setTimeout(() => {
-            initializeMap()
-          }, 100)
-        }
-        
+        initializeFirebase()
+        loadUserInfo()
+        listenToAllLocations()
       } else {
-        // 關閉位置分享功能
         stopLocationSharing()
         destroyMap()
-        disconnectLocation()
         showLocationPanel.value = false
-        
-        // 銷毀 Peer 連線
-        if (peer.value) {
-          peer.value.destroy()
-          peer.value = null
-        }
+        isSharingLocation.value = false
       }
     })
 
@@ -558,8 +510,9 @@ export default {
     // 組件掛載
     onMounted(() => {
       if (props.isLocationEnabled) {
-        loadContacts()
-        initializePeer()
+        initializeFirebase()
+        loadUserInfo()
+        listenToAllLocations()
       }
     })
 
@@ -567,28 +520,19 @@ export default {
     onUnmounted(() => {
       stopLocationSharing()
       destroyMap()
-      if (dataConnection.value) {
-        dataConnection.value.close()
-      }
-      if (peer.value) {
-        peer.value.destroy()
-      }
     })
 
     return {
       showLocationPanel,
       isSharingLocation,
-      isReceivingLocation,
       locationStatus,
       myLocation,
-      partnerLocation,
-      selectedContactForLocation,
-      contacts,
-      distance,
+      otherUsers,
+      lastUpdateTime,
       mapContainer,
       toggleLocationSharing,
-      onContactSelected,
-      disconnectLocation
+      centerMapOnUser,
+      formatTimeAgo
     }
   }
 }
@@ -614,6 +558,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
 .floating-location-btn:hover {
@@ -626,8 +571,25 @@ export default {
   animation: pulse-location 2s infinite;
 }
 
-.floating-location-btn.receiving {
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+.floating-location-btn.viewing {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+.user-count-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #ef4444;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
 }
 
 @keyframes pulse-location {
@@ -747,18 +709,8 @@ export default {
   border-color: transparent;
 }
 
-.control-btn.disconnect {
-  background: #fee2e2;
-  border-color: #fecaca;
-  color: #991b1b;
-}
-
-.control-btn.disconnect:hover {
-  background: #fecaca;
-}
-
-/* 聯絡人選擇 */
-.contact-select-section {
+/* 用戶列表 */
+.users-list-section {
   margin-bottom: 16px;
 }
 
@@ -770,19 +722,53 @@ export default {
   margin-bottom: 8px;
 }
 
-.contact-select {
-  width: 100%;
-  padding: 10px 12px;
-  border: 2px solid #e5e7eb;
+.users-list {
+  max-height: 150px;
+  overflow-y: auto;
+  background: #f9fafb;
   border-radius: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: border-color 0.2s;
+  padding: 4px;
 }
 
-.contact-select:focus {
-  outline: none;
-  border-color: #10b981;
+.user-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: white;
+  border-radius: 6px;
+  margin-bottom: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.user-item:hover {
+  background: #e0f2fe;
+  transform: translateX(2px);
+}
+
+.user-emoji {
+  font-size: 24px;
+}
+
+.user-info {
+  flex: 1;
+}
+
+.user-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: #1f2937;
+}
+
+.user-distance {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.user-time {
+  font-size: 11px;
+  color: #9ca3af;
 }
 
 /* 地圖容器 */
