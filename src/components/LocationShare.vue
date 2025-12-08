@@ -94,19 +94,8 @@
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-import { initializeApp } from 'firebase/app'
-import { getDatabase, ref as dbRef, set, onValue, remove, onDisconnect } from 'firebase/database'
-
-// Firebase 配置（與 VoiceCall 相同）
-const firebaseConfig = {
-  apiKey: "AIzaSyDSHN9_78NQ_Ty77IUG7bLjbAhOTt3x94Y",
-  authDomain: "kyoto-osaka-2026.firebaseapp.com",
-  databaseURL: "https://kyoto-osaka-2026-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "kyoto-osaka-2026",
-  storageBucket: "kyoto-osaka-2026.firebasestorage.app",
-  messagingSenderId: "611690952256",
-  appId: "1:611690952256:web:3b3aae81ab2c5aeb09ce4f"
-}
+import { database } from '../firebase.config'
+import { ref as dbRef, set, onValue, remove, onDisconnect } from 'firebase/database'
 
 export default {
   name: 'LocationShare',
@@ -117,10 +106,6 @@ export default {
     }
   },
   setup(props) {
-    // Firebase 相關
-    let firebaseApp = null
-    let database = null
-    
     // 狀態變數
     const showLocationPanel = ref(false)
     const isSharingLocation = ref(false)
@@ -142,16 +127,6 @@ export default {
     const myUserInfo = ref(null)
 
     // 初始化 Firebase
-    const initializeFirebase = () => {
-      try {
-        firebaseApp = initializeApp(firebaseConfig)
-        database = getDatabase(firebaseApp)
-        console.log('✅ Firebase initialized for LocationShare')
-      } catch (error) {
-        console.error('❌ Firebase initialization error:', error)
-      }
-    }
-
     // 載入用戶資訊
     const loadUserInfo = () => {
       const peerId = localStorage.getItem('myPeerId')
@@ -511,7 +486,6 @@ export default {
     // 監聽 isLocationEnabled 變化
     watch(() => props.isLocationEnabled, (newVal) => {
       if (newVal) {
-        initializeFirebase()
         loadUserInfo()
         listenToAllLocations()
       } else {
@@ -545,7 +519,6 @@ export default {
     // 組件掛載
     onMounted(() => {
       if (props.isLocationEnabled) {
-        initializeFirebase()
         loadUserInfo()
         listenToAllLocations()
       }
