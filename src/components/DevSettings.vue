@@ -43,6 +43,17 @@
               <span class="toggle-slider"></span>
             </label>
           </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <div class="setting-name">📍 即時位置分享</div>
+              <div class="setting-desc">透過 PeerJS 分享 GPS 位置（需啟用定位權限）</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" v-model="settings.enableLocationShare" @change="saveSettings">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
         </section>
 
         <!-- 偵錯選項 -->
@@ -139,6 +150,7 @@ export default {
       enableVoiceCall: true,
       enableWeather: true,
       enableMap: true,
+      enableLocationShare: false,
       enableDebugLog: false,
       enablePerformanceMonitor: false
     })
@@ -188,6 +200,7 @@ export default {
           enableVoiceCall: true,
           enableWeather: true,
           enableMap: true,
+          enableLocationShare: false,
           enableDebugLog: false,
           enablePerformanceMonitor: false
         }

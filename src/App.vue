@@ -367,7 +367,16 @@
     </main>
 
     <!-- 語音通話組件（根據開發者設定決定是否顯示）-->
-    <VoiceCall v-if="devSettings.enableVoiceCall" />
+    <VoiceCall 
+      v-if="devSettings.enableVoiceCall" 
+      ref="voiceCallRef"
+    />
+
+    <!-- 即時位置分享組件（根據開發者設定決定是否顯示）-->
+    <LocationShare 
+      v-if="devSettings.enableLocationShare"
+      :isLocationEnabled="devSettings.enableLocationShare"
+    />
 
     <!-- 開發者設定面板 -->
     <DevSettings 
@@ -384,12 +393,14 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import VoiceCall from './components/VoiceCall.vue'
 import DevSettings from './components/DevSettings.vue'
+import LocationShare from './components/LocationShare.vue'
 
 export default {
   name: 'App',
   components: {
     VoiceCall,
-    DevSettings
+    DevSettings,
+    LocationShare
   },
   setup() {
     const activeDay = ref('overview')
@@ -403,6 +414,7 @@ export default {
       enableVoiceCall: true,
       enableWeather: true,
       enableMap: true,
+      enableLocationShare: false,
       enableDebugLog: false,
       enablePerformanceMonitor: false
     })
