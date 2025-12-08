@@ -576,8 +576,26 @@ export default {
 
     // 廣播我的存在（使用 Firebase Realtime Database）
     const startBroadcast = () => {
-      if (!database || !myPeerId.value || !myDisplayName.value) {
-        console.warn('⚠️ Firebase not configured or missing user info')
+      console.log('🔍 Checking broadcast requirements:', {
+        hasDatabase: !!database,
+        hasPeerId: !!myPeerId.value,
+        hasDisplayName: !!myDisplayName.value,
+        peerId: myPeerId.value,
+        displayName: myDisplayName.value
+      })
+
+      if (!database) {
+        console.error('❌ Firebase database not initialized')
+        return
+      }
+
+      if (!myPeerId.value) {
+        console.warn('⚠️ Peer ID not ready, will retry when Peer connects')
+        return
+      }
+
+      if (!myDisplayName.value) {
+        console.warn('⚠️ Display name not set')
         return
       }
 
@@ -592,18 +610,33 @@ export default {
           lastSeen: Date.now()
         }
 
+        console.log('📤 Writing to Firebase:', userData)
+
         // 設定我的在線狀態
         set(myPresenceRef, userData)
+          .then(() => {
+            console.log('✅ Successfully wrote to Firebase')
+          })
+          .catch((error) => {
+            console.error('❌ Failed to write to Firebase:', error)
+          })
 
         // 當斷線時自動移除
         onDisconnect(myPresenceRef).remove()
 
         // 每 30 秒更新一次時間戳（保持活躍）
+        if (broadcastInterval.value) {
+          clearInterval(broadcastInterval.value)
+        }
         broadcastInterval.value = setInterval(() => {
-          set(myPresenceRef, {
-            ...userData,
+          const updatedData = {
+            peerId: myPeerId.value,
+            name: myDisplayName.value,
+            emoji: myEmoji.value,
             lastSeen: Date.now()
-          })
+          }
+          set(myPresenceRef, updatedData)
+          console.log('🔄 Updated presence timestamp')
         }, 30000)
 
         console.log('✅ Broadcasting presence:', myDisplayName.value)
@@ -611,24 +644,30 @@ export default {
         // 監聽所有在線用戶
         const presenceRef = dbRef(database, 'presence')
         onValue(presenceRef, (snapshot) => {
+          console.log('📥 Received Firebase update')
           const users = []
           snapshot.forEach((childSnapshot) => {
             const user = childSnapshot.val()
+            console.log('👤 Found user:', user)
             // 排除自己，只顯示其他用戶
-            if (user.peerId !== myPeerId.value) {
+            if (user && user.peerId !== myPeerId.value) {
               // 檢查是否在 5 分鐘內活躍
               const fiveMinutesAgo = Date.now() - 5 * 60 * 1000
-              if (user.lastSeen > fiveMinutesAgo) {
+              if (user.lastSeen && user.lastSeen > fiveMinutesAgo) {
                 users.push(user)
+                console.log('✅ Added online user:', user.name)
+              } else {
+                console.log('⏱️ User outdated:', user.name, 'last seen:', new Date(user.lastSeen))
               }
             }
           })
           onlineUsers.value = users
-          console.log('👥 Online users updated:', users.length)
+          console.log('👥 Online users updated:', users.length, users)
         })
 
       } catch (error) {
         console.error('❌ Failed to broadcast presence:', error)
+        console.error('Error details:', error.message, error.stack)
       }
     }
 
