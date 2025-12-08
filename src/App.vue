@@ -207,7 +207,7 @@
       </div>
 
       <!-- Map Container (always in DOM) -->
-      <div v-show="activeDay !== 'overview' && showMap" class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+      <div v-show="activeDay !== 'overview' && showMap && devSettings.enableMap" class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
         <div id="map" class="h-96 w-full"></div>
       </div>
 
@@ -216,6 +216,7 @@
         <div class="flex items-center justify-between">
           <h2 class="text-2xl font-bold text-dark flex-1">{{ getCurrentDayTitle() }}</h2>
           <button
+            v-if="devSettings.enableMap"
             @click="showMap = !showMap"
             class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors duration-200 flex items-center space-x-2 flex-shrink-0 w-32"
           >
@@ -412,7 +413,6 @@ export default {
     const titleClickTimer = ref(null)
     const devSettings = ref({
       enableVoiceCall: true,
-      enableWeather: true,
       enableMap: true,
       enableLocationShare: false,
       enableDebugLog: false,
@@ -1265,6 +1265,12 @@ export default {
   font-size: 24px;
   text-align: center;
   line-height: 30px;
+}
+
+/* 地圖容器需要允許捏合縮放和拖曳 */
+#map,
+.leaflet-container {
+  touch-action: pan-x pan-y pinch-zoom !important;
 }
 
 /* 自定義滾動條 */

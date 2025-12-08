@@ -796,6 +796,13 @@ export default {
 #location-map {
   height: 300px;
   width: 100%;
+  /* 允許地圖捏合縮放和拖曳 */
+  touch-action: pan-x pan-y pinch-zoom !important;
+}
+
+/* Leaflet 地圖容器也需要支援觸控操作 */
+#location-map .leaflet-container {
+  touch-action: pan-x pan-y pinch-zoom !important;
 }
 
 /* 座標資訊 */

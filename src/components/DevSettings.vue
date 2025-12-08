@@ -24,19 +24,8 @@
 
           <div class="setting-item">
             <div class="setting-info">
-              <div class="setting-name">🌤️ 天氣資訊</div>
-              <div class="setting-desc">顯示即時天氣資訊</div>
-            </div>
-            <label class="toggle-switch">
-              <input type="checkbox" v-model="settings.enableWeather" @change="saveSettings">
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-
-          <div class="setting-item">
-            <div class="setting-info">
-              <div class="setting-name">🗺️ 地圖功能</div>
-              <div class="setting-desc">Leaflet 地圖顯示</div>
+              <div class="setting-name">🗺️ 地圖顯示</div>
+              <div class="setting-desc">Day1~Day7 的 Leaflet 地圖顯示功能</div>
             </div>
             <label class="toggle-switch">
               <input type="checkbox" v-model="settings.enableMap" @change="saveSettings">
@@ -148,7 +137,6 @@ export default {
     const showSettings = ref(props.show)
     const settings = ref({
       enableVoiceCall: true,
-      enableWeather: true,
       enableMap: true,
       enableLocationShare: false,
       enableDebugLog: false,
@@ -198,7 +186,6 @@ export default {
       if (confirm('確定要重置所有開發者設定嗎？')) {
         settings.value = {
           enableVoiceCall: true,
-          enableWeather: true,
           enableMap: true,
           enableLocationShare: false,
           enableDebugLog: false,

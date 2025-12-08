@@ -2,7 +2,18 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <!-- 
+      viewport 設定說明 (針對 iPhone/iOS):
+      - user-scalable=yes: 允許雙指縮放
+      - maximum-scale=5.0: 最大縮放 5 倍
+      - viewport-fit=cover: 適應瀏海屏幕
+      
+      這個設定會:
+      ✅ 禁止雙擊放大 (Safari 預設行為被 CSS touch-action 覆蓋)
+      ✅ 允許雙指縮放 (pinch-zoom)
+      ✅ 固定初始畫面大小
+    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <meta name="description" content="2026關西大阪京都七天六夜之旅 - 清水寺小豬療癒、大阪環球影城、天橋立絕景、京都祇園完整行程規劃">
     <meta name="theme-color" content="#E63946">
 
