@@ -5,11 +5,34 @@
       v-if="!showPanel"
       @click="showPanel = true"
       class="floating-call-btn"
-      :class="{ 'calling': isCallActive }"
+      :class="{ 
+        'calling': isCallActive,
+        'incoming': incomingCall && !isCallActive
+      }"
     >
-      <span v-if="!isCallActive">📞</span>
+      <span v-if="incomingCall && !isCallActive" class="pulse">📞</span>
+      <span v-else-if="!isCallActive">📞</span>
       <span v-else class="pulse">📞</span>
     </button>
+
+    <!-- 來電彈窗（在主頁面也能顯示）-->
+    <div v-if="incomingCall && !isCallActive && !showPanel" class="incoming-call-popup">
+      <div class="popup-content">
+        <div class="caller-info">
+          <div class="caller-avatar">📞</div>
+          <p class="caller-name">{{ getCallerName(incomingCall.peer) }}</p>
+          <p class="caller-subtitle">來電中...</p>
+        </div>
+        <div class="popup-buttons">
+          <button @click="answerCall" class="answer-btn-popup">
+            ✅ 接聽
+          </button>
+          <button @click="rejectCall" class="reject-btn-popup">
+            ❌ 拒絕
+          </button>
+        </div>
+      </div>
+    </div>
 
     <!-- 通話面板 -->
     <div v-if="showPanel" class="call-panel">
@@ -290,8 +313,13 @@
       </div>
     </div>
 
-    <!-- 隱藏的音訊元素 -->
-    <audio ref="remoteAudio" autoplay></audio>
+    <!-- 隱藏的音訊元素（移到外層確保始終存在）-->
+    <audio 
+      ref="remoteAudio" 
+      autoplay 
+      playsinline 
+      style="display: none;"
+    ></audio>
   </div>
 </template>
 
@@ -931,9 +959,13 @@ export default {
 
         // 監聽對方的音訊流
         call.on('stream', (remoteStream) => {
-          console.log('Received remote stream')
+          console.log('Received remote stream from making call')
           if (remoteAudio.value) {
             remoteAudio.value.srcObject = remoteStream
+            // 確保音訊播放（某些瀏覽器需要手動觸發）
+            remoteAudio.value.play().catch(err => {
+              console.error('Failed to play audio:', err)
+            })
           }
           isConnecting.value = false
           isCallActive.value = true
@@ -980,9 +1012,13 @@ export default {
 
         // 監聽對方的音訊流
         call.on('stream', (remoteStream) => {
-          console.log('Received remote stream')
+          console.log('Received remote stream from answering call')
           if (remoteAudio.value) {
             remoteAudio.value.srcObject = remoteStream
+            // 確保音訊播放（某些瀏覽器需要手動觸發）
+            remoteAudio.value.play().catch(err => {
+              console.error('Failed to play audio:', err)
+            })
           }
           isCallActive.value = true
           callStatus.value = `🟢 通話中 - ${callerName}`
@@ -1172,6 +1208,11 @@ export default {
   animation: pulse-ring 1.5s infinite;
 }
 
+.floating-call-btn.incoming {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  animation: pulse-ring-green 1s infinite;
+}
+
 @keyframes pulse-ring {
   0% {
     box-shadow: 0 0 0 0 rgba(245, 87, 108, 0.7);
@@ -1188,6 +1229,18 @@ export default {
   animation: pulse-icon 1s infinite;
 }
 
+@keyframes pulse-ring-green {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(16, 185, 129, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
 @keyframes pulse-icon {
   0%, 100% {
     transform: scale(1);
@@ -1195,6 +1248,102 @@ export default {
   50% {
     transform: scale(1.2);
   }
+}
+
+/* 來電彈窗（在主頁面顯示）*/
+.incoming-call-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  padding: 32px;
+  min-width: 300px;
+  animation: popup-appear 0.3s ease-out;
+}
+
+@keyframes popup-appear {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.popup-content {
+  text-align: center;
+}
+
+.caller-info {
+  margin-bottom: 24px;
+}
+
+.caller-avatar {
+  font-size: 64px;
+  margin-bottom: 16px;
+  animation: ring-shake 0.5s infinite;
+}
+
+@keyframes ring-shake {
+  0%, 100% { transform: rotate(-15deg); }
+  50% { transform: rotate(15deg); }
+}
+
+.caller-name {
+  font-size: 24px;
+  font-weight: bold;
+  color: #1f2937;
+  margin: 0 0 8px 0;
+}
+
+.caller-subtitle {
+  font-size: 16px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.popup-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.answer-btn-popup,
+.reject-btn-popup {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 100px;
+}
+
+.answer-btn-popup {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+}
+
+.answer-btn-popup:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+.reject-btn-popup {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+}
+
+.reject-btn-popup:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
 }
 
 /* 通話面板 */
