@@ -127,20 +127,37 @@ export default {
     const myUserInfo = ref(null)
 
     // 初始化 Firebase
+    // 取得或創建位置分享用的用戶 ID
+    const getOrCreateLocationUserId = () => {
+      let userId = localStorage.getItem('myLocationUserId')
+      
+      if (userId) {
+        console.log('📦 Found saved Location User ID:', userId)
+        return userId
+      }
+      
+      // 生成新的位置用戶 ID
+      const timestamp = Date.now().toString(36)
+      const random = Math.random().toString(36).substring(2, 9)
+      userId = `loc-${timestamp}-${random}`
+      
+      localStorage.setItem('myLocationUserId', userId)
+      console.log('🆕 Created new Location User ID:', userId)
+      
+      return userId
+    }
+
     // 載入用戶資訊
     const loadUserInfo = () => {
-      const peerId = localStorage.getItem('myPeerId')
+      const userId = getOrCreateLocationUserId()
       const name = localStorage.getItem('myDisplayName') || '匿名用戶'
       const emoji = localStorage.getItem('myEmoji') || '👤'
       
-      if (!peerId) {
-        console.error('❌ No Peer ID found.')
-        locationStatus.value = '請先設定個人資訊'
-        return false
-      }
+      console.log('📱 LocationShare - Loading user info:', { userId, name, emoji })
 
-      myUserId.value = peerId
-      myUserInfo.value = { id: peerId, name, emoji }
+      myUserId.value = userId
+      myUserInfo.value = { id: userId, name, emoji }
+      console.log('✅ LocationShare - User info loaded:', myUserInfo.value)
       return true
     }
 
@@ -411,19 +428,30 @@ export default {
 
     // 監聽所有用戶位置
     const listenToAllLocations = () => {
-      if (!database) return
+      if (!database) {
+        console.warn('⚠️ Database not initialized')
+        return
+      }
 
+      console.log('👂 Starting to listen to all locations...')
       const locationsRef = dbRef(database, 'locations')
       
       onValue(locationsRef, (snapshot) => {
         const data = snapshot.val()
+        console.log('📍 Locations data received:', data)
+        
         if (!data) {
           otherUsers.value = []
+          console.log('📍 No locations data found')
           return
         }
 
         // 過濾掉自己，只顯示其他用戶
-        const users = Object.values(data).filter(user => user.id !== myUserId.value)
+        const allUsers = Object.values(data)
+        console.log('📍 All users:', allUsers)
+        console.log('📍 My user ID:', myUserId.value)
+        
+        const users = allUsers.filter(user => user.id !== myUserId.value)
         
         // 計算距離
         if (myLocation.value) {
@@ -438,6 +466,7 @@ export default {
         }
 
         otherUsers.value = users
+        console.log('👥 Filtered other users:', users)
 
         // 更新地圖上的 markers
         const currentUserIds = users.map(u => u.id)
@@ -455,6 +484,9 @@ export default {
         })
 
         console.log(`👥 ${users.length} other users online`)
+        if (users.length === 0) {
+          console.log('ℹ️ No other users found. Make sure other devices have started sharing.')
+        }
       })
     }
 
