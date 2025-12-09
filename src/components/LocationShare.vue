@@ -34,7 +34,7 @@
           </div>
           <div v-if="lastUpdateTime" class="status-item">
             <span class="status-icon">🕐</span>
-            <span class="status-text">更新頻率: 每 30 秒</span>
+            <span class="status-text">更新頻率: 每 60 秒 🔋</span>
           </div>
         </div>
 
@@ -361,12 +361,15 @@ export default {
         options
       )
 
-      // 設定定時上傳位置（每 30 秒）
+      // 設定定時上傳位置（可調整更新頻率）
+      // 30秒 = 高耗電但即時 | 60秒 = 平衡 | 120秒 = 省電
+      const UPDATE_INTERVAL = 60000 // 60 秒更新一次（省電模式）
+      
       updateIntervalId = setInterval(() => {
         if (myLocation.value && database && myUserId.value) {
           uploadLocationToFirebase()
         }
-      }, 30000) // 30 秒更新一次
+      }, UPDATE_INTERVAL)
 
       // 立即上傳一次
       setTimeout(() => {
