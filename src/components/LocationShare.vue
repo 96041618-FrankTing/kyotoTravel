@@ -441,9 +441,12 @@ export default {
       const locationsRef = dbRef(database, 'locations')
       console.log('👂 Locations reference created:', locationsRef)
       
-      onValue(locationsRef, (snapshot) => {
-        const data = snapshot.val()
-        console.log('📍 Locations data received:', data)
+      onValue(locationsRef, 
+        // Success callback
+        (snapshot) => {
+          const data = snapshot.val()
+          console.log('📍 Locations data received:', data)
+          console.log('📍 Snapshot exists:', snapshot.exists())
         
         if (!data) {
           otherUsers.value = []
@@ -492,6 +495,12 @@ export default {
         if (users.length === 0) {
           console.log('ℹ️ No other users found. Make sure other devices have started sharing.')
         }
+      },
+      // Error callback
+      (error) => {
+        console.error('❌ Error listening to locations:', error)
+        console.error('❌ Error code:', error.code)
+        console.error('❌ Error message:', error.message)
       })
     }
 
@@ -524,7 +533,10 @@ export default {
     watch(() => props.isLocationEnabled, (newVal) => {
       if (newVal) {
         loadUserInfo()
-        listenToAllLocations()
+        // 延遲啟動監聽
+        setTimeout(() => {
+          listenToAllLocations()
+        }, 500)
       } else {
         stopLocationSharing()
         destroyMap()
@@ -561,8 +573,13 @@ export default {
       if (props.isLocationEnabled) {
         console.log('✅ Location enabled, loading user info...')
         loadUserInfo()
-        console.log('✅ Starting to listen to all locations...')
-        listenToAllLocations()
+        
+        // 延遲啟動監聽，確保 database 完全就緒
+        console.log('✅ Starting to listen to all locations (with 500ms delay)...')
+        setTimeout(() => {
+          console.log('⏰ Delay completed, now calling listenToAllLocations...')
+          listenToAllLocations()
+        }, 500)
       } else {
         console.log('⚠️ Location sharing is disabled in props')
       }
