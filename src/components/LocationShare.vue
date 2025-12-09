@@ -428,13 +428,18 @@ export default {
 
     // 監聽所有用戶位置
     const listenToAllLocations = () => {
+      console.log('🔍 listenToAllLocations() called')
+      console.log('🔍 Database:', database)
+      console.log('🔍 Database type:', typeof database)
+      
       if (!database) {
-        console.warn('⚠️ Database not initialized')
+        console.error('❌ Database not initialized!')
         return
       }
 
       console.log('👂 Starting to listen to all locations...')
       const locationsRef = dbRef(database, 'locations')
+      console.log('👂 Locations reference created:', locationsRef)
       
       onValue(locationsRef, (snapshot) => {
         const data = snapshot.val()
@@ -550,9 +555,16 @@ export default {
 
     // 組件掛載
     onMounted(() => {
+      console.log('🔧 LocationShare mounted, isLocationEnabled:', props.isLocationEnabled)
+      console.log('🔧 Database object:', database)
+      
       if (props.isLocationEnabled) {
+        console.log('✅ Location enabled, loading user info...')
         loadUserInfo()
+        console.log('✅ Starting to listen to all locations...')
         listenToAllLocations()
+      } else {
+        console.log('⚠️ Location sharing is disabled in props')
       }
     })
 
