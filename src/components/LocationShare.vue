@@ -34,7 +34,7 @@
           </div>
           <div v-if="lastUpdateTime" class="status-item">
             <span class="status-icon">🕐</span>
-            <span class="status-text">更新頻率: 每 60 秒 🔋</span>
+            <span class="status-text">更新頻率: 前景 60秒 / 背景 180秒 🔋</span>
           </div>
         </div>
 
@@ -106,6 +106,10 @@ export default {
     }
   },
   setup(props) {
+    // 更新頻率設定（省電優化）
+    const UPDATE_INTERVAL_FOREGROUND = 60000  // 前景：60秒
+    const UPDATE_INTERVAL_BACKGROUND = 180000 // 背景：180秒（3分鐘）
+    
     // 狀態變數
     const showLocationPanel = ref(false)
     const isSharingLocation = ref(false)
@@ -121,6 +125,7 @@ export default {
     const userMarkers = {} // 儲存其他用戶的 marker
     let watchId = null
     let updateIntervalId = null
+    let currentUpdateInterval = UPDATE_INTERVAL_FOREGROUND
     
     // 用戶資訊
     const myUserId = ref(null)
@@ -379,6 +384,26 @@ export default {
       }, 2000)
     }
 
+    // 調整更新頻率（根據前景/背景狀態）
+    const adjustUpdateInterval = (interval) => {
+      if (!isSharingLocation.value) return
+      
+      // 清除舊的定時器
+      if (updateIntervalId) {
+        clearInterval(updateIntervalId)
+      }
+      
+      // 設定新的定時器
+      currentUpdateInterval = interval
+      updateIntervalId = setInterval(() => {
+        if (myLocation.value && database && myUserId.value) {
+          uploadLocationToFirebase()
+        }
+      }, interval)
+      
+      console.log(`🔄 Update interval changed to ${interval / 1000}s`)
+    }
+
     // 停止位置分享
     const stopLocationSharing = () => {
       if (watchId) {
@@ -586,6 +611,26 @@ export default {
       } else {
         console.log('⚠️ Location sharing is disabled in props')
       }
+
+      // 監聽頁面可見性變化（省電優化）
+      const handleVisibilityChange = () => {
+        if (document.hidden) {
+          // 頁面在背景，降低更新頻率
+          console.log('📱 App in background, reducing update frequency to 180s')
+          adjustUpdateInterval(UPDATE_INTERVAL_BACKGROUND)
+        } else {
+          // 頁面在前景，恢復正常頻率
+          console.log('📱 App in foreground, restoring update frequency to 60s')
+          adjustUpdateInterval(UPDATE_INTERVAL_FOREGROUND)
+        }
+      }
+
+      document.addEventListener('visibilitychange', handleVisibilityChange)
+
+      // 組件卸載時移除監聽
+      onUnmounted(() => {
+        document.removeEventListener('visibilitychange', handleVisibilityChange)
+      })
     })
 
     // 組件卸載
@@ -687,6 +732,8 @@ export default {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  /* 確保在 iPhone 上不會超出螢幕 */
+  top: auto;
 }
 
 .panel-header {
@@ -890,21 +937,112 @@ export default {
   font-family: monospace;
 }
 
-/* 響應式設計 */
+/* 響應式設計 - iPhone 優化 */
 @media (max-width: 640px) {
   .location-panel {
-    width: calc(100vw - 40px);
-    max-height: calc(100vh - 180px);
+    /* 全螢幕顯示，從安全區域開始 */
+    top: env(safe-area-inset-top, 20px);
+    bottom: env(safe-area-inset-bottom, 80px);
+    left: 10px;
+    right: 10px;
+    width: auto;
+    max-width: none;
+    max-height: none;
+    border-radius: 20px;
+  }
+
+  .panel-header {
+    padding: 12px 16px;
+    /* 確保關閉按鈕在安全區域內 */
+    padding-top: max(12px, env(safe-area-inset-top, 12px));
+  }
+
+  .panel-title {
+    font-size: 16px;
+  }
+
+  .close-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 28px;
+    /* 增加點擊區域 */
+    padding: 8px;
+  }
+
+  .panel-content {
+    padding: 12px;
+    /* 優化滾動體驗 */
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* 壓縮狀態區域 */
+  .status-section {
+    margin-bottom: 10px;
+  }
+
+  .status-item {
+    padding: 6px 10px;
+    margin-bottom: 6px;
+    font-size: 13px;
+  }
+
+  .status-icon {
+    font-size: 14px;
+  }
+
+  /* 壓縮控制按鈕 */
+  .control-section {
+    margin-bottom: 10px;
+  }
+
+  .control-btn {
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  /* 放大地圖！ */
+  #location-map {
+    height: 50vh; /* 使用 50% 螢幕高度 */
+    min-height: 300px;
+  }
+
+  .map-container {
+    margin-bottom: 10px;
+  }
+
+  /* 壓縮用戶列表 */
+  .users-section {
+    /* 讓用戶列表可滾動但不佔太多空間 */
+    max-height: 25vh;
+    overflow-y: auto;
+  }
+
+  .user-item {
+    padding: 8px 10px;
+    margin-bottom: 6px;
+  }
+
+  .user-emoji {
+    font-size: 20px;
+  }
+
+  .user-name {
+    font-size: 13px;
+  }
+
+  .user-distance {
+    font-size: 11px;
+  }
+
+  .user-time {
+    font-size: 10px;
   }
 
   .floating-location-btn {
     width: 56px;
     height: 56px;
     font-size: 24px;
-  }
-
-  #location-map {
-    height: 250px;
+    bottom: env(safe-area-inset-bottom, 80px);
   }
 }
 </style>
