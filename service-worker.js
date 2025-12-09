@@ -1,6 +1,7 @@
-const CACHE_NAME = 'kyoto-travel-v1.0.0';
-const STATIC_CACHE = 'kyoto-travel-static-v1.0.0';
-const DYNAMIC_CACHE = 'kyoto-travel-dynamic-v1.0.0';
+const CACHE_VERSION = '1.0.1';
+const CACHE_NAME = `kyoto-travel-v${CACHE_VERSION}`;
+const STATIC_CACHE = `kyoto-travel-static-v${CACHE_VERSION}`;
+const DYNAMIC_CACHE = `kyoto-travel-dynamic-v${CACHE_VERSION}`;
 
 // Resources to cache immediately
 const STATIC_ASSETS = [
@@ -61,40 +62,74 @@ self.addEventListener('fetch', event => {
   // Skip cross-origin requests
   if (url.origin !== location.origin) return;
 
-  // Handle navigation requests
+  // Handle navigation requests - Network First strategy to always get latest HTML
   if (request.mode === 'navigate') {
     event.respondWith(
-      caches.match('/kyotoTravel/index.html')
+      fetch(request)
         .then(response => {
-          return response || fetch(request);
+          // Cache the new HTML
+          if (response.ok) {
+            const responseClone = response.clone();
+            caches.open(STATIC_CACHE).then(cache => {
+              cache.put(request, responseClone);
+            });
+          }
+          return response;
         })
         .catch(() => {
-          return caches.match('/kyotoTravel/offline.html');
+          // Network failed, try cache
+          return caches.match('/kyotoTravel/index.html')
+            .then(response => {
+              return response || caches.match('/kyotoTravel/offline.html');
+            });
         })
     );
     return;
   }
 
-  // Cache First strategy for static assets
+  // Stale-While-Revalidate for static assets
   if (STATIC_ASSETS.some(asset => url.pathname === asset)) {
     event.respondWith(
       caches.match(request)
-        .then(response => {
-          return response || fetch(request).then(response => {
-            if (response.ok) {
-              const responseClone = response.clone();
+        .then(cachedResponse => {
+          const fetchPromise = fetch(request).then(networkResponse => {
+            if (networkResponse.ok) {
+              const responseClone = networkResponse.clone();
               caches.open(STATIC_CACHE).then(cache => {
                 cache.put(request, responseClone);
               });
             }
-            return response;
+            return networkResponse;
           });
+          // Return cached response immediately, but update cache in background
+          return cachedResponse || fetchPromise;
         })
     );
     return;
   }
 
-  // Network First for dynamic content, fallback to cache
+  // Network First for JS/CSS files (to avoid 404 errors with hash-based filenames)
+  if (url.pathname.match(/\.(js|css)$/)) {
+    event.respondWith(
+      fetch(request)
+        .then(response => {
+          if (response.ok) {
+            const responseClone = response.clone();
+            caches.open(DYNAMIC_CACHE).then(cache => {
+              cache.put(request, responseClone);
+            });
+          }
+          return response;
+        })
+        .catch(() => {
+          // Fallback to cache only if network fails
+          return caches.match(request);
+        })
+    );
+    return;
+  }
+
+  // Network First for other dynamic content, fallback to cache
   event.respondWith(
     fetch(request)
       .then(response => {

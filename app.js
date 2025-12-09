@@ -80,6 +80,26 @@ if ('serviceWorker' in navigator) {
             .then(registration => {
                 console.log('Service Worker registered successfully:', registration.scope);
 
+                // Check for updates every 60 seconds
+                setInterval(() => {
+                    registration.update();
+                }, 60000);
+
+                // Listen for updates
+                registration.addEventListener('updatefound', () => {
+                    const newWorker = registration.installing;
+                    console.log('New Service Worker found, installing...');
+
+                    newWorker.addEventListener('statechange', () => {
+                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            // New Service Worker is ready
+                            console.log('New version available! Activating...');
+                            // Tell the new Service Worker to skip waiting
+                            newWorker.postMessage({ type: 'SKIP_WAITING' });
+                        }
+                    });
+                });
+
                 // Listen for controller change to auto-refresh the page
                 navigator.serviceWorker.addEventListener('controllerchange', () => {
                     if (!refreshing) {
