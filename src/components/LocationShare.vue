@@ -722,7 +722,7 @@ export default {
   position: fixed;
   bottom: 170px;
   right: 20px;
-  width: 420px;
+  width: 500px; /* 從 420px 增加到 500px，更寬的面板 */
   max-width: calc(100vw - 40px);
   max-height: calc(100vh - 200px);
   background: white;
@@ -898,7 +898,7 @@ export default {
 }
 
 #location-map {
-  height: 300px;
+  height: 450px; /* 桌面版：從 300px 增加到 450px */
   width: 100%;
   /* 允許地圖捏合縮放和拖曳 */
   touch-action: pan-x pan-y pinch-zoom !important;
