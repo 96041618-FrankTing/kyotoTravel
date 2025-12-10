@@ -288,6 +288,36 @@
                 <p>{{ selectedItinerary?.duration }}</p>
               </div>
 
+              <div v-if="selectedItinerary?.subway" class="bg-gray-50 p-4 rounded-lg">
+                <h4 class="font-semibold text-lg mb-2">🚇 地鐵/車站</h4>
+                <p>{{ selectedItinerary?.subway }}</p>
+              </div>
+
+              <div v-if="selectedItinerary?.mustEat" class="bg-red-50 p-4 rounded-lg border-l-4 border-red-400">
+                <h4 class="font-semibold text-lg mb-2 text-red-800">🍜 必吃美食</h4>
+                <p class="whitespace-pre-line">{{ selectedItinerary?.mustEat }}</p>
+              </div>
+
+              <div v-if="selectedItinerary?.mustVisit" class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-400">
+                <h4 class="font-semibold text-lg mb-2 text-purple-800">🎯 必玩景點</h4>
+                <p class="whitespace-pre-line">{{ selectedItinerary?.mustVisit }}</p>
+              </div>
+
+              <div v-if="selectedItinerary?.mustBuy" class="bg-pink-50 p-4 rounded-lg border-l-4 border-pink-400">
+                <h4 class="font-semibold text-lg mb-2 text-pink-800">🛍️ 必買伴手禮</h4>
+                <p class="whitespace-pre-line">{{ selectedItinerary?.mustBuy }}</p>
+              </div>
+
+              <div v-if="selectedItinerary?.lunchOptions" class="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-400">
+                <h4 class="font-semibold text-lg mb-2 text-orange-800">🍱 午餐推薦</h4>
+                <p class="whitespace-pre-line">{{ selectedItinerary?.lunchOptions }}</p>
+              </div>
+
+              <div v-if="selectedItinerary?.dinnerOptions" class="bg-indigo-50 p-4 rounded-lg border-l-4 border-indigo-400">
+                <h4 class="font-semibold text-lg mb-2 text-indigo-800">🍽️ 晚餐推薦</h4>
+                <p class="whitespace-pre-line">{{ selectedItinerary?.dinnerOptions }}</p>
+              </div>
+
               <div v-if="selectedItinerary?.details?.japaneseInfo" class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
                 <h4 class="font-semibold text-lg mb-2 text-blue-800">🇯🇵 日文乘車資訊 (給司機看)</h4>
                 <div class="bg-white p-3 rounded border font-mono text-sm whitespace-pre-line">
@@ -297,7 +327,7 @@
 
               <div v-if="selectedItinerary?.details?.notes" class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-400">
                 <h4 class="font-semibold text-lg mb-2 text-yellow-800">📋 重要備註</h4>
-                <p>{{ selectedItinerary.details.notes }}</p>
+                <p class="whitespace-pre-line">{{ selectedItinerary.details.notes }}</p>
               </div>
 
               <div v-if="selectedItinerary?.details?.kkdayLink" class="bg-green-50 p-4 rounded-lg border-l-4 border-green-400">
@@ -489,11 +519,12 @@ export default {
         {
           time: '08:00-15:00',
           title: '機場移動至京都',
-          description: '關西機場 → 京都車站 → 飯店 Check-in',
-          transport: 'JR HARUKA 特急電車',
-          location: '關西機場 → 京都車站',
+          description: '關西機場 → 京都車站 (JR HARUKA特急) → 飯店 Check-in',
+          transport: 'JR HARUKA 特急電車 + 計程車 x2',
+          location: '關西機場 → 京都車站 → Onyado Nono Kyoto Shichijo',
           duration: '約2.5小時',
           coordinates: [34.4320, 135.2304],
+          subway: '關西機場站 → 京都車站 (JR HARUKA特急)',
           details: {
             japaneseInfo: '天然温泉 蓮花の湯 御宿 野乃 京都七条 までお願いします。\n(住所: 京都市下京区材木町491番地)',
             notes: '有3個大行李，建議分2台車',
@@ -502,41 +533,57 @@ export default {
         },
         {
           time: '15:30-17:30',
-          title: '京都車站周邊探險',
-          description: '京都塔或Yodobashi Camera 3F玩具區',
+          title: '京都車站周邊探險 (分流活動)',
+          description: 'A組(長輩)：京都塔 | B組(小孩)：Yodobashi Camera 3F 玩具區',
           transport: '走路',
           location: '京都車站',
           duration: '約2小時',
           coordinates: [34.9854, 135.7581],
           details: {
             japaneseInfo: null,
-            notes: '分流活動：A組京都塔，B組玩具區',
+            notes: '分流活動：A組京都塔(就在飯店對面)，B組玩具區(八條口方向)',
             kkdayLink: null
           }
         },
         {
           time: '18:00-20:00',
-          title: '晚餐',
-          description: '東洋亭 (Porta 地下街)',
+          title: '晚餐 - 東洋亭 (Porta 地下街店)',
+          description: '百年洋食漢堡排 (鋁箔包)、整顆番茄沙拉',
           location: '京都車站 Porta 地下街',
           duration: '約2小時',
           coordinates: [34.9854, 135.7581],
+          mustEat: '百年洋食漢堡排、整顆番茄沙拉',
           details: {
             japaneseInfo: null,
-            notes: '京都車站地下街美食',
+            notes: '京都車站地下街美食，排隊人多建議提早',
             kkdayLink: null
           }
         }
       ],
       day2: [
         {
+          time: '08:00-09:00',
+          title: '飯店早餐',
+          description: '享用豐富的日式/西式自助餐',
+          transport: '飯店內',
+          location: 'Onyado Nono Kyoto Shichijo',
+          duration: '約1小時',
+          coordinates: [34.9877, 135.7551],
+          details: {
+            japaneseInfo: null,
+            notes: '飯店餐廳',
+            kkdayLink: null
+          }
+        },
+        {
           time: '09:00-12:00',
           title: '清水寺與和服體驗',
-          description: '清水寺(仁王門)參觀',
-          transport: '計程車',
+          description: '參拜清水舞台、音羽之瀧',
+          transport: '計程車 x1',
           location: '清水寺',
           duration: '約3小時',
           coordinates: [34.9949, 135.7850],
+          mustVisit: '橡子共和國 (大龍貓)、史努比茶屋',
           details: {
             japaneseInfo: '清水寺の近くの「七味家本舗（しちみやほんぽ）」の前までお願いします。\n(坂道を上がりきったところです)',
             notes: '4人搭1台，請司機停在「七味家本舖」前，這是離清水寺最近的下車點',
@@ -545,24 +592,25 @@ export default {
         },
         {
           time: '12:00-14:00',
-          title: '二三年坂散策',
-          description: '沿著石板路慢慢往下走，午餐：奧丹清水或藤菜美',
+          title: '二三年坂散策 & 午餐',
+          description: '沿著石板路慢慢往下走',
           transport: '走路',
           location: '二三年坂',
           duration: '約2小時',
           coordinates: [35.0064, 135.7850],
+          lunchOptions: '奧丹清水 (湯豆腐)、阿古屋茶屋 (茶泡飯吃到飽)、藤菜美 (現烤醬油糰子、洛水)',
           details: {
             japaneseInfo: null,
-            notes: '午餐選擇：奧丹清水或藤菜美',
+            notes: '午餐推薦：奧丹清水湯豆腐(長輩會喜歡)、阿古屋茶屋茶泡飯吃到飽(需排隊)、藤菜美現烤糰子',
             kkdayLink: null
           }
         },
         {
           time: '14:30-16:00',
-          title: 'Mipig Cafe 迷你豬體驗',
-          description: '親子療癒體驗，與可愛迷你豬互動',
-          transport: '計程車',
-          location: 'Mipig Cafe 京都店',
+          title: 'Mipig Cafe 迷你豬體驗 (親子大推!)',
+          description: '與可愛迷你豬互動',
+          transport: '計程車 x1',
+          location: 'Mipig Cafe 京都店 (錦市場附近)',
           duration: '約1.5小時',
           coordinates: [35.0080, 135.7680],
           details: {
@@ -574,208 +622,367 @@ export default {
         {
           time: '16:30-18:30',
           title: '錦市場 & 祇園',
-          description: '逛錦市場美食街，漫步祇園花見小路',
+          description: '逛「京都的廚房」，漫步祇園花見小路',
           transport: '走路',
           location: '錦市場 & 祇園',
           duration: '約2小時',
           coordinates: [35.0044, 135.7740],
+          mustEat: '史努比茶屋饅頭、三木雞卵玉子燒、豆乳甜甜圈',
           details: {
             japaneseInfo: null,
-            notes: '美食街散策，體驗京都傳統街道',
+            notes: '必吃：史努比茶屋饅頭、三木雞卵玉子燒、豆乳甜甜圈',
             kkdayLink: null
           }
         },
         {
           time: '19:00',
-          title: '晚餐',
-          description: '柚子元 (柚子鍋) 或河原町周邊餐廳',
-          location: '祇園',
+          title: '晚餐 - 河原町/先斗町周邊',
+          description: '柚子元 (柚子豬肉火鍋) 或名代炸豬排',
+          location: '祇園/河原町',
           duration: '約1小時',
           coordinates: [35.0044, 135.7740],
+          dinnerOptions: '柚子元 (柚子豬肉火鍋)、名代炸豬排 Katsukura 三條本店',
           details: {
             japaneseInfo: null,
-            notes: '推薦柚子鍋，溫暖又美味',
+            notes: '推薦柚子鍋(湯頭清爽適合冬天)或京都最好吃的炸豬排',
             kkdayLink: null
           }
         }
       ],
       day3: [
         {
-          time: '07:30-08:00',
-          title: '前往京都車站集合',
+          time: '07:00-08:00',
+          title: '飯店早餐',
+          description: '吃飽一點，今天車程較長',
+          transport: '飯店內',
+          location: 'Onyado Nono Kyoto Shichijo',
+          duration: '約1小時',
+          coordinates: [34.9877, 135.7551],
+          details: {
+            japaneseInfo: null,
+            notes: '飯店餐廳',
+            kkdayLink: null
+          }
+        },
+        {
+          time: '08:00-08:30',
+          title: '前往京都車站集合點',
           description: '飯店出發前往京都車站八條口 Avanti 前',
-          transport: '計程車',
-          location: '京都車站八條口',
+          transport: '計程車 x2',
+          location: '京都車站八條口 Avanti',
           duration: '約30分鐘',
           coordinates: [34.9854, 135.7581],
+          subway: '京都車站',
           details: {
             japaneseInfo: '京都駅八条口の「京都アバンティ（Avanti）」前までお願いします。',
-            notes: '有大行李，分2台車',
-            kkdayLink: 'https://www.kkday.com/zh-tw/product/279525'
+            notes: '有3個大行李，務必叫2台車。KKday集合點',
+            kkdayLink: 'https://www.kkday.com/zh-tw/product/163483'
           }
         },
         {
-          time: '08:00-19:00',
-          title: 'KKday 關西精華一日遊',
-          description: '嵐山、金閣寺、伏見稻荷、奈良一日遊',
-          transport: '觀光遊覽車',
-          location: '嵐山 → 金閣寺 → 奈良 → 大阪',
-          duration: '約11小時',
-          coordinates: [35.0142, 135.7483],
+          time: '08:30-18:30',
+          title: 'KKday 天橋立・伊根舟屋一日遊 (京都出發/大阪下車)',
+          description: '伊根舟屋遊覽船餵海鷗、天橋立纜車看飛龍觀/昇龍觀',
+          transport: '丹後紅松號列車',
+          location: '天橋立、伊根舟屋',
+          duration: '約10小時',
+          coordinates: [35.5667, 135.1833],
+          mustEat: '花蛤丼 (あさり丼)',
+          lunchOptions: 'はまや食堂 (花蛤丼、烏龍麵)、橋立大丸本店 (海鮮丼、團體定食)、Cafe du Pin (麵包簡餐)',
+          mustVisit: '伊根舟屋餵海鷗 (自備蝦味先)、天橋立纜車',
           details: {
             japaneseInfo: null,
-            notes: 'KKday一日遊行程，包含嵐山、金閣寺、伏見稻荷、奈良',
-            kkdayLink: 'https://www.kkday.com/zh-tw/product/279525'
+            notes: '天橋立、伊根舟屋餵海鷗、紅松號列車。午餐自理(文殊地區)，推薦花蛤丼',
+            kkdayLink: 'https://www.kkday.com/zh-tw/product/163483'
           }
         },
         {
-          time: '19:00-20:00',
-          title: '抵達大阪飯店',
-          description: '難波解散點 → Hotel Sobial Namba Daikokucho',
-          transport: '計程車',
-          location: 'Hotel Sobial Namba Daikokucho',
+          time: '18:30-19:30',
+          title: '抵達大阪・走路去飯店',
+          description: '蟹道樂道頓堀東店下車 → 推行李步行至 KOKO HOTEL',
+          transport: '走路',
+          location: 'KOKO HOTEL Osaka Namba Sennichimae',
+          duration: '約4分鐘 (300公尺)',
+          coordinates: [34.6658, 135.5043],
+          subway: '日本橋站附近',
+          details: {
+            japaneseInfo: null,
+            notes: '步行約300公尺(4分鐘)，雖有行李但路程很短且平坦，不需叫車',
+            kkdayLink: null
+          }
+        },
+        {
+          time: '20:00',
+          title: '晚餐 - 千日前/日本橋周邊',
+          description: '飯店附近美食',
+          location: '千日前',
           duration: '約1小時',
-          coordinates: [34.6544, 135.5063],
+          coordinates: [34.6686, 135.5011],
+          dinnerOptions: '千房大阪燒、神座拉麵千日前店 (蔬菜湯頭)、わなか章魚燒',
           details: {
             japaneseInfo: null,
-            notes: '有大行李，分2台車',
+            notes: '千房大阪燒、神座拉麵(蔬菜湯頭清甜)、わなか章魚燒千日前總店',
             kkdayLink: null
           }
         }
       ],
       day4: [
         {
+          time: '08:30-09:30',
+          title: '飯店早餐',
+          description: '享受飯店自助早餐',
+          transport: '飯店內',
+          location: 'KOKO HOTEL Osaka Namba',
+          duration: '約1小時',
+          coordinates: [34.6658, 135.5043],
+          details: {
+            japaneseInfo: null,
+            notes: '飯店餐廳',
+            kkdayLink: null
+          }
+        },
+        {
           time: '09:30-10:30',
           title: '難波八阪神社',
-          description: '參觀大阪知名神社',
+          description: '巨大獅子頭舞台 (吸厄運)',
           transport: '走路',
           location: '難波八阪神社',
           duration: '約1小時',
-          coordinates: [34.6628, 135.5011]
+          coordinates: [34.6628, 135.5011],
+          mustVisit: '巨大獅子頭舞台',
+          details: {
+            japaneseInfo: null,
+            notes: '離飯店約10-12分鐘',
+            kkdayLink: null
+          }
         },
         {
           time: '11:00-13:00',
-          title: '大阪城公園',
-          description: '參觀大阪城，搭小火車遊園',
+          title: '大阪城公園 (搭小火車)',
+          description: '參觀大阪城天守閣，搭路面小火車',
           transport: '地鐵',
           location: '大阪城公園',
           duration: '約2小時',
-          coordinates: [34.6873, 135.5262]
+          coordinates: [34.6873, 135.5262],
+          subway: '難波站 (御堂筋線) → 本町站 (轉中央線) → 谷町四丁目站',
+          mustEat: '抹茶冰淇淋 (天守閣前廣場)',
+          mustVisit: '大阪城御座船 (戴金色斗笠遊護城河)、路面小火車',
+          details: {
+            japaneseInfo: null,
+            notes: '搭乘路面小火車直達天守閣。必玩：御座船(戴金色斗笠)、抹茶冰淇淋',
+            kkdayLink: null
+          }
         },
         {
           time: '13:30-15:30',
-          title: '黑門市場 & 午餐',
+          title: '黑門市場 & 午餐 (邊走邊吃)',
           description: '大阪知名市場，品嚐新鮮海鮮',
-          transport: '計程車',
+          transport: '計程車 x1',
           location: '黑門市場',
           duration: '約2小時',
-          coordinates: [34.6686, 135.5011]
+          coordinates: [34.6686, 135.5011],
+          subway: '日本橋站附近',
+          mustEat: '黑門三平 (現切生魚片、大蝦)、石橋食品 (關東煮)、丸善食肉店 (現烤和牛串)',
+          details: {
+            japaneseInfo: '「黒門市場（くろもんいちば）」の入り口までお願いします。\n(日本橋駅の近くです)',
+            notes: '午餐推薦邊走邊吃：黑門三平生魚片、石橋關東煮、丸善和牛串',
+            kkdayLink: null
+          }
         },
         {
           time: '16:00-19:00',
-          title: '心齋橋 PARCO & 大丸',
+          title: '心齋橋 PARCO & 大丸 (小孩天堂)',
           description: '購物血拼，參觀寶可夢中心、任天堂商店',
-          transport: '走路/地鐵',
+          transport: '走路',
           location: '心齋橋 PARCO & 大丸',
           duration: '約3小時',
-          coordinates: [34.6739, 135.5011]
+          coordinates: [34.6739, 135.5011],
+          subway: '心齋橋站',
+          mustVisit: '9F Pokemon Center DX・Jump Shop、6F 橡子共和國・樂高・哥吉拉商店、B1/2F Harbs蛋糕',
+          mustEat: 'Harbs 水果千層蛋糕 (長輩休息好去處)',
+          details: {
+            japaneseInfo: null,
+            notes: '黑門市場走過去約15分鐘。必逛：9F寶可夢中心、6F橡子共和國、B1 Harbs蛋糕',
+            kkdayLink: null
+          }
         },
         {
           time: '19:00',
-          title: '晚餐：燒肉',
-          description: '國產牛燒肉放題 Aburiya',
-          location: '心齋橋',
+          title: '晚餐 - 燒肉',
+          description: '國產牛燒肉放題 Aburiya 或播重壽喜燒',
+          location: '心齋橋/道頓堀',
           duration: '約1小時',
-          coordinates: [34.6739, 135.5011]
+          coordinates: [34.6739, 135.5011],
+          dinnerOptions: '國產牛燒肉放題 Aburiya (道頓堀御堂筋店，建議預約)、播重 Hariju (壽喜燒老店)',
+          details: {
+            japaneseInfo: null,
+            notes: '推薦國產牛燒肉放題Aburiya(強烈建議預約)或播重壽喜燒(適合長輩)',
+            kkdayLink: null
+          }
         }
       ],
       day5: [
         {
           time: '07:00-07:30',
           title: '退房與寄放行李',
-          description: '退房，將行李寄放在 Hotel Sobial 櫃檯',
-          location: 'Hotel Sobial Namba Daikokucho',
+          description: '辦理退房，將3個大行李寄放在 KOKO HOTEL 櫃檯',
+          transport: '飯店內',
+          location: 'KOKO HOTEL Osaka Namba',
           duration: '約30分鐘',
-          coordinates: [34.6544, 135.5063],
+          coordinates: [34.6658, 135.5043],
           details: {
             japaneseInfo: null,
-            notes: '將行李寄放在飯店櫃檯',
+            notes: '將行李寄放在飯店櫃檯，告知晚上回來拿',
             kkdayLink: null
           }
         },
         {
-          time: '07:30-07:45',
-          title: '前往集合地點',
-          description: '前往大阪蟹道樂道頓堀東店集合',
-          transport: '計程車',
-          location: '大阪蟹道樂道頓堀東店',
-          duration: '約15分鐘',
-          coordinates: [34.6686, 135.5011],
-          details: {
-            japaneseInfo: '「かに道楽 道頓堀東店（ひがしてん）」の前までお願いします。\n(住所: 大阪市中央区道頓堀1-1-3)\n※日本橋駅の近く、堺筋沿いです。',
-            notes: 'KKday丹後紅松號一日遊集合點',
-            kkdayLink: 'https://www.kkday.com/zh-tw/product/163483'
-          }
-        },
-        {
-          time: '08:00-18:30',
-          title: 'KKday 丹後紅松號一日遊',
-          description: '天橋立、餵海鷗、紅松號列車體驗',
-          transport: '丹後紅松號列車',
-          location: '天橋立',
-          duration: '約10.5小時',
-          coordinates: [35.5667, 135.1833],
+          time: '07:30-08:30',
+          title: '飯店早餐',
+          description: '快速吃早餐，準備出發',
+          transport: '飯店內',
+          location: 'KOKO HOTEL Osaka Namba',
+          duration: '約1小時',
+          coordinates: [34.6658, 135.5043],
           details: {
             japaneseInfo: null,
-            notes: '天橋立、餵海鷗、紅松號列車體驗',
-            kkdayLink: 'https://www.kkday.com/zh-tw/product/163483'
+            notes: '飯店餐廳',
+            kkdayLink: null
           }
         },
         {
-          time: '19:00-20:30',
-          title: '返回飯店拿行李',
-          description: '返回大阪飯店拿行李，移動至環球影城飯店',
-          transport: '地鐵 + 計程車',
+          time: '08:30-09:00',
+          title: '前往集合地點',
+          description: '走路前往蟹道樂道頓堀東店集合',
+          transport: '走路',
+          location: '大阪蟹道樂道頓堀東店',
+          duration: '約4-6分鐘',
+          coordinates: [34.6686, 135.5011],
+          subway: '日本橋站附近',
+          details: {
+            japaneseInfo: '「かに道楽 道頓堀東店（ひがしてん）」の前までお願いします。\n(住所: 大阪市中央区道頓堀1-1-3)\n※日本橋駅の近く、堺筋沿いです。',
+            notes: 'KKday嵐山奈良一日遊集合點，走路約4-6分鐘非常近',
+            kkdayLink: 'https://www.kkday.com/zh-tw/product/270423'
+          }
+        },
+        {
+          time: '09:00-18:00',
+          title: 'KKday 嵐山・奈良・伏見稻荷一日遊',
+          description: '嵐山竹林、奈良餵鹿、伏見稻荷千本鳥居',
+          transport: '觀光遊覽車',
+          location: '嵐山 → 奈良 → 伏見稻荷',
+          duration: '約9小時',
+          coordinates: [35.0142, 135.7483],
+          mustEat: '嵐山：中村屋可樂餅、% Arabica Coffee、Miffy Sakura Kitchen | 奈良：中谷堂麻糬、大佛布丁 | 伏見稻荷：稻荷壽司',
+          mustVisit: '嵐山竹林、奈良餵鹿、伏見稻荷千本鳥居',
+          details: {
+            japaneseInfo: null,
+            notes: '嵐山竹林+奈良餵鹿+伏見稻荷。必吃：中村屋可樂餅、中谷堂麻糬、大佛布丁',
+            kkdayLink: 'https://www.kkday.com/zh-tw/product/270423'
+          }
+        },
+        {
+          time: '18:00-20:00',
+          title: '返回飯店拿行李 & 移動至 USJ',
+          description: '走路回 KOKO HOTEL 取行李，搭計程車到環球影城飯店',
+          transport: '走路 + 計程車 x2',
           location: 'The Singulari Hotel & Skyspa',
-          duration: '約1.5小時',
+          duration: '約2小時',
           coordinates: [34.6654, 135.4323],
+          subway: 'ユニバーサルシティ駅',
           details: {
             japaneseInfo: 'ユニバーサルシティ駅の「ザ・シンギュラリホテル & スカイスパ」までお願いします。\n(住所: 大阪市此花区島屋6丁目2-25)',
-            notes: '叫2台計程車，有大行李',
+            notes: '解散後走路回KOKO HOTEL(4分鐘)取行李，叫2台計程車(有行李)前往USJ飯店',
+            kkdayLink: null
+          }
+        },
+        {
+          time: '20:00',
+          title: '晚餐 - USJ CityWalk',
+          description: '環球影城 CityWalk 區享用晚餐',
+          location: '環球影城 CityWalk',
+          duration: '約1小時',
+          coordinates: [34.6654, 135.4323],
+          dinnerOptions: '551 Horai (海鮮炒麵、肉包)、大阪章魚燒博物館 (甲賀流、會津屋)',
+          details: {
+            japaneseInfo: null,
+            notes: '推薦551 Horai海鮮炒麵與肉包(可外帶)、章魚燒博物館',
             kkdayLink: null
           }
         }
       ],
       day6: [
         {
+          time: '07:30-08:30',
+          title: '飯店早餐',
+          description: '吃飽一點，樂園裡食物較貴且需排隊',
+          transport: '飯店內',
+          location: 'The Singulari Hotel',
+          duration: '約1小時',
+          coordinates: [34.6654, 135.4323],
+          details: {
+            japaneseInfo: null,
+            notes: '飯店餐廳',
+            kkdayLink: null
+          }
+        },
+        {
           time: '08:30-20:00',
-          title: '大阪環球影城全日遊',
+          title: '大阪環球影城 (USJ) 全日遊',
           description: '任天堂世界、哈利波特、小小兵等精彩設施',
           transport: '走路',
           location: '環球影城',
           duration: '約11.5小時',
-          coordinates: [34.6654, 135.4323]
+          coordinates: [34.6654, 135.4323],
+          subway: 'ユニバーサルシティ駅',
+          mustEat: '奇諾比奧咖啡 (需抽號碼牌)、瑪利歐鬆餅三明治、奶油啤酒 (無酒精)、三根掃帚烤雞拼盤、小小兵夾心餅乾、火雞腿、吉拿棒',
+          mustVisit: '超級任天堂世界、哈利波特魔法世界、小小兵樂園',
+          details: {
+            japaneseInfo: null,
+            notes: '飯店就在車站樓上。必吃：奇諾比奧咖啡、奶油啤酒、三根掃帚烤雞、火雞腿',
+            kkdayLink: null
+          }
         },
         {
           time: '20:00',
-          title: 'CityWalk 晚餐',
+          title: '晚餐 - CityWalk',
           description: '環球影城 CityWalk 區享用晚餐',
           location: '環球影城 CityWalk',
           duration: '約1小時',
-          coordinates: [34.6654, 135.4323]
+          coordinates: [34.6654, 135.4323],
+          dinnerOptions: 'Shake Shack (紐約漢堡、蘑菇漢堡、奶昔)、Ganko 壽司 (迴轉壽司或定食)',
+          details: {
+            japaneseInfo: null,
+            notes: 'Shake Shack蘑菇漢堡與奶昔必點、Ganko壽司適合想吃日式的長輩',
+            kkdayLink: null
+          }
         }
       ],
       day7: [
+        {
+          time: '08:30-09:30',
+          title: '飯店早餐',
+          description: '最後一天，悠閒享用早餐',
+          transport: '飯店內',
+          location: 'The Singulari Hotel',
+          duration: '約1小時',
+          coordinates: [34.6654, 135.4323],
+          details: {
+            japaneseInfo: null,
+            notes: '飯店餐廳',
+            kkdayLink: null
+          }
+        },
         {
           time: '10:00',
           title: '退房與移動',
           description: '推行李步行至巴士總站',
           transport: '走路',
           location: '環球影城巴士總站',
-          duration: '約30分鐘',
+          duration: '約10分鐘',
           coordinates: [34.6654, 135.4323],
           details: {
-            japaneseInfo: null,
+            japaneseInfo: '関西空港行きのリムジンバス乗り場はどこですか？\n(請問往關西機場的利木津巴士乘車處在哪裡？)',
             notes: '推行李步行約10分鐘至巴士總站',
             kkdayLink: null
           }
@@ -788,36 +995,39 @@ export default {
           location: '關西機場',
           duration: '約1小時',
           coordinates: [34.4320, 135.2304],
+          subway: '環球影城巴士總站 → 關西機場 T1',
           details: {
             japaneseInfo: '関西空港行きのリムジンバス乗り場はどこですか？\n(請問往關西機場的利木津巴士乘車處在哪裡？)',
-            notes: '利木津巴士從環球影城直達關西機場',
+            notes: '利木津巴士從環球影城直達關西機場，建議搭10:27班次',
             kkdayLink: null
           }
         },
         {
           time: '12:00-14:00',
-          title: '關西機場',
+          title: '關西機場 (KIX)',
           description: '辦理登機手續，準備返程',
-          location: '關西機場',
+          location: '關西機場 T1',
           duration: '約2小時',
           coordinates: [34.4320, 135.2304],
+          mustEat: '神座拉麵 (第一航廈3F，白菜清甜湯頭)',
+          mustBuy: 'Tokyo Banana、白色戀人、Royce 巧克力',
           details: {
             japaneseInfo: null,
-            notes: '中華航空CI153：14:30關西機場T1 / 16:45桃園機場T2',
+            notes: '中華航空CI153：14:30關西機場T1 / 16:45桃園機場T2。必吃神座拉麵、必買伴手禮',
             kkdayLink: null
           }
         },
         {
-          time: '14:30',
-          title: '返程',
-          description: '搭機返回台灣',
+          time: '14:30-16:45',
+          title: '返程航班',
+          description: '中華航空 CI153 關西機場 → 桃園機場',
           transport: '中華航空 CI153',
-          location: '關西機場 → 桃園機場',
-          duration: '飛行約3小時',
+          location: '關西機場 T1 → 桃園機場 T2',
+          duration: '飛行約3小時15分',
           coordinates: [34.4320, 135.2304],
           details: {
             japaneseInfo: null,
-            notes: '星宇航空JX822：09:20桃園機場T1 / 12:50關西機場T1 (去程)',
+            notes: '去程：星宇航空JX822 09:20桃園T1/12:50關西T1 | 回程：中華航空CI153 14:30關西T1/16:45桃園T2',
             kkdayLink: null
           }
         }
@@ -828,9 +1038,9 @@ export default {
       const dayMap = {
         day1: 'Day 1 - 抵達京都・鐵道與溫泉放鬆',
         day2: 'Day 2 - 京都經典：清水寺・小豬療癒・祇園',
-        day3: 'Day 3 - 關西精華一日遊 (移動日)',
-        day4: 'Day 4 - 大阪市區：寶可夢與歷史交錯',
-        day5: 'Day 5 - 海之京都：丹後紅松號・天橋立絕景',
+        day3: 'Day 3 - 海之京都：天橋立・伊根舟屋 (移動日)',
+        day4: 'Day 4 - 大阪市區自由散策',
+        day5: 'Day 5 - 古都巡禮：嵐山・奈良・伏見稻荷',
         day6: 'Day 6 - 大阪環球影城 (USJ)',
         day7: 'Day 7 - 輕鬆返台'
       }
