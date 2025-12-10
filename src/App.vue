@@ -748,7 +748,7 @@ export default {
           time: '08:30-18:30',
           title: 'KKday 天橋立・伊根舟屋一日遊 (京都出發/大阪下車)',
           description: '伊根舟屋遊覽船餵海鷗、天橋立纜車看飛龍觀/昇龍觀',
-          transport: '丹後紅松號列車',
+          transport: 'KKday 巴士一日遊',
           location: '天橋立、伊根舟屋',
           duration: '約10小時',
           coordinates: [35.5667, 135.1833],
@@ -764,7 +764,7 @@ export default {
           },
           details: {
             japaneseInfo: null,
-            notes: '天橋立、伊根舟屋餵海鷗、紅松號列車。午餐自理(文殊地區)，推薦花蛤丼',
+            notes: '搭乘遊覽船餵海鷗(請自備蝦味先)、天橋立纜車看飛龍觀。午餐自理(文殊地區)，推薦花蛤丼',
             kkdayLink: 'https://www.kkday.com/zh-tw/product/25439'
           }
         },
