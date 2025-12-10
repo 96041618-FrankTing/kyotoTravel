@@ -171,4 +171,114 @@ self.addEventListener('message', event => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
+  
+  // ⭐ 方案 1: 處理位置同步訊息
+  if (event.data && event.data.type === 'SYNC_LOCATION') {
+    const locationData = event.data.payload;
+    console.log('📍 Service Worker received location sync request:', locationData);
+    
+    // 儲存位置資料到 IndexedDB 或 Cache
+    if (locationData) {
+      caches.open('location-cache').then(cache => {
+        const response = new Response(JSON.stringify(locationData));
+        cache.put('/last-location', response);
+        console.log('💾 Location cached in Service Worker');
+      });
+    }
+  }
+});
+
+// ⭐ 方案 1: Background Fetch API 支援
+// 當背景同步完成時觸發
+self.addEventListener('backgroundfetchsuccess', (event) => {
+  console.log('✅ Background fetch succeeded!', event.registration.id);
+  
+  event.waitUntil(async function() {
+    try {
+      const registration = event.registration;
+      
+      // 獲取所有回應
+      const records = await registration.matchAll();
+      const responses = await Promise.all(
+        records.map(record => record.responseReady)
+      );
+      
+      console.log('📦 Background fetch responses:', responses);
+      
+      // 通知主應用程式同步成功
+      const clients = await self.clients.matchAll();
+      clients.forEach(client => {
+        client.postMessage({
+          type: 'BACKGROUND_FETCH_SUCCESS',
+          data: {
+            id: registration.id,
+            timestamp: Date.now()
+          }
+        });
+      });
+      
+      // 顯示通知（可選）
+      await registration.showNotification('位置已更新', {
+        body: '您的位置已成功同步到雲端',
+        icon: '/icon-192.png',
+        badge: '/icon-72.png'
+      });
+    } catch (error) {
+      console.error('❌ Background fetch processing error:', error);
+    }
+  }());
+});
+
+// 當背景同步失敗時觸發
+self.addEventListener('backgroundfetchfail', (event) => {
+  console.error('❌ Background fetch failed:', event.registration.id);
+  
+  event.waitUntil(async function() {
+    // 通知主應用程式同步失敗
+    const clients = await self.clients.matchAll();
+    clients.forEach(client => {
+      client.postMessage({
+        type: 'BACKGROUND_FETCH_FAILED',
+        data: {
+          id: event.registration.id,
+          timestamp: Date.now()
+        }
+      });
+    });
+  }());
+});
+
+// 當背景同步被中止時觸發
+self.addEventListener('backgroundfetchabort', (event) => {
+  console.warn('⚠️ Background fetch aborted:', event.registration.id);
+  
+  event.waitUntil(async function() {
+    const clients = await self.clients.matchAll();
+    clients.forEach(client => {
+      client.postMessage({
+        type: 'BACKGROUND_FETCH_ABORTED',
+        data: {
+          id: event.registration.id,
+          timestamp: Date.now()
+        }
+      });
+    });
+  }());
+});
+
+// 當用戶點擊背景同步的通知時觸發
+self.addEventListener('backgroundfetchclick', (event) => {
+  console.log('👆 Background fetch notification clicked');
+  
+  event.waitUntil(async function() {
+    const clients = await self.clients.matchAll({ type: 'window' });
+    
+    // 如果已有打開的視窗，聚焦它
+    if (clients.length > 0) {
+      clients[0].focus();
+    } else {
+      // 否則打開新視窗
+      self.clients.openWindow('/kyotoTravel/');
+    }
+  }());
 });

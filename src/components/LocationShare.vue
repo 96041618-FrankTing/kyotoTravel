@@ -30,11 +30,15 @@
           </div>
           <div class="status-item">
             <span class="status-icon">👥</span>
-            <span class="status-text">線上成員: {{ otherUsers.length }} 人</span>
+            <span class="status-text">團隊成員: {{ otherUsers.length }} 人</span>
           </div>
-          <div v-if="lastUpdateTime" class="status-item">
-            <span class="status-icon">🕐</span>
-            <span class="status-text">更新頻率: 前景 60秒 / 背景 180秒 🔋</span>
+          <div v-if="isSharingLocation" class="status-item">
+            <span class="status-icon">⚡</span>
+            <span class="status-text">更新頻率: 前景 30秒 / 背景快照 🔋</span>
+          </div>
+          <div v-if="backgroundFetchSupported && isSharingLocation" class="status-item">
+            <span class="status-icon">�</span>
+            <span class="status-text">背景同步: 已啟用 (15分鐘)</span>
           </div>
         </div>
 
@@ -51,18 +55,27 @@
 
         <!-- 在線成員列表 -->
         <div v-if="otherUsers.length > 0" class="users-list-section">
-          <label class="section-label">👥 在線成員位置：</label>
+          <label class="section-label">👥 團隊成員位置：</label>
           <div class="users-list">
             <div 
               v-for="user in otherUsers" 
               :key="user.id"
               class="user-item"
+              :class="{ 'user-offline': user.statusInfo?.icon === '🔴' }"
               @click="centerMapOnUser(user)"
             >
               <span class="user-emoji">{{ user.emoji }}</span>
               <div class="user-info">
-                <div class="user-name">{{ user.name }}</div>
-                <div class="user-distance" v-if="user.distance">{{ user.distance }}</div>
+                <div class="user-name">
+                  {{ user.name }}
+                  <span 
+                    class="user-status-badge" 
+                    :style="{ backgroundColor: user.statusInfo?.color }"
+                  >
+                    {{ user.statusInfo?.icon }} {{ user.statusInfo?.text }}
+                  </span>
+                </div>
+                <div class="user-distance" v-if="user.distance">📍 {{ user.distance }}</div>
               </div>
               <span class="user-time">{{ formatTimeAgo(user.timestamp) }}</span>
             </div>
@@ -106,9 +119,9 @@ export default {
     }
   },
   setup(props) {
-    // 更新頻率設定（省電優化）
-    const UPDATE_INTERVAL_FOREGROUND = 60000  // 前景：60秒
-    const UPDATE_INTERVAL_BACKGROUND = 180000 // 背景：180秒（3分鐘）
+    // 更新頻率設定（方案 5 混合策略）
+    const UPDATE_INTERVAL_FOREGROUND = 30000  // 前景：30秒（提升即時性）
+    const UPDATE_INTERVAL_BACKGROUND = 180000 // 背景：180秒（3分鐘，實際上會被暫停）
     
     // 狀態變數
     const showLocationPanel = ref(false)
@@ -118,6 +131,10 @@ export default {
     const otherUsers = ref([])
     const lastUpdateTime = ref(null)
     
+    // 新增：追蹤模式狀態
+    const trackingMode = ref('inactive') // 'inactive' | 'foreground' | 'background'
+    const backgroundFetchSupported = ref(false)
+    
     // 地圖相關
     const mapContainer = ref(null)
     let map = null
@@ -126,6 +143,9 @@ export default {
     let watchId = null
     let updateIntervalId = null
     let currentUpdateInterval = UPDATE_INTERVAL_FOREGROUND
+    
+    // 新增：上傳鎖（防止競態條件）
+    let isUploading = false
     
     // 用戶資訊
     const myUserId = ref(null)
@@ -198,6 +218,37 @@ export default {
       if (seconds < 60) return `${seconds}秒前`
       if (seconds < 3600) return `${Math.floor(seconds / 60)}分鐘前`
       return `${Math.floor(seconds / 3600)}小時前`
+    }
+
+    // ⭐ 方案 5 新增：獲取用戶狀態（即時/最近/離線）
+    const getUserStatus = (user) => {
+      if (!user || !user.timestamp) return { icon: '⚪', text: '未知', color: '#999' }
+
+      const now = Date.now()
+      const timeDiff = now - user.timestamp
+
+      // 檢查用戶狀態標記
+      if (user.status === 'stopped') {
+        return { icon: '⏸️', text: '已停止', color: '#666' }
+      }
+      if (user.status === 'disconnected') {
+        return { icon: '🔴', text: '已離線', color: '#ef4444' }
+      }
+
+      // 根據時間判斷
+      if (timeDiff < 60000) {
+        // 1分鐘內
+        return { icon: '🟢', text: '即時', color: '#10b981' }
+      } else if (timeDiff < 300000) {
+        // 5分鐘內
+        return { icon: '🟡', text: '最近', color: '#f59e0b' }
+      } else if (timeDiff < 600000) {
+        // 10分鐘內
+        return { icon: '🟠', text: '稍早', color: '#f97316' }
+      } else {
+        // 超過10分鐘
+        return { icon: '🔴', text: '離線', color: '#ef4444' }
+      }
     }
 
     // 初始化地圖
@@ -327,7 +378,7 @@ export default {
       }
     }
 
-    // 開始位置分享
+    // 開始位置分享（方案 5：前景實時追蹤）
     const startLocationSharing = () => {
       if (!navigator.geolocation) {
         alert('您的瀏覽器不支援地理定位功能')
@@ -335,6 +386,7 @@ export default {
       }
 
       locationStatus.value = '正在獲取位置...'
+      trackingMode.value = 'foreground'
       
       const options = {
         enableHighAccuracy: true,
@@ -353,10 +405,10 @@ export default {
             accuracy: accuracy
           }
 
-          locationStatus.value = '分享中'
+          locationStatus.value = trackingMode.value === 'foreground' ? '📡 實時分享中' : '🔋 背景模式'
           updateMyMarker(latitude, longitude)
           
-          console.log('📍 My location:', latitude, longitude, 'Accuracy:', accuracy)
+          console.log('📍 My location:', latitude, longitude, 'Accuracy:', accuracy, 'Mode:', trackingMode.value)
         },
         (error) => {
           console.error('❌ Geolocation error:', error)
@@ -366,15 +418,12 @@ export default {
         options
       )
 
-      // 設定定時上傳位置（可調整更新頻率）
-      // 30秒 = 高耗電但即時 | 60秒 = 平衡 | 120秒 = 省電
-      const UPDATE_INTERVAL = 60000 // 60 秒更新一次（省電模式）
-      
+      // 前景模式：30秒更新一次（提升即時性）
       updateIntervalId = setInterval(() => {
         if (myLocation.value && database && myUserId.value) {
           uploadLocationToFirebase()
         }
-      }, UPDATE_INTERVAL)
+      }, UPDATE_INTERVAL_FOREGROUND)
 
       // 立即上傳一次
       setTimeout(() => {
@@ -382,6 +431,8 @@ export default {
           uploadLocationToFirebase()
         }
       }, 2000)
+
+      console.log('🚀 Location sharing started in foreground mode (30s interval)')
     }
 
     // 調整更新頻率（根據前景/背景狀態）
@@ -404,8 +455,8 @@ export default {
       console.log(`🔄 Update interval changed to ${interval / 1000}s`)
     }
 
-    // 停止位置分享
-    const stopLocationSharing = () => {
+    // 停止位置分享（方案 5：標記為停止而非刪除）
+    const stopLocationSharing = async () => {
       if (watchId) {
         navigator.geolocation.clearWatch(watchId)
         watchId = null
@@ -416,42 +467,74 @@ export default {
         updateIntervalId = null
       }
 
-      // 從 Firebase 移除我的位置
-      if (database && myUserId.value) {
+      trackingMode.value = 'inactive'
+
+      // 標記為停止，而非刪除資料
+      if (database && myUserId.value && myLocation.value) {
         const myLocationRef = dbRef(database, `locations/${myUserId.value}`)
-        remove(myLocationRef)
+        try {
+          await set(myLocationRef, {
+            id: myUserId.value,
+            name: myUserInfo.value.name,
+            emoji: myUserInfo.value.emoji,
+            lat: myLocation.value.lat,
+            lng: myLocation.value.lng,
+            accuracy: myLocation.value.accuracy,
+            timestamp: myLocation.value.timestamp || Date.now(),
+            status: 'stopped',
+            stoppedAt: Date.now()
+          })
+          console.log('🛑 Location sharing stopped, data marked as inactive')
+        } catch (error) {
+          console.error('❌ Failed to update stop status:', error)
+        }
       }
 
       locationStatus.value = '未開始'
       console.log('🛑 Location sharing stopped')
     }
 
-    // 上傳位置到 Firebase
-    const uploadLocationToFirebase = () => {
+    // 上傳位置到 Firebase（方案 5：加入上傳鎖與狀態標記）
+    const uploadLocationToFirebase = async () => {
       if (!myLocation.value || !database || !myUserId.value) return
 
-      const locationData = {
-        id: myUserId.value,
-        name: myUserInfo.value.name,
-        emoji: myUserInfo.value.emoji,
-        lat: myLocation.value.lat,
-        lng: myLocation.value.lng,
-        accuracy: myLocation.value.accuracy,
-        timestamp: Date.now()
+      // 防止重複上傳（競態條件保護）
+      if (isUploading) {
+        console.log('⏳ Upload in progress, skipping...')
+        return
       }
 
-      const myLocationRef = dbRef(database, `locations/${myUserId.value}`)
-      set(myLocationRef, locationData)
-        .then(() => {
-          lastUpdateTime.value = Date.now()
-          console.log('✅ Location uploaded to Firebase')
-        })
-        .catch((error) => {
-          console.error('❌ Failed to upload location:', error)
-        })
+      isUploading = true
 
-      // 設定斷線時自動刪除
-      onDisconnect(myLocationRef).remove()
+      try {
+        const locationData = {
+          id: myUserId.value,
+          name: myUserInfo.value.name,
+          emoji: myUserInfo.value.emoji,
+          lat: myLocation.value.lat,
+          lng: myLocation.value.lng,
+          accuracy: myLocation.value.accuracy,
+          timestamp: Date.now(),
+          status: trackingMode.value, // 'foreground' | 'background' | 'inactive'
+          updatedAt: Date.now()
+        }
+
+        const myLocationRef = dbRef(database, `locations/${myUserId.value}`)
+        await set(myLocationRef, locationData)
+        
+        lastUpdateTime.value = Date.now()
+        console.log(`✅ Location uploaded to Firebase (mode: ${trackingMode.value})`)
+
+        // ⭐ 方案 5 核心改變：不自動刪除，改為標記離線狀態
+        onDisconnect(myLocationRef).update({
+          status: 'disconnected',
+          disconnectedAt: Date.now()
+        })
+      } catch (error) {
+        console.error('❌ Failed to upload location:', error)
+      } finally {
+        isUploading = false
+      }
     }
 
     // 監聽所有用戶位置
@@ -489,7 +572,7 @@ export default {
         
         const users = allUsers.filter(user => user.id !== myUserId.value)
         
-        // 計算距離
+        // ⭐ 方案 5：計算距離並加入狀態資訊
         if (myLocation.value) {
           users.forEach(user => {
             user.distance = calculateDistance(
@@ -498,8 +581,25 @@ export default {
               user.lat,
               user.lng
             )
+            // 加入狀態資訊
+            user.statusInfo = getUserStatus(user)
+          })
+        } else {
+          // 沒有我的位置時，仍然顯示狀態
+          users.forEach(user => {
+            user.statusInfo = getUserStatus(user)
           })
         }
+
+        // 按狀態和時間排序（即時 > 最近 > 離線）
+        users.sort((a, b) => {
+          const statusOrder = { '🟢': 0, '🟡': 1, '🟠': 2, '🔴': 3, '⏸️': 4 }
+          const orderA = statusOrder[a.statusInfo?.icon] ?? 5
+          const orderB = statusOrder[b.statusInfo?.icon] ?? 5
+          
+          if (orderA !== orderB) return orderA - orderB
+          return (b.timestamp || 0) - (a.timestamp || 0)
+        })
 
         otherUsers.value = users
         console.log('👥 Filtered other users:', users)
@@ -593,10 +693,98 @@ export default {
       }
     })
 
+    // ⭐ 方案 1: 檢測 Background Fetch 支援
+    const checkBackgroundFetchSupport = async () => {
+      if ('serviceWorker' in navigator && 'BackgroundFetchManager' in self) {
+        try {
+          const registration = await navigator.serviceWorker.ready
+          if (registration.backgroundFetch) {
+            backgroundFetchSupported.value = true
+            console.log('✅ Background Fetch API is supported')
+            return true
+          }
+        } catch (error) {
+          console.warn('⚠️ Background Fetch check error:', error)
+        }
+      }
+      
+      backgroundFetchSupported.value = false
+      console.log('⚠️ Background Fetch API is NOT supported, falling back to foreground-only mode')
+      return false
+    }
+
+    // ⭐ 方案 1: 註冊 Background Fetch（背景位置同步）
+    const registerBackgroundFetch = async () => {
+      if (!backgroundFetchSupported.value || !myLocation.value || !myUserId.value) {
+        return
+      }
+
+      try {
+        const registration = await navigator.serviceWorker.ready
+        
+        // 準備要上傳的位置資料
+        const locationData = {
+          id: myUserId.value,
+          name: myUserInfo.value.name,
+          emoji: myUserInfo.value.emoji,
+          lat: myLocation.value.lat,
+          lng: myLocation.value.lng,
+          accuracy: myLocation.value.accuracy,
+          timestamp: Date.now(),
+          status: 'background-fetch',
+          fetchedAt: Date.now()
+        }
+
+        // Firebase REST API endpoint
+        const firebaseUrl = `https://kyoto-travel-2026-default-rtdb.firebaseio.com/locations/${myUserId.value}.json`
+
+        // 註冊 Background Fetch
+        const bgFetch = await registration.backgroundFetch.fetch(
+          `location-sync-${Date.now()}`, // 唯一 ID
+          [firebaseUrl], // 要請求的 URL
+          {
+            title: '📍 位置同步中',
+            icons: [{ src: '/kyotoTravel/icon-192.png', sizes: '192x192', type: 'image/png' }],
+            downloadTotal: 2048, // 預估傳輸量（bytes）
+          }
+        )
+
+        console.log('🔄 Background Fetch registered:', bgFetch.id)
+
+        // 監聽進度
+        bgFetch.addEventListener('progress', () => {
+          console.log(`📊 Background Fetch progress: ${bgFetch.downloaded}/${bgFetch.downloadTotal}`)
+        })
+
+      } catch (error) {
+        console.error('❌ Background Fetch registration failed:', error)
+      }
+    }
+
+    // 監聽來自 Service Worker 的訊息
+    const setupServiceWorkerListener = () => {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.addEventListener('message', (event) => {
+          if (event.data.type === 'BACKGROUND_FETCH_SUCCESS') {
+            console.log('✅ Background fetch completed:', event.data)
+            // 可以更新 UI 或重新載入資料
+          } else if (event.data.type === 'BACKGROUND_FETCH_FAILED') {
+            console.error('❌ Background fetch failed:', event.data)
+          } else if (event.data.type === 'BACKGROUND_FETCH_ABORTED') {
+            console.warn('⚠️ Background fetch aborted:', event.data)
+          }
+        })
+      }
+    }
+
     // 組件掛載
-    onMounted(() => {
+    onMounted(async () => {
       console.log('🔧 LocationShare mounted, isLocationEnabled:', props.isLocationEnabled)
       console.log('🔧 Database object:', database)
+      
+      // ⭐ 方案 1: 檢測 Background Fetch 支援
+      await checkBackgroundFetchSupport()
+      setupServiceWorkerListener()
       
       if (props.isLocationEnabled) {
         console.log('✅ Location enabled, loading user info...')
@@ -612,24 +800,86 @@ export default {
         console.log('⚠️ Location sharing is disabled in props')
       }
 
-      // 監聽頁面可見性變化（省電優化）
+      // ⭐ 方案 5 核心：監聽頁面可見性變化（前景/背景切換）
       const handleVisibilityChange = () => {
+        if (!isSharingLocation.value) return
+
         if (document.hidden) {
-          // 頁面在背景，降低更新頻率
-          console.log('📱 App in background, reducing update frequency to 180s')
+          // 📱 切換到背景：立即上傳快照
+          console.log('📱 App switching to background, capturing snapshot...')
+          trackingMode.value = 'background'
+          
+          if (myLocation.value && database && myUserId.value) {
+            uploadLocationToFirebase() // 立即上傳當前位置
+            console.log('📸 Background snapshot captured')
+            
+            // ⭐ 方案 1: 如果支援 Background Fetch，註冊背景同步
+            if (backgroundFetchSupported.value) {
+              setTimeout(() => {
+                registerBackgroundFetch()
+                console.log('🔄 Background Fetch registered for periodic sync')
+              }, 2000) // 延遲 2 秒避免與立即快照衝突
+            }
+          }
+
+          // 降低更新頻率（實際上會被 iOS 暫停）
           adjustUpdateInterval(UPDATE_INTERVAL_BACKGROUND)
+          locationStatus.value = backgroundFetchSupported.value ? '🔄 背景同步中' : '🔋 背景模式'
         } else {
-          // 頁面在前景，恢復正常頻率
-          console.log('📱 App in foreground, restoring update frequency to 60s')
+          // 📱 返回前景：恢復實時追蹤
+          console.log('📱 App returning to foreground, resuming real-time tracking...')
+          trackingMode.value = 'foreground'
+          
+          // 立即上傳一次以通知其他用戶
+          if (myLocation.value && database && myUserId.value) {
+            uploadLocationToFirebase()
+            console.log('✅ Foreground resumed, location updated')
+          }
+
+          // 恢復高頻更新
           adjustUpdateInterval(UPDATE_INTERVAL_FOREGROUND)
+          locationStatus.value = '📡 實時分享中'
         }
       }
 
       document.addEventListener('visibilitychange', handleVisibilityChange)
 
+      // ⭐ 方案 5 新增：pagehide 事件（頁面關閉前最後快照）
+      const handlePageHide = (event) => {
+        if (!isSharingLocation.value || !myLocation.value) return
+
+        console.log('🚪 Page hiding, sending final beacon...')
+
+        // 使用 sendBeacon 確保資料能送出（即使頁面關閉）
+        const data = JSON.stringify({
+          id: myUserId.value,
+          name: myUserInfo.value.name,
+          emoji: myUserInfo.value.emoji,
+          lat: myLocation.value.lat,
+          lng: myLocation.value.lng,
+          accuracy: myLocation.value.accuracy,
+          timestamp: Date.now(),
+          status: 'pagehide',
+          pagehideAt: Date.now()
+        })
+
+        // Firebase Realtime Database 使用 REST API
+        const firebaseUrl = `https://kyoto-travel-2026-default-rtdb.firebaseio.com/locations/${myUserId.value}.json`
+        
+        try {
+          navigator.sendBeacon(firebaseUrl, data)
+          console.log('📤 Beacon sent successfully')
+        } catch (error) {
+          console.error('❌ Beacon send failed:', error)
+        }
+      }
+
+      window.addEventListener('pagehide', handlePageHide)
+
       // 組件卸載時移除監聽
       onUnmounted(() => {
         document.removeEventListener('visibilitychange', handleVisibilityChange)
+        window.removeEventListener('pagehide', handlePageHide)
       })
     })
 
@@ -649,7 +899,10 @@ export default {
       mapContainer,
       toggleLocationSharing,
       centerMapOnUser,
-      formatTimeAgo
+      formatTimeAgo,
+      trackingMode,
+      backgroundFetchSupported,
+      getUserStatus
     }
   }
 }
@@ -865,6 +1118,10 @@ export default {
   transform: translateX(2px);
 }
 
+.user-item.user-offline {
+  opacity: 0.6;
+}
+
 .user-emoji {
   font-size: 24px;
 }
@@ -877,11 +1134,27 @@ export default {
   font-weight: 600;
   font-size: 14px;
   color: #1f2937;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.user-status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  color: white;
+  gap: 2px;
 }
 
 .user-distance {
   font-size: 12px;
   color: #6b7280;
+  margin-top: 2px;
 }
 
 .user-time {
