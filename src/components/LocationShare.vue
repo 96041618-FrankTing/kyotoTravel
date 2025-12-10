@@ -40,6 +40,10 @@
             <span class="status-icon">�</span>
             <span class="status-text">背景同步: 已啟用 (15分鐘)</span>
           </div>
+          <div v-if="notificationPermissionGranted && isSharingLocation" class="status-item">
+            <span class="status-icon">🤖</span>
+            <span class="status-text">Android 優化: 已啟用 🚀</span>
+          </div>
         </div>
 
         <!-- 控制按鈕 -->
@@ -122,6 +126,21 @@ export default {
     // 更新頻率設定（方案 5 混合策略）
     const UPDATE_INTERVAL_FOREGROUND = 30000  // 前景：30秒（提升即時性）
     const UPDATE_INTERVAL_BACKGROUND = 180000 // 背景：180秒（3分鐘，實際上會被暫停）
+    const BACKGROUND_FETCH_INTERVAL = 900000  // Background Fetch：15分鐘（系統控制，僅參考）
+    
+    // 用戶狀態判斷時間閾值
+    const STATUS_REALTIME_THRESHOLD = 90000   // 1.5分鐘：即時（前景模式）
+    const STATUS_RECENT_THRESHOLD = 600000    // 10分鐘：最近（剛切背景）
+    const STATUS_BACKGROUND_THRESHOLD = 1200000 // 20分鐘：背景中（配合 Background Fetch）
+    const STATUS_AWAY_THRESHOLD = 3600000     // 1小時：稍早
+    // 超過1小時：離線
+    
+    // ⭐ Android 平台檢測與優化
+    const isAndroid = /Android/i.test(navigator.userAgent)
+    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent)
+    
+    // Android 特定：背景更新策略
+    const ANDROID_BACKGROUND_INTERVAL = 120000 // Android: 背景可能持續 2 分鐘更新
     
     // 狀態變數
     const showLocationPanel = ref(false)
@@ -134,6 +153,7 @@ export default {
     // 新增：追蹤模式狀態
     const trackingMode = ref('inactive') // 'inactive' | 'foreground' | 'background'
     const backgroundFetchSupported = ref(false)
+    const notificationPermissionGranted = ref(false)
     
     // 地圖相關
     const mapContainer = ref(null)
@@ -220,7 +240,7 @@ export default {
       return `${Math.floor(seconds / 3600)}小時前`
     }
 
-    // ⭐ 方案 5 新增：獲取用戶狀態（即時/最近/離線）
+    // ⭐ 方案 5 新增：獲取用戶狀態（即時/最近/背景/離線）
     const getUserStatus = (user) => {
       if (!user || !user.timestamp) return { icon: '⚪', text: '未知', color: '#999' }
 
@@ -231,22 +251,22 @@ export default {
       if (user.status === 'stopped') {
         return { icon: '⏸️', text: '已停止', color: '#666' }
       }
-      if (user.status === 'disconnected') {
-        return { icon: '🔴', text: '已離線', color: '#ef4444' }
-      }
 
-      // 根據時間判斷
-      if (timeDiff < 60000) {
-        // 1分鐘內
-        return { icon: '🟢', text: '即時', color: '#10b981' }
-      } else if (timeDiff < 300000) {
-        // 5分鐘內
-        return { icon: '🟡', text: '最近', color: '#f59e0b' }
-      } else if (timeDiff < 600000) {
-        // 10分鐘內
+      // 根據時間判斷（配合 Background Fetch 15分鐘週期）
+      if (timeDiff < STATUS_REALTIME_THRESHOLD) {
+        // 1.5分鐘內 - 即時（前景 30秒更新）
+        return { icon: '�', text: '即時', color: '#10b981' }
+      } else if (timeDiff < STATUS_RECENT_THRESHOLD) {
+        // 10分鐘內 - 最近（可能剛切背景）
+        return { icon: '�', text: '最近', color: '#f59e0b' }
+      } else if (timeDiff < STATUS_BACKGROUND_THRESHOLD) {
+        // 20分鐘內 - 背景中（配合 Background Fetch 15分鐘週期）
+        return { icon: '�', text: '背景中', color: '#3b82f6' }
+      } else if (timeDiff < STATUS_AWAY_THRESHOLD) {
+        // 1小時內 - 稍早
         return { icon: '🟠', text: '稍早', color: '#f97316' }
       } else {
-        // 超過10分鐘
+        // 超過1小時 - 離線
         return { icon: '🔴', text: '離線', color: '#ef4444' }
       }
     }
@@ -444,15 +464,24 @@ export default {
         clearInterval(updateIntervalId)
       }
       
+      // ⭐ Android 優化：背景時使用較積極的更新頻率
+      let actualInterval = interval
+      if (interval === UPDATE_INTERVAL_BACKGROUND && isAndroid) {
+        // Android 背景可能持續運行 2-5 分鐘，使用較短間隔
+        actualInterval = ANDROID_BACKGROUND_INTERVAL
+        console.log('🤖 Android: Using optimistic background interval (2min)')
+      }
+      
       // 設定新的定時器
-      currentUpdateInterval = interval
+      currentUpdateInterval = actualInterval
       updateIntervalId = setInterval(() => {
         if (myLocation.value && database && myUserId.value) {
           uploadLocationToFirebase()
         }
-      }, interval)
+      }, actualInterval)
       
-      console.log(`🔄 Update interval changed to ${interval / 1000}s`)
+      const platform = isAndroid ? '🤖 Android' : isIOS ? '🍎 iOS' : '💻 Desktop'
+      console.log(`🔄 ${platform}: Update interval changed to ${actualInterval / 1000}s`)
     }
 
     // 停止位置分享（方案 5：標記為停止而非刪除）
@@ -761,6 +790,45 @@ export default {
       }
     }
 
+    // ⭐ Android 優化：請求通知權限（改善 Background Fetch 穩定性）
+    const requestNotificationPermission = async () => {
+      // 僅在 Android 上請求（iOS 不需要用於 Background Fetch）
+      if (!isAndroid || !('Notification' in window)) {
+        console.log('⚠️ Notification API not available or not on Android')
+        return false
+      }
+
+      try {
+        if (Notification.permission === 'granted') {
+          notificationPermissionGranted.value = true
+          console.log('✅ Notification permission already granted')
+          return true
+        } else if (Notification.permission === 'default') {
+          const permission = await Notification.requestPermission()
+          if (permission === 'granted') {
+            notificationPermissionGranted.value = true
+            console.log('✅ Notification permission granted')
+            // 顯示歡迎通知
+            new Notification('位置追蹤已啟用', {
+              body: 'Android 背景同步功能已優化 🚀',
+              icon: '/kyotoTravel/icon-192.png',
+              badge: '/kyotoTravel/icon-72.png'
+            })
+            return true
+          } else {
+            console.log('⚠️ Notification permission denied')
+            return false
+          }
+        } else {
+          console.log('⚠️ Notification permission denied by user')
+          return false
+        }
+      } catch (error) {
+        console.error('❌ Notification permission request error:', error)
+        return false
+      }
+    }
+
     // 監聽來自 Service Worker 的訊息
     const setupServiceWorkerListener = () => {
       if ('serviceWorker' in navigator) {
@@ -781,10 +849,21 @@ export default {
     onMounted(async () => {
       console.log('🔧 LocationShare mounted, isLocationEnabled:', props.isLocationEnabled)
       console.log('🔧 Database object:', database)
+      console.log(`📱 Platform detected: ${isAndroid ? 'Android' : isIOS ? 'iOS' : 'Desktop'}`)
       
       // ⭐ 方案 1: 檢測 Background Fetch 支援
       await checkBackgroundFetchSupport()
       setupServiceWorkerListener()
+      
+      // ⭐ Android 優化：請求通知權限（改善背景同步）
+      if (isAndroid && backgroundFetchSupported.value) {
+        setTimeout(async () => {
+          const granted = await requestNotificationPermission()
+          if (granted) {
+            console.log('🤖 Android optimization: Notification permission granted for better background sync')
+          }
+        }, 2000) // 延遲 2 秒，避免打擾初始化流程
+      }
       
       if (props.isLocationEnabled) {
         console.log('✅ Location enabled, loading user info...')
