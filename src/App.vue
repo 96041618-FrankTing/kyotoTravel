@@ -319,9 +319,27 @@
               </div>
 
               <div v-if="selectedItinerary?.details?.japaneseInfo" class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
-                <h4 class="font-semibold text-lg mb-2 text-blue-800">🇯🇵 日文乘車資訊 (給司機看)</h4>
+                <div class="flex justify-between items-start mb-2">
+                  <h4 class="font-semibold text-lg text-blue-800">🇯🇵 日文乘車資訊 (給司機看)</h4>
+                  <button 
+                    @click="speakJapanese(selectedItinerary.details.japaneseInfo)"
+                    :class="[
+                      'px-3 py-1 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-1',
+                      isSpeaking 
+                        ? 'bg-red-500 text-white hover:bg-red-600' 
+                        : 'bg-blue-500 text-white hover:bg-blue-600'
+                    ]"
+                  >
+                    <span v-if="!isSpeaking">🔊</span>
+                    <span v-else>⏸️</span>
+                    <span>{{ isSpeaking ? '停止' : '播放' }}</span>
+                  </button>
+                </div>
                 <div class="bg-white p-3 rounded border font-mono text-sm whitespace-pre-line">
                   {{ selectedItinerary.details.japaneseInfo }}
+                </div>
+                <div class="text-xs text-blue-600 mt-2">
+                  💡 點擊「播放」按鈕可用日文語音朗讀給司機或服務人員聽
                 </div>
               </div>
 
@@ -450,6 +468,11 @@ export default {
       enablePerformanceMonitor: false
     })
     const map = ref(null)
+    
+    // 語音播放相關
+    const isSpeaking = ref(false)
+    const speechSynthesis = window.speechSynthesis
+    let currentUtterance = null
     const markers = ref([])
     const userMarker = ref(null)
     const selectedItinerary = ref(null)
@@ -1488,9 +1511,102 @@ export default {
       // 用戶資訊已儲存在 localStorage，VoiceCall 和 LocationShare 會自動讀取
     }
 
+    // 日文語音播放功能
+    const speakJapanese = (text) => {
+      if (!text) return
+
+      // 如果正在播放，則停止
+      if (isSpeaking.value) {
+        speechSynthesis.cancel()
+        isSpeaking.value = false
+        currentUtterance = null
+        return
+      }
+
+      try {
+        // 創建語音合成實例
+        const utterance = new SpeechSynthesisUtterance(text)
+        currentUtterance = utterance
+
+        // 設定為日文
+        utterance.lang = 'ja-JP'
+        
+        // 設定語音參數
+        utterance.rate = 0.9  // 語速稍慢一點，讓司機聽得更清楚
+        utterance.pitch = 1.0 // 音調正常
+        utterance.volume = 1.0 // 音量最大
+
+        // 嘗試選擇日文語音（如果有的話）
+        const voices = speechSynthesis.getVoices()
+        const japaneseVoice = voices.find(voice => 
+          voice.lang === 'ja-JP' || 
+          voice.lang.startsWith('ja')
+        )
+        
+        if (japaneseVoice) {
+          utterance.voice = japaneseVoice
+          console.log('🇯🇵 使用日文語音:', japaneseVoice.name)
+        } else {
+          console.log('⚠️ 未找到日文語音，使用系統預設語音')
+        }
+
+        // 播放開始事件
+        utterance.onstart = () => {
+          isSpeaking.value = true
+          console.log('🔊 開始播放日文語音')
+          
+          // 震動反饋（如果支援）
+          if (navigator.vibrate) {
+            navigator.vibrate(50)
+          }
+        }
+
+        // 播放結束事件
+        utterance.onend = () => {
+          isSpeaking.value = false
+          currentUtterance = null
+          console.log('✅ 日文語音播放完成')
+        }
+
+        // 播放錯誤事件
+        utterance.onerror = (event) => {
+          isSpeaking.value = false
+          currentUtterance = null
+          console.error('❌ 語音播放錯誤:', event.error)
+          
+          // 顯示錯誤提示
+          alert(`語音播放失敗: ${event.error}\n請確認您的裝置支援語音播放功能`)
+        }
+
+        // 開始播放
+        speechSynthesis.speak(utterance)
+
+      } catch (error) {
+        console.error('❌ 語音播放初始化失敗:', error)
+        isSpeaking.value = false
+        alert('語音播放功能初始化失敗，您的裝置可能不支援此功能')
+      }
+    }
+
+    // 組件卸載時停止語音播放
+    onUnmounted(() => {
+      if (isSpeaking.value) {
+        speechSynthesis.cancel()
+        isSpeaking.value = false
+      }
+    })
+
     // 在組件掛載時載入設定
     onMounted(() => {
       loadDevSettings()
+      
+      // 載入語音列表（某些瀏覽器需要）
+      if (speechSynthesis.getVoices().length === 0) {
+        speechSynthesis.addEventListener('voiceschanged', () => {
+          const voices = speechSynthesis.getVoices()
+          console.log('📢 可用語音:', voices.filter(v => v.lang.startsWith('ja')).map(v => v.name))
+        })
+      }
     })
 
     return {
@@ -1512,7 +1628,10 @@ export default {
       devSettings,
       handleTitleClick,
       onSettingsChanged,
-      onUserInfoChanged
+      onUserInfoChanged,
+      // 日文語音播放
+      isSpeaking,
+      speakJapanese
     }
   }
 }
