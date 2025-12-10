@@ -200,7 +200,7 @@
           <div class="mt-4 pt-4 border-t border-gray-200">
             <div class="flex justify-between items-center text-lg font-bold">
               <span>總計預估費用</span>
-              <span class="text-primary">NT$ {{ (63317 + 23236 + 11790 + 15282 + 4832 + 12476).toLocaleString() }}</span>
+              <span class="text-primary">NT$ {{ (63317 + 23236 + 15978 + 15282 + 7144 + 6668).toLocaleString() }}</span>
             </div>
           </div>
         </div>
@@ -516,9 +516,9 @@ export default {
           link: 'https://www.booking.com/hotel/jp/onyado-nono-kyoto-shichijo.zh-tw.html'
         },
         {
-          name: 'Hotel Sobial Namba Daikokucho',
+          name: 'KOKO HOTEL Osaka Namba Sennichimae',
           dates: '01/18~01/20 (住兩晚)',
-          link: 'https://www.booking.com/hotel/jp/hotel-sobial-namba-daikokucho.zh-tw.html'
+          link: 'https://www.booking.com/hotel/jp/koko-osaka-namba-sennichimae.zh-tw.html'
         },
         {
           name: 'THE SINGULARI HOTEL & SKYSPA at UNIVERSAL STUDIOS JAPAN',
@@ -529,10 +529,10 @@ export default {
       costs: [
         { item: '來回機票 x4人 (ezTravel訂購)', amount: 'NT$63,317' },
         { item: '住宿 Onyado Nono Kyoto Shichijo 兩晚', amount: 'NT$23,236' },
-        { item: '住宿 Hotel Sobial Namba Daikokucho 兩晚', amount: 'NT$11,790' },
+        { item: '住宿 KOKO HOTEL Osaka Namba 兩晚', amount: 'NT$15,978' },
         { item: '住宿 THE SINGULARI HOTEL 兩晚', amount: 'NT$15,282' },
-        { item: 'KKDAY京都行程 x4', amount: 'NT$4,832' },
-        { item: 'KKDAY天橋立行程 x4', amount: 'NT$12,476' }
+        { item: 'KKDAY 天橋立一日遊 x4', amount: 'NT$7,144' },
+        { item: 'KKDAY 京都奈良一日遊 x4', amount: 'NT$6,668' }
       ]
     }
 
@@ -699,7 +699,7 @@ export default {
           details: {
             japaneseInfo: '京都駅八条口の「京都アバンティ（Avanti）」前までお願いします。',
             notes: '有3個大行李，務必叫2台車。KKday集合點',
-            kkdayLink: 'https://www.kkday.com/zh-tw/product/163483'
+            kkdayLink: 'https://www.kkday.com/zh-tw/product/25439'
           }
         },
         {
@@ -716,7 +716,7 @@ export default {
           details: {
             japaneseInfo: null,
             notes: '天橋立、伊根舟屋餵海鷗、紅松號列車。午餐自理(文殊地區)，推薦花蛤丼',
-            kkdayLink: 'https://www.kkday.com/zh-tw/product/163483'
+            kkdayLink: 'https://www.kkday.com/zh-tw/product/25439'
           }
         },
         {

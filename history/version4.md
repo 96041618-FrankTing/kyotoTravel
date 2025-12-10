@@ -281,3 +281,36 @@
     1.  **神座拉麵 (Kamukura)：** 第一航廈 3F，大量白菜的清甜湯頭。
     2.  **免稅店：** 購買 **Tokyo Banana**、**白色戀人**、**Royce 巧克力**。
 * 快樂賦歸。
+
+
+--
+
+## 飛機航班 
+* 1/16 星宇航空JX822：09:20桃園機場T1 / 12:50關西機場T1, 2h30m
+* 1/22 中華航空CI153：14:30關西機場T1 / 16:45桃園機場T2, 3h15m
+
+## 住宿飯店
+* Onyado Nono Kyoto Shichijo Natural Hot Spring,  01/16~01/18 (住兩晚)
+https://www.booking.com/hotel/jp/onyado-nono-kyoto-shichijo.zh-tw.html
+
+* KOKO HOTEL Osaka Namba Sennichimae,  01/18~01/20 (住兩晚)
+https://www.booking.com/hotel/jp/koko-osaka-namba-sennichimae.zh-tw.html
+
+* THE SINGULARI HOTEL & SKYSPA at UNIVERSAL STUDIOS JAPAN, 01/20~01/22 （住兩晚)
+https://www.booking.com/hotel/jp/singulari-hotel-skyspa-at-universal-studios-japan.zh-tw.html
+
+## KKDAY一日團資訊
+* KKDAY日本天橋立一日遊(京都伊根舟屋＆伊根灣遊船) | [京都出發] 08:30集合/京都站八条口巴士站 | [大阪下車] 預計18:30抵達
+https://www.kkday.com/zh-tw/product/25439-amanohashidate-day-trip-kyoto-ine-funaya-ine-bay-cruise-depart-from-osaka?pkg_oid=1837362&go_date=2026-01-18&2f739f0761f57fa891a5e4cf82339fb5=4
+
+* KKDAY【京都&奈良一日遊】嵐山・奈良公園・伏見稻荷大社｜[大阪出發] 7:45集合/大阪近鐵日本橋2號出口
+https://www.kkday.com/zh-tw/product/270423-kyoto-nara-day-tour-arashiyama-nara-park-fushimi-inari-bamboo?pkg_oid=1820162&go_date=2026-01-20&14a0e6e90225bee341b3b430e49faf1d=1&c6dc2fc8d6dfba51f0f2dfbbb44f09be=3
+
+
+## 費用估算
+來回機票x4人 (ezTravel訂購)：NT.63317
+住宿 Onyado Nono Kyoto Shichijo Natural Hot Spring 兩晚：NT.23236
+住宿 KOKO HOTEL Osaka Namba Sennichimae 兩晚：NT.15978
+住宿 THE SINGULARI HOTEL & SKYSPA at UNIVERSAL STUDIOS JAPAN 兩晚：NT.15282
+KKDAY日本天橋立一日遊x4：NT.7144
+KKDAY京都&奈良一日遊(嵐山・奈良公園・伏見稻荷大社)x4：NT.6668
