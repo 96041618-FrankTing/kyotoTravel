@@ -311,11 +311,35 @@
               <div v-if="selectedItinerary?.lunchOptions" class="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-400">
                 <h4 class="font-semibold text-lg mb-2 text-orange-800">🍱 午餐推薦</h4>
                 <p class="whitespace-pre-line">{{ selectedItinerary?.lunchOptions }}</p>
+                <div v-if="selectedItinerary?.restaurants?.lunch" class="mt-3 space-y-2">
+                  <div v-for="(restaurant, index) in selectedItinerary.restaurants.lunch" :key="index" class="bg-white p-2 rounded border border-orange-200">
+                    <button 
+                      @click="openGoogleMaps(restaurant.name, restaurant.location)"
+                      class="text-orange-600 hover:text-orange-800 underline font-medium flex items-center space-x-1 bg-transparent border-none cursor-pointer text-left w-full"
+                    >
+                      <span>📍</span>
+                      <span>{{ restaurant.name }}</span>
+                    </button>
+                    <div v-if="restaurant.note" class="text-xs text-gray-600 mt-1 ml-5">{{ restaurant.note }}</div>
+                  </div>
+                </div>
               </div>
 
               <div v-if="selectedItinerary?.dinnerOptions" class="bg-indigo-50 p-4 rounded-lg border-l-4 border-indigo-400">
                 <h4 class="font-semibold text-lg mb-2 text-indigo-800">🍽️ 晚餐推薦</h4>
                 <p class="whitespace-pre-line">{{ selectedItinerary?.dinnerOptions }}</p>
+                <div v-if="selectedItinerary?.restaurants?.dinner" class="mt-3 space-y-2">
+                  <div v-for="(restaurant, index) in selectedItinerary.restaurants.dinner" :key="index" class="bg-white p-2 rounded border border-indigo-200">
+                    <button 
+                      @click="openGoogleMaps(restaurant.name, restaurant.location)"
+                      class="text-indigo-600 hover:text-indigo-800 underline font-medium flex items-center space-x-1 bg-transparent border-none cursor-pointer text-left w-full"
+                    >
+                      <span>📍</span>
+                      <span>{{ restaurant.name }}</span>
+                    </button>
+                    <div v-if="restaurant.note" class="text-xs text-gray-600 mt-1 ml-5">{{ restaurant.note }}</div>
+                  </div>
+                </div>
               </div>
 
               <div v-if="selectedItinerary?.details?.japaneseInfo" class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
@@ -576,6 +600,11 @@ export default {
           duration: '約2小時',
           coordinates: [34.9854, 135.7581],
           mustEat: '百年洋食漢堡排、整顆番茄沙拉',
+          restaurants: {
+            dinner: [
+              { name: '東洋亭 Porta店', location: '京都車站 Porta地下街', note: '百年洋食漢堡排、整顆番茄沙拉' }
+            ]
+          },
           details: {
             japaneseInfo: null,
             notes: '京都車站地下街美食，排隊人多建議提早',
@@ -622,6 +651,13 @@ export default {
           duration: '約2小時',
           coordinates: [35.0064, 135.7850],
           lunchOptions: '奧丹清水 (湯豆腐)、阿古屋茶屋 (茶泡飯吃到飽)、藤菜美 (現烤醬油糰子、洛水)',
+          restaurants: {
+            lunch: [
+              { name: '奧丹清水 Okutan', location: '京都清水寺', note: '湯豆腐料理，環境清幽' },
+              { name: '阿古屋茶屋 Akoya', location: '京都清水寺二年坂', note: '茶泡飯吃到飽(需排隊)' },
+              { name: '藤菜美 Fujinami', location: '京都清水寺', note: '現烤醬油糰子、洛水(抹茶水)' }
+            ]
+          },
           details: {
             japaneseInfo: null,
             notes: '午餐推薦：奧丹清水湯豆腐(長輩會喜歡)、阿古屋茶屋茶泡飯吃到飽(需排隊)、藤菜美現烤糰子',
@@ -665,6 +701,12 @@ export default {
           duration: '約1小時',
           coordinates: [35.0044, 135.7740],
           dinnerOptions: '柚子元 (柚子豬肉火鍋)、名代炸豬排 Katsukura 三條本店',
+          restaurants: {
+            dinner: [
+              { name: '柚子元 Yuzugen', location: '京都河原町', note: '柚子豬肉火鍋，湯頭清爽適合冬天' },
+              { name: '名代炸豬排 Katsukura 三條本店', location: '京都三條', note: '京都最好吃的炸豬排之一' }
+            ]
+          },
           details: {
             japaneseInfo: null,
             notes: '推薦柚子鍋(湯頭清爽適合冬天)或京都最好吃的炸豬排',
@@ -713,6 +755,13 @@ export default {
           mustEat: '花蛤丼 (あさり丼)',
           lunchOptions: 'はまや食堂 (花蛤丼、烏龍麵)、橋立大丸本店 (海鮮丼、團體定食)、Cafe du Pin (麵包簡餐)',
           mustVisit: '伊根舟屋餵海鷗 (自備蝦味先)、天橋立纜車',
+          restaurants: {
+            lunch: [
+              { name: 'はまや食堂 Hamaya Shokudo', location: '天橋立智恩寺', note: '花蛤丼、烏龍麵，座位多出餐快' },
+              { name: '橋立大丸本店', location: '天橋立', note: '海鮮丼、團體定食，環境寬敞' },
+              { name: 'Cafe du Pin', location: '天橋立運河旁', note: '麵包和簡餐' }
+            ]
+          },
           details: {
             japaneseInfo: null,
             notes: '天橋立、伊根舟屋餵海鷗、紅松號列車。午餐自理(文殊地區)，推薦花蛤丼',
@@ -742,6 +791,13 @@ export default {
           duration: '約1小時',
           coordinates: [34.6686, 135.5011],
           dinnerOptions: '千房大阪燒、神座拉麵千日前店 (蔬菜湯頭)、わなか章魚燒',
+          restaurants: {
+            dinner: [
+              { name: '千房大阪燒 Chibo', location: '大阪千日前', note: '大阪燒名店' },
+              { name: '神座拉麵 Kamukura 千日前店', location: '大阪千日前', note: '蔬菜湯頭拉麵，口味清甜' },
+              { name: 'わなか章魚燒 Wanaka', location: '大阪千日前', note: '千日前總店，必吃大阪章魚燒' }
+            ]
+          },
           details: {
             japaneseInfo: null,
             notes: '千房大阪燒、神座拉麵(蔬菜湯頭清甜)、わなか章魚燒千日前總店',
@@ -806,6 +862,13 @@ export default {
           coordinates: [34.6686, 135.5011],
           subway: '日本橋站附近',
           mustEat: '黑門三平 (現切生魚片、大蝦)、石橋食品 (關東煮)、丸善食肉店 (現烤和牛串)',
+          restaurants: {
+            lunch: [
+              { name: '黑門三平', location: '大阪黑門市場', note: '現切生魚片、大蝦(可內用)' },
+              { name: '石橋食品', location: '大阪黑門市場', note: '關東煮(蘿蔔燉得很爛)' },
+              { name: '丸善食肉店', location: '大阪黑門市場', note: '現烤和牛串(現場吃非常香)' }
+            ]
+          },
           details: {
             japaneseInfo: '「黒門市場（くろもんいちば）」の入り口までお願いします。\n(日本橋駅の近くです)',
             notes: '午餐推薦邊走邊吃：黑門三平生魚片、石橋關東煮、丸善和牛串',
@@ -837,6 +900,12 @@ export default {
           duration: '約1小時',
           coordinates: [34.6739, 135.5011],
           dinnerOptions: '國產牛燒肉放題 Aburiya (道頓堀御堂筋店，建議預約)、播重 Hariju (壽喜燒老店)',
+          restaurants: {
+            dinner: [
+              { name: '國產牛燒肉放題 Aburiya 道頓堀御堂筋店', location: '大阪道頓堀', note: '高品質吃到飽，強烈建議預約' },
+              { name: '播重 Hariju', location: '大阪心齋橋', note: '壽喜燒老店，適合長輩' }
+            ]
+          },
           details: {
             japaneseInfo: null,
             notes: '推薦國產牛燒肉放題Aburiya(強烈建議預約)或播重壽喜燒(適合長輩)',
@@ -927,6 +996,12 @@ export default {
           duration: '約1小時',
           coordinates: [34.6654, 135.4323],
           dinnerOptions: '551 Horai (海鮮炒麵、肉包)、大阪章魚燒博物館 (甲賀流、會津屋)',
+          restaurants: {
+            dinner: [
+              { name: '551 Horai 蓬萊', location: '環球影城 CityWalk', note: '海鮮炒麵、肉包(可外帶)' },
+              { name: '大阪章魚燒博物館', location: '環球影城 CityWalk', note: '多家名店聚集(甲賀流、會津屋)' }
+            ]
+          },
           details: {
             japaneseInfo: null,
             notes: '推薦551 Horai海鮮炒麵與肉包(可外帶)、章魚燒博物館',
@@ -974,6 +1049,12 @@ export default {
           duration: '約1小時',
           coordinates: [34.6654, 135.4323],
           dinnerOptions: 'Shake Shack (紐約漢堡、蘑菇漢堡、奶昔)、Ganko 壽司 (迴轉壽司或定食)',
+          restaurants: {
+            dinner: [
+              { name: 'Shake Shack', location: '環球影城 CityWalk', note: '紐約漢堡，蘑菇漢堡與奶昔必點' },
+              { name: 'Ganko 壽司 がんこ', location: '環球影城 CityWalk', note: '迴轉壽司或定食，適合長輩' }
+            ]
+          },
           details: {
             japaneseInfo: null,
             notes: 'Shake Shack蘑菇漢堡與奶昔必點、Ganko壽司適合想吃日式的長輩',
@@ -1137,6 +1218,33 @@ export default {
         // 最後的備用方案
         window.location.href = url
       }
+    }
+
+    // 打開 Google Maps 搜尋餐廳/店家位置
+    const openGoogleMaps = (name, location) => {
+      if (!name) return
+
+      // 建立搜尋查詢字串: 店名 + 地點
+      let searchQuery = name
+      if (location) {
+        searchQuery = `${name} ${location}`
+      }
+
+      // 編碼 URL 參數
+      const encodedQuery = encodeURIComponent(searchQuery)
+      
+      // Google Maps 搜尋 URL
+      const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedQuery}`
+      
+      console.log('🗺️ 打開 Google Maps:', searchQuery)
+      
+      // 震動反饋（如果支援）
+      if (navigator.vibrate) {
+        navigator.vibrate(30)
+      }
+
+      // 使用現有的 openExternalLink 函數打開連結
+      openExternalLink(googleMapsUrl)
     }
 
     const initializeMap = () => {
@@ -1622,6 +1730,7 @@ export default {
       openDetailModal,
       closeDetailModal,
       openExternalLink,
+      openGoogleMaps,
       currentWeather,
       // 開發者模式
       showDevSettings,
