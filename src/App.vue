@@ -78,13 +78,15 @@
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-2xl font-bold text-dark">行程總覽</h2>
           <video 
-            src="./image/i-love-you.mp4" 
             class="overview-cat-gif"
             autoplay
             loop
             muted
             playsinline
-          ></video>
+          >
+            <source src="./image/i-love-you.webm" type="video/webm">
+            <source src="./image/i-love-you.mp4" type="video/mp4">
+          </video>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div class="bg-white rounded-lg shadow-md p-4">
@@ -460,12 +462,14 @@
     <!-- 貓咪大戰爭行走動畫 -->
     <div class="battle-cat-walking">
       <video 
-        src="./image/battle-cats-walking.mp4" 
         autoplay
         loop
         muted
         playsinline
-      ></video>
+      >
+        <source src="./image/battle-cats-walking.webm" type="video/webm">
+        <source src="./image/battle-cats-walking.mp4" type="video/mp4">
+      </video>
     </div>
 
     <!-- 語音通話組件（根據開發者設定決定是否顯示）-->
