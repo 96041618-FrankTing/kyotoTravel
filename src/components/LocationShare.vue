@@ -171,6 +171,79 @@ export default {
     const myUserId = ref(null)
     const myUserInfo = ref(null)
 
+    // ⭐ 事件日誌系統
+    const MAX_LOG_ENTRIES = 100 // 最多保留 100 條日誌
+    const LOG_RETENTION_DAYS = 7 // 保留 7 天的日誌
+    
+    // 記錄事件到 localStorage
+    const logEvent = (eventType, details = {}) => {
+      try {
+        const timestamp = Date.now()
+        const logEntry = {
+          time: new Date(timestamp).toLocaleString('zh-TW', { 
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+          }),
+          timestamp,
+          event: eventType,
+          details
+        }
+        
+        // 從 localStorage 讀取現有日誌
+        let logs = []
+        try {
+          const savedLogs = localStorage.getItem('locationShareLogs')
+          if (savedLogs) {
+            logs = JSON.parse(savedLogs)
+          }
+        } catch (e) {
+          console.warn('⚠️ Failed to parse existing logs:', e)
+        }
+        
+        // 清除超過 7 天的日誌
+        const cutoffTime = timestamp - (LOG_RETENTION_DAYS * 24 * 60 * 60 * 1000)
+        logs = logs.filter(log => log.timestamp > cutoffTime)
+        
+        // 加入新日誌
+        logs.push(logEntry)
+        
+        // 保持最多 100 條
+        if (logs.length > MAX_LOG_ENTRIES) {
+          logs = logs.slice(-MAX_LOG_ENTRIES)
+        }
+        
+        // 儲存回 localStorage
+        localStorage.setItem('locationShareLogs', JSON.stringify(logs))
+        console.log(`📝 Log: [${eventType}]`, details)
+      } catch (error) {
+        console.error('❌ Failed to save log:', error)
+      }
+    }
+    
+    // 取得所有日誌
+    const getLogs = () => {
+      try {
+        const savedLogs = localStorage.getItem('locationShareLogs')
+        if (savedLogs) {
+          const logs = JSON.parse(savedLogs)
+          return logs.reverse() // 最新的在前面
+        }
+      } catch (e) {
+        console.error('❌ Failed to get logs:', e)
+      }
+      return []
+    }
+    
+    // 清除所有日誌
+    const clearLogs = () => {
+      localStorage.removeItem('locationShareLogs')
+      console.log('🗑️ All logs cleared')
+    }
+
     // 初始化 Firebase
     // 取得或創建位置分享用的用戶 ID
     const getOrCreateLocationUserId = () => {
@@ -215,11 +288,13 @@ export default {
         const startTime = parseInt(savedTime)
         const now = Date.now()
         const elapsed = now - startTime
-        const MAX_SHARING_DURATION = 24 * 60 * 60 * 1000 // 24 小時
+        const MAX_SHARING_DURATION = 7 * 24 * 60 * 60 * 1000 // ⭐ 改為 7 天（一週）
         
-        // 如果超過 24 小時，自動停止
+        // 如果超過 7 天，自動停止
         if (elapsed > MAX_SHARING_DURATION) {
-          console.log('⏰ Sharing duration exceeded 24 hours, auto-stopping')
+          const elapsedDays = Math.floor(elapsed / 1000 / 60 / 60 / 24)
+          console.log(`⏰ Sharing duration exceeded 7 days (${elapsedDays} days), auto-stopping`)
+          logEvent('自動停止', { reason: `超過 7 天限制 (${elapsedDays} 天)` })
           localStorage.removeItem('isSharingLocation')
           localStorage.removeItem('sharingStartTime')
           return false
@@ -428,6 +503,7 @@ export default {
     const startLocationSharing = () => {
       if (!navigator.geolocation) {
         alert('您的瀏覽器不支援地理定位功能')
+        logEvent('錯誤', { message: '瀏覽器不支援地理定位' })
         return
       }
 
@@ -438,6 +514,13 @@ export default {
       localStorage.setItem('isSharingLocation', 'true')
       localStorage.setItem('sharingStartTime', Date.now().toString())
       console.log('💾 Saved sharing state to localStorage')
+      
+      // ⭐ 記錄事件
+      logEvent('開始分享位置', { 
+        mode: 'foreground',
+        userId: myUserId.value,
+        platform: isAndroid ? 'Android' : isIOS ? 'iOS' : 'Desktop'
+      })
       
       const options = {
         enableHighAccuracy: true,
@@ -460,10 +543,26 @@ export default {
           updateMyMarker(latitude, longitude)
           
           console.log('📍 My location:', latitude, longitude, 'Accuracy:', accuracy, 'Mode:', trackingMode.value)
+          
+          // ⭐ 記錄首次獲取位置
+          if (!lastUpdateTime.value) {
+            logEvent('首次獲取位置', { 
+              lat: latitude.toFixed(6), 
+              lng: longitude.toFixed(6), 
+              accuracy: accuracy.toFixed(2) 
+            })
+          }
         },
         (error) => {
           console.error('❌ Geolocation error:', error)
           locationStatus.value = '定位失敗'
+          
+          // ⭐ 記錄錯誤
+          logEvent('定位錯誤', { 
+            code: error.code, 
+            message: error.message 
+          })
+          
           alert(`定位失敗: ${error.message}`)
         },
         options
@@ -528,6 +627,17 @@ export default {
       }
 
       trackingMode.value = 'inactive'
+      
+      // ⭐ 記錄停止事件
+      logEvent('停止分享位置', { 
+        lastLocation: myLocation.value ? {
+          lat: myLocation.value.lat.toFixed(6),
+          lng: myLocation.value.lng.toFixed(6)
+        } : null,
+        duration: localStorage.getItem('sharingStartTime') ? 
+          Math.floor((Date.now() - parseInt(localStorage.getItem('sharingStartTime'))) / 1000 / 60) + '分鐘' : 
+          '未知'
+      })
 
       // ⭐ 清除 localStorage 中的分享狀態
       localStorage.removeItem('isSharingLocation')
@@ -589,6 +699,15 @@ export default {
         
         lastUpdateTime.value = Date.now()
         console.log(`✅ Location uploaded to Firebase (mode: ${trackingMode.value})`)
+        
+        // ⭐ 記錄上傳成功
+        logEvent('上傳位置', { 
+          mode: trackingMode.value,
+          lat: myLocation.value.lat.toFixed(6),
+          lng: myLocation.value.lng.toFixed(6),
+          accuracy: myLocation.value.accuracy.toFixed(2),
+          success: true
+        })
 
         // ⭐ 方案 5 核心改變：不自動刪除，改為標記離線狀態
         onDisconnect(myLocationRef).update({
@@ -597,6 +716,13 @@ export default {
         })
       } catch (error) {
         console.error('❌ Failed to upload location:', error)
+        
+        // ⭐ 記錄上傳失敗
+        logEvent('上傳位置失敗', { 
+          mode: trackingMode.value,
+          error: error.message,
+          success: false
+        })
       } finally {
         isUploading = false
       }
@@ -911,12 +1037,19 @@ export default {
         // ⭐ 如果之前在分享，自動恢復
         if (shouldResumeSharing) {
           console.log('🔄 Resuming location sharing from saved state...')
+          
+          // ⭐ 記錄恢復事件
+          const elapsed = parseInt(localStorage.getItem('sharingStartTime') || '0')
+          const minutes = Math.floor((Date.now() - elapsed) / 1000 / 60)
+          logEvent('恢復分享', { 
+            elapsedMinutes: minutes,
+            reason: 'PWA 重新開啟後自動恢復'
+          })
+          
           setTimeout(() => {
             startLocationSharing()
             isSharingLocation.value = true
             // 顯示提示訊息
-            const elapsed = parseInt(localStorage.getItem('sharingStartTime') || '0')
-            const minutes = Math.floor((Date.now() - elapsed) / 1000 / 60)
             if (minutes > 0) {
               locationStatus.value = `🔄 已恢復分享 (${minutes} 分鐘前開始)`
               setTimeout(() => {
@@ -945,6 +1078,15 @@ export default {
           console.log('📱 App switching to background, capturing snapshot...')
           trackingMode.value = 'background'
           
+          // ⭐ 記錄背景切換
+          logEvent('切換到背景', { 
+            currentLocation: myLocation.value ? {
+              lat: myLocation.value.lat.toFixed(6),
+              lng: myLocation.value.lng.toFixed(6)
+            } : null,
+            backgroundFetchSupported: backgroundFetchSupported.value
+          })
+          
           if (myLocation.value && database && myUserId.value) {
             uploadLocationToFirebase() // 立即上傳當前位置
             console.log('📸 Background snapshot captured')
@@ -954,6 +1096,7 @@ export default {
               setTimeout(() => {
                 registerBackgroundFetch()
                 console.log('🔄 Background Fetch registered for periodic sync')
+                logEvent('註冊 Background Fetch', { interval: '15分鐘' })
               }, 2000) // 延遲 2 秒避免與立即快照衝突
             }
           }
@@ -965,6 +1108,11 @@ export default {
           // 📱 返回前景：恢復實時追蹤
           console.log('📱 App returning to foreground, resuming real-time tracking...')
           trackingMode.value = 'foreground'
+          
+          // ⭐ 記錄返回前景
+          logEvent('返回前景', { 
+            resumeTracking: true
+          })
           
           // 立即上傳一次以通知其他用戶
           if (myLocation.value && database && myUserId.value) {

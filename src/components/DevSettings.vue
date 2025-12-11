@@ -1,4 +1,5 @@
 <template>
+  <!-- 主設定面板 -->
   <div v-if="showSettings" class="dev-settings-overlay" @click="closeSettings">
     <div class="dev-settings-panel" @click.stop>
       <div class="panel-header">
@@ -112,6 +113,14 @@
               <span class="toggle-slider"></span>
             </label>
           </div>
+          
+          <!-- ⭐ 新增：位置分享診斷按鈕 -->
+          <div class="setting-item diagnostic-btn-wrapper">
+            <button @click="openDiagnosticPanel" class="diagnostic-btn">
+              📊 查看位置分享診斷日誌
+            </button>
+            <p class="setting-desc">查看位置分享事件記錄和系統狀態</p>
+          </div>
         </section>
 
         <!-- 資訊顯示 -->
@@ -138,6 +147,20 @@
           </div>
         </section>
 
+        <!-- ⭐ 新增：位置分享診斷 -->
+        <section class="settings-section" v-if="settings.enableLocationShare">
+          <h3 class="section-title">📊 位置分享診斷</h3>
+          
+          <div class="diagnostic-btn-wrapper">
+            <button @click="openDiagnosticPanel" class="diagnostic-btn">
+              🔍 查看診斷日誌
+            </button>
+            <p class="diagnostic-hint">
+              查看位置分享的詳細事件記錄，用於診斷背景更新問題
+            </p>
+          </div>
+        </section>
+
         <!-- 危險操作 -->
         <section class="settings-section danger-section">
           <h3 class="section-title">⚠️ 危險操作</h3>
@@ -161,6 +184,87 @@
       </div>
     </div>
   </div>
+  
+  <!-- ⭐ 診斷面板 -->
+  <div v-if="showDiagnosticPanel" class="diagnostic-overlay" @click="closeDiagnosticPanel">
+    <div class="diagnostic-panel" @click.stop>
+      <div class="panel-header">
+        <h2 class="panel-title">📊 位置分享診斷</h2>
+        <button @click="closeDiagnosticPanel" class="close-btn">&times;</button>
+      </div>
+
+      <div class="panel-content diagnostic-content">
+        <!-- 當前狀態 -->
+        <section class="diagnostic-section">
+          <h3 class="section-title">💾 當前狀態</h3>
+          <div class="status-grid">
+            <div class="status-item">
+              <div class="status-label">分享狀態</div>
+              <div class="status-value" :class="{ active: getDiagnosticInfo().isSharingLocation }">
+                {{ getDiagnosticInfo().isSharingLocation ? '✅ 進行中' : '❌ 未開始' }}
+              </div>
+            </div>
+            <div class="status-item">
+              <div class="status-label">開始時間</div>
+              <div class="status-value">{{ getDiagnosticInfo().sharingStartTime }}</div>
+            </div>
+            <div class="status-item">
+              <div class="status-label">持續時間</div>
+              <div class="status-value">{{ getDiagnosticInfo().sharingDuration }}</div>
+            </div>
+            <div class="status-item">
+              <div class="status-label">日誌數量</div>
+              <div class="status-value">{{ getDiagnosticInfo().logs.length }} 條</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 事件日誌 -->
+        <section class="diagnostic-section">
+          <h3 class="section-title">📜 事件日誌 (最近 20 條)</h3>
+          <div class="logs-container">
+            <div v-if="getDiagnosticInfo().logs.length === 0" class="no-logs">
+              暫無日誌記錄
+            </div>
+            <div 
+              v-for="(log, index) in getDiagnosticInfo().logs" 
+              :key="index" 
+              class="log-entry"
+              :class="getLogClass(log.event)"
+            >
+              <div class="log-header">
+                <span class="log-icon">{{ getLogIcon(log.event) }}</span>
+                <span class="log-event">{{ log.event }}</span>
+                <span class="log-time">{{ log.time }}</span>
+              </div>
+              <div class="log-details" v-if="Object.keys(log.details).length > 0">
+                <div v-for="(value, key) in log.details" :key="key" class="log-detail-item">
+                  <span class="detail-key">{{ key }}:</span>
+                  <span class="detail-value">{{ formatDetailValue(value) }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 操作按鈕 -->
+        <section class="diagnostic-actions">
+          <button @click="exportLogs" class="action-btn primary">
+            📋 匯出日誌
+          </button>
+          <button @click="clearDiagnosticLogs" class="action-btn danger">
+            🗑️ 清除日誌
+          </button>
+        </section>
+      </div>
+
+      <div class="panel-footer">
+        <button @click="closeDiagnosticPanel" class="footer-btn">
+          關閉
+        </button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -177,6 +281,8 @@ export default {
   emits: ['close', 'settings-changed', 'user-info-changed'],
   setup(props, { emit }) {
     const showSettings = ref(props.show)
+    const showDiagnosticPanel = ref(false)  // ⭐ 新增診斷面板狀態
+    
     const settings = ref({
       enableVoiceCall: true,
       enableMap: true,
@@ -304,9 +410,142 @@ export default {
     const updateShow = (newVal) => {
       showSettings.value = newVal
     }
+    
+    // ⭐ 新增：打開診斷面板
+    const openDiagnosticPanel = () => {
+      showDiagnosticPanel.value = true
+    }
+    
+    // ⭐ 新增：關閉診斷面板
+    const closeDiagnosticPanel = () => {
+      showDiagnosticPanel.value = false
+    }
+    
+    // ⭐ 新增：獲取診斷資訊
+    const getDiagnosticInfo = () => {
+      const logs = getLogs()
+      const isSharingLocation = localStorage.getItem('isSharingLocation') === 'true'
+      const sharingStartTime = localStorage.getItem('sharingStartTime')
+      
+      let sharingDuration = '未開始'
+      if (isSharingLocation && sharingStartTime) {
+        const elapsed = Date.now() - parseInt(sharingStartTime)
+        const hours = Math.floor(elapsed / 1000 / 60 / 60)
+        const minutes = Math.floor((elapsed / 1000 / 60) % 60)
+        sharingDuration = hours > 0 ? `${hours}小時${minutes}分鐘` : `${minutes}分鐘`
+      }
+      
+      return {
+        isSharingLocation,
+        sharingDuration,
+        sharingStartTime: sharingStartTime ? new Date(parseInt(sharingStartTime)).toLocaleString('zh-TW') : '未開始',
+        logs
+      }
+    }
+    
+    // ⭐ 新增：獲取日誌（從 localStorage）
+    const getLogs = () => {
+      try {
+        const savedLogs = localStorage.getItem('locationShareLogs')
+        if (savedLogs) {
+          const logs = JSON.parse(savedLogs)
+          return logs.reverse().slice(0, 20) // 最新的 20 條
+        }
+      } catch (e) {
+        console.error('❌ Failed to get logs:', e)
+      }
+      return []
+    }
+    
+    // ⭐ 新增：清除日誌
+    const clearDiagnosticLogs = () => {
+      if (confirm('確定要清除所有位置分享日誌嗎？')) {
+        localStorage.removeItem('locationShareLogs')
+        alert('✅ 日誌已清除')
+        closeDiagnosticPanel()
+      }
+    }
+    
+    // ⭐ 新增：匯出日誌
+    const exportLogs = () => {
+      const info = getDiagnosticInfo()
+      const text = `📊 位置分享診斷報告
+生成時間：${new Date().toLocaleString('zh-TW')}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━
+💾 當前狀態
+━━━━━━━━━━━━━━━━━━━━━━━━━
+分享狀態：${info.isSharingLocation ? '✅ 進行中' : '❌ 未開始'}
+開始時間：${info.sharingStartTime}
+持續時間：${info.sharingDuration}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━
+📜 事件日誌 (最近 20 條)
+━━━━━━━━━━━━━━━━━━━━━━━━━
+${info.logs.map(log => `[${log.time}] ${log.event}
+${JSON.stringify(log.details, null, 2)}`).join('\n\n')}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━
+ℹ️ 系統資訊
+━━━━━━━━━━━━━━━━━━━━━━━━━
+User Agent: ${navigator.userAgent}
+Platform: ${navigator.platform}
+LocalStorage: ${storageUsed.value}
+`
+      
+      // 複製到剪貼簿
+      navigator.clipboard.writeText(text).then(() => {
+        alert('✅ 診斷報告已複製到剪貼簿！')
+      }).catch(() => {
+        // 降級方案：下載為文件
+        const blob = new Blob([text], { type: 'text/plain' })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `location-diagnostic-${Date.now()}.txt`
+        a.click()
+        URL.revokeObjectURL(url)
+        alert('✅ 診斷報告已下載！')
+      })
+    }
+    
+    // ⭐ 新增：獲取日誌圖示
+    const getLogIcon = (event) => {
+      const iconMap = {
+        '開始分享位置': '🚀',
+        '停止分享位置': '🛑',
+        '首次獲取位置': '📍',
+        '上傳位置': '✅',
+        '上傳位置失敗': '❌',
+        '切換到背景': '📱',
+        '返回前景': '📱',
+        '恢復分享': '🔄',
+        '註冊 Background Fetch': '🔄',
+        '定位錯誤': '⚠️',
+        '錯誤': '❌'
+      }
+      return iconMap[event] || '📝'
+    }
+    
+    // ⭐ 新增：獲取日誌樣式類別
+    const getLogClass = (event) => {
+      if (event.includes('錯誤') || event.includes('失敗')) return 'log-error'
+      if (event.includes('成功') || event.includes('上傳位置') && !event.includes('失敗')) return 'log-success'
+      if (event.includes('背景') || event.includes('前景')) return 'log-info'
+      return ''
+    }
+    
+    // ⭐ 新增：格式化詳細資訊值
+    const formatDetailValue = (value) => {
+      if (typeof value === 'object') {
+        return JSON.stringify(value)
+      }
+      return String(value)
+    }
 
     return {
       showSettings,
+      showDiagnosticPanel,
       settings,
       userInfo,
       emojiList,
@@ -319,7 +558,15 @@ export default {
       buildDate,
       browserInfo,
       storageUsed,
-      updateShow
+      updateShow,
+      openDiagnosticPanel,
+      closeDiagnosticPanel,
+      getDiagnosticInfo,
+      clearDiagnosticLogs,
+      exportLogs,
+      getLogIcon,
+      getLogClass,
+      formatDetailValue
     }
   },
   watch: {
@@ -744,6 +991,252 @@ input:checked + .toggle-slider:before {
 
   .info-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* ⭐ 診斷面板樣式 */
+.diagnostic-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10001;
+  backdrop-filter: blur(4px);
+}
+
+.diagnostic-panel {
+  background: white;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease-out;
+}
+
+.diagnostic-content {
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.diagnostic-section {
+  margin-bottom: 24px;
+}
+
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.status-item {
+  background: #f9fafb;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.status-label {
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+.status-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.status-value.active {
+  color: #10b981;
+}
+
+.logs-container {
+  max-height: 400px;
+  overflow-y: auto;
+  margin-top: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 8px;
+  background: #f9fafb;
+}
+
+.no-logs {
+  text-align: center;
+  padding: 40px 20px;
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.log-entry {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 8px;
+  transition: all 0.2s;
+}
+
+.log-entry:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.log-entry.log-error {
+  border-left: 3px solid #ef4444;
+}
+
+.log-entry.log-success {
+  border-left: 3px solid #10b981;
+}
+
+.log-entry.log-info {
+  border-left: 3px solid #3b82f6;
+}
+
+.log-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.log-icon {
+  font-size: 16px;
+}
+
+.log-event {
+  flex: 1;
+  font-weight: 600;
+  font-size: 14px;
+  color: #1f2937;
+}
+
+.log-time {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.log-details {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.log-detail-item {
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 2px;
+  display: flex;
+  gap: 6px;
+}
+
+.detail-key {
+  font-weight: 500;
+  color: #4b5563;
+}
+
+.detail-value {
+  color: #6b7280;
+  word-break: break-all;
+}
+
+.diagnostic-actions {
+  display: flex;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.action-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.action-btn.primary {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+}
+
+.action-btn.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+.action-btn.danger {
+  background: white;
+  color: #ef4444;
+  border: 1px solid #ef4444;
+}
+
+.action-btn.danger:hover {
+  background: #fef2f2;
+  transform: translateY(-2px);
+}
+
+/* 診斷按鈕樣式 */
+.diagnostic-btn-wrapper {
+  display: block;
+  margin-top: 16px;
+}
+
+.diagnostic-btn {
+  width: 100%;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.diagnostic-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+}
+
+.diagnostic-btn:active {
+  transform: translateY(0);
+}
+
+.diagnostic-hint {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #6b7280;
+  text-align: center;
+  line-height: 1.4;
+}
+
+@media (max-width: 600px) {
+  .diagnostic-panel {
+    width: 95%;
+    max-height: 90vh;
+  }
+  
+  .status-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .diagnostic-actions {
+    flex-direction: column;
   }
 }
 </style>
