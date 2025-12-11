@@ -6,13 +6,15 @@
         <div class="flex items-center justify-between">
           <div>
             <h1 
-              class="text-lg sm:text-2xl font-bold text-primary no-zoom-title" 
+              class="text-lg sm:text-2xl font-bold text-primary no-zoom-title flex items-center gap-2" 
               @click="handleTitleClick"
               @touchend.prevent="handleTitleClick"
             >
+              <span class="cat-decoration">🐱</span>
               🇯🇵 京阪古都七日散策之旅
+              <span class="cat-decoration" style="animation-delay: 0.5s">🌸</span>
             </h1>
-            <p class="text-sm text-gray-600">2026年1月16日 - 1月22日</p>
+            <p class="text-sm text-gray-600">2026年1月16日 - 1月22日 <span class="sparkle">✨</span></p>
           </div>
           <div class="text-right">
             <div class="text-sm text-gray-600">
@@ -445,6 +447,9 @@
         </div>
       </div>
     </main>
+
+    <!-- 可愛的貓咪行走動畫 -->
+    <div class="cat-walk-animation">🐱</div>
 
     <!-- 語音通話組件（根據開發者設定決定是否顯示）-->
     <VoiceCall 
@@ -1872,11 +1877,23 @@ nav::-webkit-scrollbar-track {
 }
 
 nav::-webkit-scrollbar-thumb {
-  background: #E63946;
+  background: #FFB7C5;  /* 櫻花粉色 */
   border-radius: 2px;
 }
 
 nav::-webkit-scrollbar-thumb:hover {
-  background: #d32f3f;
+  background: #FF9CAD;  /* 深櫻花粉 */
 }
 </style>
+/* 可愛日本風按鈕效果 */
+button, .nav-btn {
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+button:hover:not(:disabled), .nav-btn:hover {
+  transform: translateY(-2px);
+}
+
+button:active:not(:disabled), .nav-btn:active {
+  transform: translateY(0);
+}
