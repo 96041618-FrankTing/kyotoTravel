@@ -10,7 +10,6 @@
               @click="handleTitleClick"
               @touchend.prevent="handleTitleClick"
             >
-              <img src="./image/the-battle-cats-basic-cat.gif" alt="貓咪" class="battle-cat-icon" />
               🇯🇵 京阪古都七日散策之旅
               <span class="cat-decoration" style="animation-delay: 0.5s; font-size: 1.3em;">🌸</span>
             </h1>
@@ -1951,26 +1950,36 @@ button:active:not(:disabled), .nav-btn:active {
 /* 行走的貓咪動畫 */
 @keyframes cat-walk-across {
   0% {
-    left: -150px;
+    left: -100px;
   }
   100% {
-    left: calc(100% + 150px);
+    left: calc(100% + 100px);
   }
 }
 
 .battle-cat-walking {
   position: fixed;
   bottom: 30px;
-  left: -150px;
+  left: -100px;
   animation: cat-walk-across 30s linear infinite;
   z-index: 1000;
   pointer-events: none;
+  /* 強制 GPU 加速，修正 iPhone GIF 播放問題 */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .battle-cat-walking img {
-  width: 120px;
+  width: 80px;  /* 從 120px 改為 80px，更小巧可愛 */
   height: auto;
   filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.3));
+  /* 確保 iPhone 上 GIF 正常播放 */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 
 /* Overview 頁面的貓咪 GIF */
@@ -1979,6 +1988,12 @@ button:active:not(:disabled), .nav-btn:active {
   height: 60px;
   object-fit: contain;
   animation: bounce 2s ease-in-out infinite;
+  /* 確保 iPhone 上 GIF 正常播放 */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  image-rendering: -webkit-optimize-contrast;
 }
 
 /* 彈跳動畫 */
