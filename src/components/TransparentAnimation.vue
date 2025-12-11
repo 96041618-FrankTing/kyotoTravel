@@ -1,57 +1,37 @@
 <template>
   <div class="transparent-animation-wrapper">
-    <!-- 影片載入失敗時顯示保底圖片 -->
-    <img 
-      v-if="videoError"
-      :src="fallbackImage" 
-      :alt="altText"
-      class="transparent-animation fallback-image"
-    />
-    
-    <!-- 正常影片播放 -->
-    <video
-      v-else
-      ref="videoRef"
-      class="transparent-animation"
-      autoplay
-      loop
-      muted
-      playsinline
-      webkit-playsinline
-      :poster="posterImage"
-      @loadedmetadata="onVideoLoaded"
-      @error="onVideoError"
-    >
-      <!-- iOS Safari 優先：HEVC with alpha channel -->
-      <source :src="hevcSource" type='video/quicktime; codecs="hvc1"' />
+    <!-- 
+      使用 picture 元素來支援多種格式
+      瀏覽器會自動選擇第一個支援的格式
+    -->
+    <picture>
+      <!-- iOS 和現代瀏覽器優先：APNG (透明動畫) -->
+      <source 
+        v-if="apngSource" 
+        :srcset="apngSource" 
+        type="image/apng"
+      />
       
-      <!-- Android/Desktop 備用：WebM with alpha channel -->
-      <source :src="webmSource" type="video/webm" />
-    </video>
+      <!-- 保底：原始 GIF -->
+      <img 
+        :src="fallbackImage" 
+        :alt="altText"
+        class="transparent-animation"
+        loading="lazy"
+      />
+    </picture>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
-
 // Props 定義
 const props = defineProps({
-  // HEVC 影片路徑 (iOS 專用，支援透明背景)
-  hevcSource: {
-    type: String,
-    required: true
-  },
-  // WebM 影片路徑 (Android/PC 專用，支援透明背景)
-  webmSource: {
-    type: String,
-    required: true
-  },
-  // Poster 圖片 (載入前顯示)
-  posterImage: {
+  // APNG 圖片路徑 (iOS/現代瀏覽器，支援透明動畫)
+  apngSource: {
     type: String,
     default: ''
   },
-  // 保底靜態圖片 (瀏覽器不支援影片時)
+  // 保底 GIF 圖片 (所有瀏覽器都支援)
   fallbackImage: {
     type: String,
     required: true
@@ -72,52 +52,6 @@ const props = defineProps({
     default: 'auto'
   }
 })
-
-const videoRef = ref(null)
-const videoError = ref(false)
-
-// 影片載入完成
-const onVideoLoaded = () => {
-  videoError.value = false
-  if (videoRef.value) {
-    // 確保影片能播放（某些瀏覽器需要手動觸發）
-    const playPromise = videoRef.value.play()
-    
-    if (playPromise !== undefined) {
-      playPromise.catch(error => {
-        console.warn('自動播放被阻止，嘗試靜音播放:', error)
-        // 如果自動播放失敗，確保靜音後重試
-        videoRef.value.muted = true
-        videoRef.value.play()
-      })
-    }
-  }
-}
-
-// 影片載入錯誤
-const onVideoError = (event) => {
-  console.warn('影片載入失敗，將顯示保底圖片:', event)
-  videoError.value = true
-}
-
-// 生命週期：確保影片在可見時播放
-onMounted(() => {
-  // 監聽頁面可見性變化，確保切回頁面時影片繼續播放
-  const handleVisibilityChange = () => {
-    if (!document.hidden && videoRef.value && videoRef.value.paused) {
-      videoRef.value.play().catch(() => {
-        // 靜默處理播放失敗
-      })
-    }
-  }
-  
-  document.addEventListener('visibilitychange', handleVisibilityChange)
-  
-  // 清理函數
-  onUnmounted(() => {
-    document.removeEventListener('visibilitychange', handleVisibilityChange)
-  })
-})
 </script>
 
 <style scoped>
@@ -133,10 +67,10 @@ onMounted(() => {
   height: 100%;
   object-fit: contain;
   
-  /* 關鍵：讓影片像背景圖，無法被點擊 */
+  /* 關鍵：讓圖片像背景圖，無法被點擊 */
   pointer-events: none;
   
-  /* 確保影片不會被選取 */
+  /* 確保圖片不會被選取 */
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -147,15 +81,6 @@ onMounted(() => {
   
   /* 確保透明背景正確顯示 */
   background: transparent;
-}
-
-/* 保底圖片樣式 */
-.fallback-image {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  pointer-events: none;
-  user-select: none;
 }
 
 /* 針對 iOS Safari 的額外優化 */

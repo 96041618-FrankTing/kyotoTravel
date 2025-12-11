@@ -78,8 +78,7 @@
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-2xl font-bold text-dark">行程總覽</h2>
           <TransparentAnimation
-            hevc-source="image/i-love-you-hevc.mov"
-            webm-source="image/i-love-you.webm"
+            apng-source="image/i-love-you.apng"
             fallback-image="image/i-love-you.gif"
             alt-text="可愛貓咪愛心"
             width="60px"
@@ -461,8 +460,7 @@
     <!-- 貓咪大戰爭行走動畫 -->
     <div class="battle-cat-walking">
       <TransparentAnimation
-        hevc-source="image/battle-cats-walking-hevc.mov"
-        webm-source="image/battle-cats-walking.webm"
+        apng-source="image/battle-cats-walking.apng"
         fallback-image="image/battle-cats-walking.gif"
         alt-text="行走的貓咪"
         width="80px"
