@@ -77,17 +77,11 @@
       <div v-if="activeDay === 'overview'" class="space-y-6">
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-2xl font-bold text-dark">行程總覽</h2>
-          <video 
+          <img 
+            src="./image/i-love-you.gif" 
+            alt="可愛貓咪"
             class="overview-cat-gif"
-            autoplay
-            loop
-            muted
-            playsinline
-          >
-            <source src="./image/i-love-you-prores.mov" type="video/quicktime">
-            <source src="./image/i-love-you.webm" type="video/webm">
-            <img src="./image/i-love-you.gif" alt="可愛貓咪">
-          </video>
+          />
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div class="bg-white rounded-lg shadow-md p-4">
@@ -462,16 +456,10 @@
 
     <!-- 貓咪大戰爭行走動畫 -->
     <div class="battle-cat-walking">
-      <video 
-        autoplay
-        loop
-        muted
-        playsinline
-      >
-        <source src="./image/battle-cats-walking-prores.mov" type="video/quicktime">
-        <source src="./image/battle-cats-walking.webm" type="video/webm">
-        <img src="./image/battle-cats-walking.gif" alt="行走的貓咪">
-      </video>
+      <img 
+        src="./image/battle-cats-walking.gif" 
+        alt="行走的貓咪"
+      />
     </div>
 
     <!-- 語音通話組件（根據開發者設定決定是否顯示）-->
@@ -1985,7 +1973,6 @@ button:active:not(:disabled), .nav-btn:active {
   pointer-events: none;
 }
 
-.battle-cat-walking video,
 .battle-cat-walking img {
   display: block;
   width: 80px;
@@ -1993,9 +1980,8 @@ button:active:not(:disabled), .nav-btn:active {
   filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.3));
 }
 
-/* Overview 頁面的貓咪 */
-.overview-cat-gif,
-.overview-cat-gif img {
+/* Overview 頁面的貓咪 GIF */
+.overview-cat-gif {
   width: 60px;
   height: 60px;
   object-fit: contain;
