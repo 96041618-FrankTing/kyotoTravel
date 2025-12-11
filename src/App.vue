@@ -235,7 +235,7 @@
             >
               <div class="flex items-start space-x-4">
                 <div class="flex-shrink-0">
-                  <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white font-bold text-[10px] leading-tight">
+                  <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white font-bold text-[10px] leading-tight px-1 text-center">
                     {{ item.time }}
                   </div>
                 </div>
@@ -256,7 +256,7 @@
               v-if="index < getCurrentDayItinerary().length - 1 && getCurrentDayItinerary()[index + 1].transport && getCurrentDayItinerary()[index + 1].transport !== '走路' && getCurrentDayItinerary()[index + 1].transport !== '飯店內'"
               class="flex items-center justify-center py-1"
             >
-              <div class="flex items-center space-x-1.5 text-gray-400 text-xs bg-gray-50 px-2.5 py-1 rounded-full">
+              <div class="flex items-center space-x-1.5 text-gray-600 text-xs bg-gray-50 px-2.5 py-1 rounded-full">
                 <span class="text-sm">{{ getTransportIcon(getCurrentDayItinerary()[index + 1].transport) }}</span>
                 <span class="font-medium">{{ getTransportText(getCurrentDayItinerary()[index + 1]) }}</span>
               </div>
@@ -288,11 +288,6 @@
               <div v-if="selectedItinerary?.transport" class="bg-gray-50 p-4 rounded-lg">
                 <h4 class="font-semibold text-lg mb-2">🚄 交通方式</h4>
                 <p>{{ selectedItinerary?.transport }}</p>
-              </div>
-
-              <div v-if="selectedItinerary?.location" class="bg-gray-50 p-4 rounded-lg">
-                <h4 class="font-semibold text-lg mb-2">📍 地點</h4>
-                <p>{{ selectedItinerary?.location }}</p>
               </div>
 
               <div v-if="selectedItinerary?.duration" class="bg-gray-50 p-4 rounded-lg">
