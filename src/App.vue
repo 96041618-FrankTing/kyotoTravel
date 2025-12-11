@@ -10,9 +10,9 @@
               @click="handleTitleClick"
               @touchend.prevent="handleTitleClick"
             >
-              <span class="cat-decoration">🐱</span>
+              <span class="cat-decoration" style="font-size: 1.5em;">�</span>
               🇯🇵 京阪古都七日散策之旅
-              <span class="cat-decoration" style="animation-delay: 0.5s">🌸</span>
+              <span class="cat-decoration" style="animation-delay: 0.5s; font-size: 1.3em;">🌸</span>
             </h1>
             <p class="text-sm text-gray-600">2026年1月16日 - 1月22日 <span class="sparkle">✨</span></p>
           </div>
@@ -448,8 +448,12 @@
       </div>
     </main>
 
-    <!-- 可愛的貓咪行走動畫 -->
-    <div class="cat-walk-animation">🐱</div>
+    <!-- 貓咪大戰爭行走動畫 - 基礎貓 -->
+    <div class="cat-battle-walk">
+      <div class="cat-battle-sprite">
+        <div class="battle-cat-character"></div>
+      </div>
+    </div>
 
     <!-- 語音通話組件（根據開發者設定決定是否顯示）-->
     <VoiceCall 
@@ -1727,6 +1731,16 @@ export default {
           console.log('📢 可用語音:', voices.filter(v => v.lang.startsWith('ja')).map(v => v.name))
         })
       }
+
+      // 確保貓咪動畫正確顯示
+      nextTick(() => {
+        const catElement = document.querySelector('.battle-cat-character')
+        if (catElement) {
+          // 使用 JavaScript 設置 emoji,避免編碼問題
+          catElement.textContent = '🐈'
+          console.log('✅ 貓咪大戰爭角色已載入')
+        }
+      })
     })
 
     // 獲取交通方式圖示
@@ -1884,7 +1898,7 @@ nav::-webkit-scrollbar-thumb {
 nav::-webkit-scrollbar-thumb:hover {
   background: #FF9CAD;  /* 深櫻花粉 */
 }
-</style>
+
 /* 可愛日本風按鈕效果 */
 button, .nav-btn {
   transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
@@ -1897,3 +1911,76 @@ button:hover:not(:disabled), .nav-btn:hover {
 button:active:not(:disabled), .nav-btn:active {
   transform: translateY(0);
 }
+
+/* 貓咪大戰爭動畫效果 */
+@keyframes cat-battle-walk {
+  0% { 
+    left: -100px; 
+  }
+  100% { 
+    left: calc(100% + 100px); 
+  }
+}
+
+@keyframes cat-wiggle {
+  0%, 100% { 
+    transform: rotate(-3deg) scale(1); 
+  }
+  25% { 
+    transform: rotate(3deg) scale(1.1); 
+  }
+  50% { 
+    transform: rotate(-3deg) scale(1); 
+  }
+  75% { 
+    transform: rotate(3deg) scale(0.95); 
+  }
+}
+
+@keyframes sparkle-animation {
+  0%, 100% { 
+    opacity: 1; 
+    transform: scale(1) rotate(0deg); 
+  }
+  50% { 
+    opacity: 0.4; 
+    transform: scale(1.3) rotate(180deg); 
+  }
+}
+
+.cat-battle-walk {
+  position: fixed;
+  bottom: 20px;
+  animation: cat-battle-walk 25s linear infinite;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.cat-battle-sprite {
+  animation: cat-wiggle 0.5s ease-in-out infinite;
+}
+
+.cat-decoration {
+  display: inline-block;
+  animation: cat-wiggle 2s ease-in-out infinite;
+}
+
+.sparkle {
+  display: inline-block;
+  animation: sparkle-animation 2s ease-in-out infinite;
+}
+
+/* 貓咪大戰爭角色樣式 */
+.battle-cat-character {
+  font-size: 48px;
+  filter: drop-shadow(3px 3px 6px rgba(0,0,0,0.3));
+  line-height: 1;
+}
+
+/* 測試用 - 確保動畫可見 */
+.cat-battle-walk {
+  background: rgba(255, 183, 197, 0.1);
+  padding: 10px;
+  border-radius: 50%;
+}
+</style>
