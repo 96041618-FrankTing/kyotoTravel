@@ -78,7 +78,7 @@
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-2xl font-bold text-dark">行程總覽</h2>
           <img 
-            src="./image/i-love-you.gif" 
+            src="./image/i-love-you-transparent.gif" 
             alt="可愛貓咪"
             class="overview-cat-gif"
           />
@@ -457,7 +457,7 @@
     <!-- 貓咪大戰爭行走動畫 -->
     <div class="battle-cat-walking">
       <img 
-        src="./image/battle-cats-walking.gif" 
+        src="./image/battle-cats-walking-transparent.gif" 
         alt="行走的貓咪"
       />
     </div>
