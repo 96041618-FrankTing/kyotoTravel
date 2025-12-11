@@ -10,7 +10,6 @@
               @click="handleTitleClick"
               @touchend.prevent="handleTitleClick"
             >
-              <span class="cat-decoration" style="font-size: 1.5em;">�</span>
               🇯🇵 京阪古都七日散策之旅
               <span class="cat-decoration" style="animation-delay: 0.5s; font-size: 1.3em;">🌸</span>
             </h1>
@@ -447,13 +446,6 @@
         </div>
       </div>
     </main>
-
-    <!-- 貓咪大戰爭行走動畫 - 基礎貓 -->
-    <div class="cat-battle-walk">
-      <div class="cat-battle-sprite">
-        <div class="battle-cat-character"></div>
-      </div>
-    </div>
 
     <!-- 語音通話組件（根據開發者設定決定是否顯示）-->
     <VoiceCall 
@@ -1731,16 +1723,6 @@ export default {
           console.log('📢 可用語音:', voices.filter(v => v.lang.startsWith('ja')).map(v => v.name))
         })
       }
-
-      // 確保貓咪動畫正確顯示
-      nextTick(() => {
-        const catElement = document.querySelector('.battle-cat-character')
-        if (catElement) {
-          // 使用 JavaScript 設置 emoji,避免編碼問題
-          catElement.textContent = '🐈'
-          console.log('✅ 貓咪大戰爭角色已載入')
-        }
-      })
     })
 
     // 獲取交通方式圖示
@@ -1912,16 +1894,7 @@ button:active:not(:disabled), .nav-btn:active {
   transform: translateY(0);
 }
 
-/* 貓咪大戰爭動畫效果 */
-@keyframes cat-battle-walk {
-  0% { 
-    left: -100px; 
-  }
-  100% { 
-    left: calc(100% + 100px); 
-  }
-}
-
+/* 貓咪大戰爭動畫效果 - 僅保留標題裝飾動畫 */
 @keyframes cat-wiggle {
   0%, 100% { 
     transform: rotate(-3deg) scale(1); 
@@ -1948,18 +1921,6 @@ button:active:not(:disabled), .nav-btn:active {
   }
 }
 
-.cat-battle-walk {
-  position: fixed;
-  bottom: 20px;
-  animation: cat-battle-walk 25s linear infinite;
-  z-index: 9999;
-  pointer-events: none;
-}
-
-.cat-battle-sprite {
-  animation: cat-wiggle 0.5s ease-in-out infinite;
-}
-
 .cat-decoration {
   display: inline-block;
   animation: cat-wiggle 2s ease-in-out infinite;
@@ -1968,19 +1929,5 @@ button:active:not(:disabled), .nav-btn:active {
 .sparkle {
   display: inline-block;
   animation: sparkle-animation 2s ease-in-out infinite;
-}
-
-/* 貓咪大戰爭角色樣式 */
-.battle-cat-character {
-  font-size: 48px;
-  filter: drop-shadow(3px 3px 6px rgba(0,0,0,0.3));
-  line-height: 1;
-}
-
-/* 測試用 - 確保動畫可見 */
-.cat-battle-walk {
-  background: rgba(255, 183, 197, 0.1);
-  padding: 10px;
-  border-radius: 50%;
 }
 </style>
