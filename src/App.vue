@@ -78,7 +78,7 @@
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-2xl font-bold text-dark">行程總覽</h2>
           <video 
-            src="./image/i-love-you.mp4" 
+            src="./image/i-love-you-transparent.mp4" 
             class="overview-cat-gif"
             autoplay
             loop
@@ -460,7 +460,7 @@
     <!-- 貓咪大戰爭行走動畫 -->
     <div class="battle-cat-walking">
       <video 
-        src="./image/battle-cats-walking.mp4" 
+        src="./image/battle-cats-walking-transparent.mp4" 
         autoplay
         loop
         muted
