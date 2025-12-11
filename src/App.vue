@@ -77,9 +77,13 @@
       <div v-if="activeDay === 'overview'" class="space-y-6">
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-2xl font-bold text-dark">行程總覽</h2>
-          <img 
-            src="./image/i-love-you.gif" 
-            alt="可愛貓咪"
+          <TransparentAnimation
+            hevc-source="./image/i-love-you-hevc.mov"
+            webm-source="./image/i-love-you.webm"
+            fallback-image="./image/i-love-you.gif"
+            alt-text="可愛貓咪愛心"
+            width="60px"
+            height="60px"
             class="overview-cat-gif"
           />
         </div>
@@ -456,9 +460,12 @@
 
     <!-- 貓咪大戰爭行走動畫 -->
     <div class="battle-cat-walking">
-      <img 
-        src="./image/battle-cats-walking.gif" 
-        alt="行走的貓咪"
+      <TransparentAnimation
+        hevc-source="./image/battle-cats-walking-hevc.mov"
+        webm-source="./image/battle-cats-walking.webm"
+        fallback-image="./image/battle-cats-walking.gif"
+        alt-text="行走的貓咪"
+        width="80px"
       />
     </div>
 
@@ -491,13 +498,15 @@ import 'leaflet/dist/leaflet.css'
 import VoiceCall from './components/VoiceCall.vue'
 import DevSettings from './components/DevSettings.vue'
 import LocationShare from './components/LocationShare.vue'
+import TransparentAnimation from './components/TransparentAnimation.vue'
 
 export default {
   name: 'App',
   components: {
     VoiceCall,
     DevSettings,
-    LocationShare
+    LocationShare,
+    TransparentAnimation
   },
   setup() {
     const activeDay = ref('overview')
