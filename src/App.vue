@@ -10,6 +10,7 @@
               @click="handleTitleClick"
               @touchend.prevent="handleTitleClick"
             >
+              <img src="./image/the-battle-cats-basic-cat.gif" alt="貓咪" class="battle-cat-icon" />
               🇯🇵 京阪古都七日散策之旅
               <span class="cat-decoration" style="animation-delay: 0.5s; font-size: 1.3em;">🌸</span>
             </h1>
@@ -75,7 +76,10 @@
     <main class="container mx-auto px-4 py-6">
       <!-- Overview Section -->
       <div v-if="activeDay === 'overview'" class="space-y-6">
-        <h2 class="text-2xl font-bold text-dark mb-6">行程總覽</h2>
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold text-dark">行程總覽</h2>
+          <img src="./image/i-love-you.gif" alt="可愛貓咪" class="overview-cat-gif" />
+        </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div class="bg-white rounded-lg shadow-md p-4">
             <h3 class="text-lg font-semibold text-primary mb-2">📅 旅遊日期</h3>
@@ -446,6 +450,11 @@
         </div>
       </div>
     </main>
+
+    <!-- 貓咪大戰爭行走動畫 -->
+    <div class="battle-cat-walking">
+      <img src="./image/battle-cats-walking.gif" alt="行走的貓咪" />
+    </div>
 
     <!-- 語音通話組件（根據開發者設定決定是否顯示）-->
     <VoiceCall 
@@ -1929,5 +1938,59 @@ button:active:not(:disabled), .nav-btn:active {
 .sparkle {
   display: inline-block;
   animation: sparkle-animation 2s ease-in-out infinite;
+}
+
+/* 貓咪大戰爭 GIF 動畫樣式 */
+.battle-cat-icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+/* 行走的貓咪動畫 */
+@keyframes cat-walk-across {
+  0% {
+    left: -150px;
+  }
+  100% {
+    left: calc(100% + 150px);
+  }
+}
+
+.battle-cat-walking {
+  position: fixed;
+  bottom: 30px;
+  left: -150px;
+  animation: cat-walk-across 30s linear infinite;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.battle-cat-walking img {
+  width: 120px;
+  height: auto;
+  filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.3));
+}
+
+/* Overview 頁面的貓咪 GIF */
+.overview-cat-gif {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+/* 彈跳動畫 */
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
 }
 </style>
