@@ -1,6 +1,16 @@
 <template>
   <div class="transparent-animation-wrapper">
+    <!-- 影片載入失敗時顯示保底圖片 -->
+    <img 
+      v-if="videoError"
+      :src="fallbackImage" 
+      :alt="altText"
+      class="transparent-animation fallback-image"
+    />
+    
+    <!-- 正常影片播放 -->
     <video
+      v-else
       ref="videoRef"
       class="transparent-animation"
       autoplay
@@ -17,9 +27,6 @@
       
       <!-- Android/Desktop 備用：WebM with alpha channel -->
       <source :src="webmSource" type="video/webm" />
-      
-      <!-- 最終保底：靜態圖片 -->
-      <img :src="fallbackImage" :alt="altText" />
     </video>
   </div>
 </template>
@@ -67,9 +74,11 @@ const props = defineProps({
 })
 
 const videoRef = ref(null)
+const videoError = ref(false)
 
 // 影片載入完成
 const onVideoLoaded = () => {
+  videoError.value = false
   if (videoRef.value) {
     // 確保影片能播放（某些瀏覽器需要手動觸發）
     const playPromise = videoRef.value.play()
@@ -88,6 +97,7 @@ const onVideoLoaded = () => {
 // 影片載入錯誤
 const onVideoError = (event) => {
   console.warn('影片載入失敗，將顯示保底圖片:', event)
+  videoError.value = true
 }
 
 // 生命週期：確保影片在可見時播放
@@ -140,7 +150,7 @@ onMounted(() => {
 }
 
 /* 保底圖片樣式 */
-.transparent-animation img {
+.fallback-image {
   width: 100%;
   height: 100%;
   object-fit: contain;
