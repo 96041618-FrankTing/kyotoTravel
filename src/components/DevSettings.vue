@@ -250,9 +250,9 @@ export default {
     const showDiagnosticPanel = ref(false)  // ⭐ 新增診斷面板狀態
     
     const settings = ref({
-      enableVoiceCall: true,
-      enableMap: true,
-      enableLocationShare: false,
+      enableVoiceCall: false,
+      enableMap: false,
+      enableLocationShare: true,
       enableDebugLog: false,
       enablePerformanceMonitor: false
     })
@@ -333,9 +333,9 @@ export default {
     const resetSettings = () => {
       if (confirm('確定要重置所有開發者設定嗎？')) {
         settings.value = {
-          enableVoiceCall: true,
-          enableMap: true,
-          enableLocationShare: false,
+          enableVoiceCall: false,
+          enableMap: false,
+          enableLocationShare: true,
           enableDebugLog: false,
           enablePerformanceMonitor: false
         }
