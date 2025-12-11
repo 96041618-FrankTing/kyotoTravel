@@ -77,11 +77,14 @@
       <div v-if="activeDay === 'overview'" class="space-y-6">
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-2xl font-bold text-dark">行程總覽</h2>
-          <img 
-            src="./image/i-love-you-transparent.gif" 
-            alt="可愛貓咪"
+          <video 
+            src="./image/i-love-you.mp4" 
             class="overview-cat-gif"
-          />
+            autoplay
+            loop
+            muted
+            playsinline
+          ></video>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div class="bg-white rounded-lg shadow-md p-4">
@@ -456,10 +459,13 @@
 
     <!-- 貓咪大戰爭行走動畫 -->
     <div class="battle-cat-walking">
-      <img 
-        src="./image/battle-cats-walking-transparent.gif" 
-        alt="行走的貓咪"
-      />
+      <video 
+        src="./image/battle-cats-walking.mp4" 
+        autoplay
+        loop
+        muted
+        playsinline
+      ></video>
     </div>
 
     <!-- 語音通話組件（根據開發者設定決定是否顯示）-->
@@ -1973,19 +1979,23 @@ button:active:not(:disabled), .nav-btn:active {
   pointer-events: none;
 }
 
-.battle-cat-walking img {
+.battle-cat-walking video {
   display: block;
   width: 80px;
   height: auto;
+  /* 使用濾色模式讓白色背景變透明 */
+  mix-blend-mode: screen;
   filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.3));
 }
 
-/* Overview 頁面的貓咪 GIF */
+/* Overview 頁面的貓咪 video */
 .overview-cat-gif {
   width: 60px;
   height: 60px;
   object-fit: contain;
   animation: bounce 2s ease-in-out infinite;
+  /* 使用濾色模式讓白色背景變透明 */
+  mix-blend-mode: screen;
 }
 
 /* 彈跳動畫 */
