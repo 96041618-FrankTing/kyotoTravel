@@ -77,7 +77,16 @@
       <div v-if="activeDay === 'overview'" class="space-y-6">
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-2xl font-bold text-dark">行程總覽</h2>
-          <img src="./image/i-love-you.gif" alt="可愛貓咪" class="overview-cat-gif" />
+          <picture>
+            <source type="image/gif" srcset="./image/i-love-you.gif">
+            <img 
+              src="./image/i-love-you.gif" 
+              alt="可愛貓咪" 
+              class="overview-cat-gif"
+              loading="eager"
+              decoding="async"
+            />
+          </picture>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div class="bg-white rounded-lg shadow-md p-4">
@@ -452,7 +461,15 @@
 
     <!-- 貓咪大戰爭行走動畫 -->
     <div class="battle-cat-walking">
-      <img src="./image/battle-cats-walking.gif" alt="行走的貓咪" />
+      <picture>
+        <source type="image/gif" srcset="./image/battle-cats-walking.gif">
+        <img 
+          src="./image/battle-cats-walking.gif" 
+          alt="行走的貓咪"
+          loading="eager"
+          decoding="async"
+        />
+      </picture>
     </div>
 
     <!-- 語音通話組件（根據開發者設定決定是否顯示）-->
@@ -1731,6 +1748,23 @@ export default {
           console.log('📢 可用語音:', voices.filter(v => v.lang.startsWith('ja')).map(v => v.name))
         })
       }
+
+      // 強制 iPhone 播放 GIF 的 workaround
+      nextTick(() => {
+        const gifImages = document.querySelectorAll('.battle-cat-walking img, .overview-cat-gif')
+        gifImages.forEach(img => {
+          // 強制重新載入 GIF
+          const src = img.src
+          img.src = ''
+          img.src = src
+          
+          // 確保圖片完整載入
+          img.setAttribute('loading', 'eager')
+          img.setAttribute('decoding', 'async')
+          
+          console.log('🐱 已重新載入 GIF:', src)
+        })
+      })
     })
 
     // 獲取交通方式圖示
@@ -1964,36 +1998,38 @@ button:active:not(:disabled), .nav-btn:active {
   animation: cat-walk-across 30s linear infinite;
   z-index: 1000;
   pointer-events: none;
-  /* 強制 GPU 加速，修正 iPhone GIF 播放問題 */
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+  /* iPhone GIF 播放優化 */
+  will-change: left;
+  contain: layout;
 }
 
-.battle-cat-walking img {
-  width: 80px;  /* 從 120px 改為 80px，更小巧可愛 */
+.battle-cat-walking img,
+.battle-cat-walking picture {
+  display: block;
+  width: 80px;
   height: auto;
   filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.3));
-  /* 確保 iPhone 上 GIF 正常播放 */
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
+  /* 確保 GIF 在所有設備正常播放 */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
 }
 
 /* Overview 頁面的貓咪 GIF */
-.overview-cat-gif {
+.overview-cat-gif,
+.overview-cat-gif picture {
   width: 60px;
   height: 60px;
   object-fit: contain;
   animation: bounce 2s ease-in-out infinite;
-  /* 確保 iPhone 上 GIF 正常播放 */
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  image-rendering: -webkit-optimize-contrast;
+  /* 確保 GIF 播放 */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.overview-cat-gif picture {
+  display: block;
 }
 
 /* 彈跳動畫 */
