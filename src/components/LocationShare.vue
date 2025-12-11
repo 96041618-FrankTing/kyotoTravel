@@ -206,6 +206,32 @@ export default {
       return true
     }
 
+    // ⭐ 新增：檢查位置分享狀態的持久化資料
+    const checkSavedSharingState = () => {
+      const saved = localStorage.getItem('isSharingLocation')
+      const savedTime = localStorage.getItem('sharingStartTime')
+      
+      if (saved === 'true' && savedTime) {
+        const startTime = parseInt(savedTime)
+        const now = Date.now()
+        const elapsed = now - startTime
+        const MAX_SHARING_DURATION = 24 * 60 * 60 * 1000 // 24 小時
+        
+        // 如果超過 24 小時，自動停止
+        if (elapsed > MAX_SHARING_DURATION) {
+          console.log('⏰ Sharing duration exceeded 24 hours, auto-stopping')
+          localStorage.removeItem('isSharingLocation')
+          localStorage.removeItem('sharingStartTime')
+          return false
+        }
+        
+        console.log(`🔄 Found saved sharing state (${Math.floor(elapsed / 1000 / 60)} minutes ago)`)
+        return true
+      }
+      
+      return false
+    }
+
     // 計算兩點間距離
     const calculateDistance = (lat1, lng1, lat2, lng2) => {
       const R = 6371e3 // 地球半徑（米）
@@ -408,6 +434,11 @@ export default {
       locationStatus.value = '正在獲取位置...'
       trackingMode.value = 'foreground'
       
+      // ⭐ 儲存分享狀態到 localStorage
+      localStorage.setItem('isSharingLocation', 'true')
+      localStorage.setItem('sharingStartTime', Date.now().toString())
+      console.log('💾 Saved sharing state to localStorage')
+      
       const options = {
         enableHighAccuracy: true,
         timeout: 10000,
@@ -497,6 +528,11 @@ export default {
       }
 
       trackingMode.value = 'inactive'
+
+      // ⭐ 清除 localStorage 中的分享狀態
+      localStorage.removeItem('isSharingLocation')
+      localStorage.removeItem('sharingStartTime')
+      console.log('🗑️ Cleared sharing state from localStorage')
 
       // 標記為停止，而非刪除資料
       if (database && myUserId.value && myLocation.value) {
@@ -865,9 +901,30 @@ export default {
         }, 2000) // 延遲 2 秒，避免打擾初始化流程
       }
       
+      // ⭐ 新增：檢查並恢復之前的位置分享狀態
+      const shouldResumeSharing = checkSavedSharingState()
+      
       if (props.isLocationEnabled) {
         console.log('✅ Location enabled, loading user info...')
         loadUserInfo()
+        
+        // ⭐ 如果之前在分享，自動恢復
+        if (shouldResumeSharing) {
+          console.log('🔄 Resuming location sharing from saved state...')
+          setTimeout(() => {
+            startLocationSharing()
+            isSharingLocation.value = true
+            // 顯示提示訊息
+            const elapsed = parseInt(localStorage.getItem('sharingStartTime') || '0')
+            const minutes = Math.floor((Date.now() - elapsed) / 1000 / 60)
+            if (minutes > 0) {
+              locationStatus.value = `🔄 已恢復分享 (${minutes} 分鐘前開始)`
+              setTimeout(() => {
+                locationStatus.value = '📡 實時分享中'
+              }, 3000)
+            }
+          }, 1000)
+        }
         
         // 延遲啟動監聽，確保 database 完全就緒
         console.log('✅ Starting to listen to all locations (with 500ms delay)...')
