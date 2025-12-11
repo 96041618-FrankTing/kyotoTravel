@@ -88,38 +88,18 @@
           </div>
         </section>
 
-        <!-- 偵錯選項 -->
-        <section class="settings-section">
-          <h3 class="section-title">🐛 偵錯選項</h3>
-          
-          <div class="setting-item">
-            <div class="setting-info">
-              <div class="setting-name">📋 Console 日誌</div>
-              <div class="setting-desc">顯示詳細的 console.log</div>
-            </div>
-            <label class="toggle-switch">
-              <input type="checkbox" v-model="settings.enableDebugLog" @change="saveSettings">
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
 
-          <div class="setting-item">
-            <div class="setting-info">
-              <div class="setting-name">🔔 效能監控</div>
-              <div class="setting-desc">顯示 FPS 和記憶體使用</div>
-            </div>
-            <label class="toggle-switch">
-              <input type="checkbox" v-model="settings.enablePerformanceMonitor" @change="saveSettings">
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
+        <!-- ⭐ 位置分享診斷 -->
+        <section class="settings-section" v-if="settings.enableLocationShare">
+          <h3 class="section-title">📊 位置分享診斷</h3>
           
-          <!-- ⭐ 新增：位置分享診斷按鈕 -->
-          <div class="setting-item diagnostic-btn-wrapper">
+          <div class="diagnostic-btn-wrapper">
             <button @click="openDiagnosticPanel" class="diagnostic-btn">
-              📊 查看位置分享診斷日誌
+              🔍 查看診斷日誌
             </button>
-            <p class="setting-desc">查看位置分享事件記錄和系統狀態</p>
+            <p class="diagnostic-hint">
+              查看位置分享的歷史事件記錄（可追溯 7 天），用於診斷背景更新問題
+            </p>
           </div>
         </section>
 
@@ -144,20 +124,6 @@
               <div class="info-label">LocalStorage</div>
               <div class="info-value">{{ storageUsed }}</div>
             </div>
-          </div>
-        </section>
-
-        <!-- ⭐ 新增：位置分享診斷 -->
-        <section class="settings-section" v-if="settings.enableLocationShare">
-          <h3 class="section-title">📊 位置分享診斷</h3>
-          
-          <div class="diagnostic-btn-wrapper">
-            <button @click="openDiagnosticPanel" class="diagnostic-btn">
-              🔍 查看診斷日誌
-            </button>
-            <p class="diagnostic-hint">
-              查看位置分享的詳細事件記錄，用於診斷背景更新問題
-            </p>
           </div>
         </section>
 
@@ -1223,6 +1189,13 @@ input:checked + .toggle-slider:before {
   color: #6b7280;
   text-align: center;
   line-height: 1.4;
+}
+
+/* 診斷區塊樣式 */
+.diagnostic-section {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
 }
 
 @media (max-width: 600px) {
