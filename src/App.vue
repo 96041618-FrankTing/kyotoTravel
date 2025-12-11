@@ -84,8 +84,8 @@
             muted
             playsinline
           >
-            <source src="./image/i-love-you.mov" type="video/quicktime">
             <source src="./image/i-love-you.webm" type="video/webm">
+            <source src="./image/i-love-you.mov" type="video/quicktime">
             <img src="./image/i-love-you.gif" alt="可愛貓咪">
           </video>
         </div>
@@ -468,8 +468,8 @@
         muted
         playsinline
       >
-        <source src="./image/battle-cats-walking.mov" type="video/quicktime">
         <source src="./image/battle-cats-walking.webm" type="video/webm">
+        <source src="./image/battle-cats-walking.mov" type="video/quicktime">
         <img src="./image/battle-cats-walking.gif" alt="行走的貓咪">
       </video>
     </div>
@@ -1991,6 +1991,9 @@ button:active:not(:disabled), .nav-btn:active {
   width: 80px;
   height: auto;
   filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.3));
+  /* 針對無法顯示透明的情況,使用混合模式淡化白色背景 */
+  mix-blend-mode: darken;
+  background: transparent;
 }
 
 /* Overview 頁面的貓咪 */
@@ -2000,6 +2003,9 @@ button:active:not(:disabled), .nav-btn:active {
   height: 60px;
   object-fit: contain;
   animation: bounce 2s ease-in-out infinite;
+  /* 針對無法顯示透明的情況,使用混合模式淡化白色背景 */
+  mix-blend-mode: darken;
+  background: transparent;
 }
 
 /* 彈跳動畫 */
