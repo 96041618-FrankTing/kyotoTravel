@@ -258,7 +258,7 @@
             >
               <div class="flex items-center space-x-1.5 text-gray-400 text-xs bg-gray-50 px-2.5 py-1 rounded-full">
                 <span class="text-sm">{{ getTransportIcon(getCurrentDayItinerary()[index + 1].transport) }}</span>
-                <span class="font-medium">{{ getTransportText(getCurrentDayItinerary()[index + 1].transport) }}</span>
+                <span class="font-medium">{{ getTransportText(getCurrentDayItinerary()[index + 1]) }}</span>
               </div>
             </div>
           </template>
@@ -1746,25 +1746,64 @@ export default {
       return '🚗'
     }
 
-    // 獲取交通方式簡化文字
-    const getTransportText = (transport) => {
-      if (!transport) return ''
+    // 獲取交通方式簡化文字 (含站名資訊)
+    const getTransportText = (nextItem) => {
+      if (!nextItem || !nextItem.transport) return ''
       
-      // 提取關鍵字
+      const transport = nextItem.transport
+      
+      // 地鐵：顯示站名資訊
+      if (transport.includes('地鐵') && nextItem.subway) {
+        // 提取終點站名
+        const subwayInfo = nextItem.subway
+        const stations = subwayInfo.split('→').map(s => s.trim())
+        if (stations.length >= 2) {
+          const endStation = stations[stations.length - 1].replace(/站$/, '')
+          return `地鐵 → ${endStation}`
+        }
+        return '地鐵'
+      }
+      
+      // JR/火車：顯示站名資訊
+      if (transport.includes('JR') || transport.includes('電車') || transport.includes('特急')) {
+        if (nextItem.subway) {
+          const subwayInfo = nextItem.subway
+          const stations = subwayInfo.split('→').map(s => s.trim())
+          if (stations.length >= 2) {
+            const endStation = stations[stations.length - 1].replace(/站$/, '')
+            return `JR → ${endStation}`
+          }
+        }
+        if (transport.includes('JR HARUKA')) {
+          return nextItem.location ? `JR HARUKA → ${nextItem.location}` : 'JR HARUKA'
+        }
+        return transport.includes('JR') ? 'JR電車' : '電車'
+      }
+      
+      // 計程車：顯示目的地
       if (transport.includes('計程車')) {
         const match = transport.match(/x(\d+)/)
-        return match ? `計程車 x${match[1]}` : '計程車'
+        const taxiCount = match ? ` x${match[1]}` : ''
+        return nextItem.location ? `計程車${taxiCount} → ${nextItem.location}` : `計程車${taxiCount}`
       }
-      if (transport.includes('JR HARUKA')) return 'JR HARUKA'
-      if (transport.includes('JR')) return 'JR電車'
-      if (transport.includes('巴士')) return '巴士'
-      if (transport.includes('地鐵')) return '地鐵'
-      if (transport.includes('纜車')) return '纜車'
-      if (transport.includes('船')) return '觀光船'
-      if (transport.includes('電車')) return '電車'
+      
+      // 巴士
+      if (transport.includes('巴士') || transport.includes('bus')) {
+        return nextItem.location ? `巴士 → ${nextItem.location}` : '巴士'
+      }
+      
+      // 纜車
+      if (transport.includes('纜車')) {
+        return nextItem.location ? `纜車 → ${nextItem.location}` : '纜車'
+      }
+      
+      // 船
+      if (transport.includes('船')) {
+        return nextItem.location ? `觀光船 → ${nextItem.location}` : '觀光船'
+      }
       
       // 如果太長，截斷
-      return transport.length > 12 ? transport.substring(0, 12) + '...' : transport
+      return transport.length > 15 ? transport.substring(0, 15) + '...' : transport
     }
 
     return {
