@@ -227,29 +227,41 @@
 
         <!-- Itinerary Section -->
         <div class="space-y-4">
-          <div
-            v-for="(item, index) in getCurrentDayItinerary()"
-            :key="index"
-            class="bg-white rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg transition-shadow duration-200"
-            @click="openDetailModal(item)"
-          >
-            <div class="flex items-start space-x-4">
-              <div class="flex-shrink-0">
-                <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white font-bold">
-                  {{ item.time }}
+          <template v-for="(item, index) in getCurrentDayItinerary()" :key="index">
+            <!-- Itinerary Card -->
+            <div
+              class="bg-white rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg transition-shadow duration-200"
+              @click="openDetailModal(item)"
+            >
+              <div class="flex items-start space-x-4">
+                <div class="flex-shrink-0">
+                  <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white font-bold text-[10px] leading-tight">
+                    {{ item.time }}
+                  </div>
                 </div>
-              </div>
-              <div class="flex-1">
-                <h3 class="text-lg font-semibold text-dark mb-2">{{ item.title }}</h3>
-                <p class="text-gray-600 mb-2">{{ item.description }}</p>
-                <div class="flex items-center space-x-4 text-sm text-gray-500">
-                  <span v-if="item.transport">🚄 {{ item.transport }}</span>
-                  <span v-if="item.location">📍 {{ item.location }}</span>
-                  <span v-if="item.duration">⏱️ {{ item.duration }}</span>
+                <div class="flex-1">
+                  <h3 class="text-lg font-semibold text-dark mb-2">{{ item.title }}</h3>
+                  <p class="text-gray-600 mb-2">{{ item.description }}</p>
+                  <div class="flex items-center space-x-4 text-sm text-gray-500">
+                    <span v-if="item.transport">🚄 {{ item.transport }}</span>
+                    <span v-if="item.location">📍 {{ item.location }}</span>
+                    <span v-if="item.duration">⏱️ {{ item.duration }}</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+
+            <!-- Transport Indicator (between cards) -->
+            <div 
+              v-if="index < getCurrentDayItinerary().length - 1 && getCurrentDayItinerary()[index + 1].transport && getCurrentDayItinerary()[index + 1].transport !== '走路' && getCurrentDayItinerary()[index + 1].transport !== '飯店內'"
+              class="flex items-center justify-center py-1"
+            >
+              <div class="flex items-center space-x-1.5 text-gray-400 text-xs bg-gray-50 px-2.5 py-1 rounded-full">
+                <span class="text-sm">{{ getTransportIcon(getCurrentDayItinerary()[index + 1].transport) }}</span>
+                <span class="font-medium">{{ getTransportText(getCurrentDayItinerary()[index + 1].transport) }}</span>
+              </div>
+            </div>
+          </template>
         </div>
       </div>
 
@@ -1717,6 +1729,44 @@ export default {
       }
     })
 
+    // 獲取交通方式圖示
+    const getTransportIcon = (transport) => {
+      if (!transport) return ''
+      
+      const transportLower = transport.toLowerCase()
+      
+      if (transportLower.includes('計程車') || transportLower.includes('taxi')) return '🚖'
+      if (transportLower.includes('jr') || transportLower.includes('電車') || transportLower.includes('特急')) return '🚄'
+      if (transportLower.includes('巴士') || transportLower.includes('bus')) return '🚌'
+      if (transportLower.includes('地鐵') || transportLower.includes('subway')) return '🚇'
+      if (transportLower.includes('走路') || transportLower.includes('步行')) return '🚶'
+      if (transportLower.includes('纜車')) return '🚡'
+      if (transportLower.includes('船')) return '⛴️'
+      
+      return '🚗'
+    }
+
+    // 獲取交通方式簡化文字
+    const getTransportText = (transport) => {
+      if (!transport) return ''
+      
+      // 提取關鍵字
+      if (transport.includes('計程車')) {
+        const match = transport.match(/x(\d+)/)
+        return match ? `計程車 x${match[1]}` : '計程車'
+      }
+      if (transport.includes('JR HARUKA')) return 'JR HARUKA'
+      if (transport.includes('JR')) return 'JR電車'
+      if (transport.includes('巴士')) return '巴士'
+      if (transport.includes('地鐵')) return '地鐵'
+      if (transport.includes('纜車')) return '纜車'
+      if (transport.includes('船')) return '觀光船'
+      if (transport.includes('電車')) return '電車'
+      
+      // 如果太長，截斷
+      return transport.length > 12 ? transport.substring(0, 12) + '...' : transport
+    }
+
     return {
       activeDay,
       showMap,
@@ -1740,7 +1790,10 @@ export default {
       onUserInfoChanged,
       // 日文語音播放
       isSpeaking,
-      speakJapanese
+      speakJapanese,
+      // 交通方式
+      getTransportIcon,
+      getTransportText
     }
   }
 }
