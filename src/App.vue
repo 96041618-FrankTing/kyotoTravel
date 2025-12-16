@@ -626,13 +626,16 @@ export default {
         { name: 'TING/PEIEN', number: '362619698' }
       ],
       todoList: [
-        '購買上網SIM/eSIM卡',
+        '購買上網SIM/eSIM卡(eSIMGo)',
         '購買雪地防滑鞋套',
         '購買iPhone 6S手機殼和背帶',
         '預定KKDay一日遊行程',
         '預定日本和服時間',
-        '投保旅遊不便險',
-        '預定機上餐點與座位(需付費？)'
+        '預定機上餐點與座位(需付費？)',
+        '投保旅遊不便險(國泰or富邦)',
+        '填寫VJW(https://www.vjw.digital.go.jp/main/#/vjwplo001)',
+        '線上購買環球影城門票 + 快通4',
+        '線上購買JR HARUKA WEST QR火車票和選位(電子票)'
       ]
     }
 
@@ -1089,7 +1092,7 @@ export default {
         {
           time: '07:30-08:30',
           title: '飯店早餐',
-          description: '吃飽一點，樂園裡食物較貴且需排隊',
+          description: '建議吃飽一點，園區食物較貴且排隊久',
           transport: '飯店內',
           location: 'The Singulari Hotel',
           duration: '約1小時',
@@ -1103,17 +1106,17 @@ export default {
         {
           time: '08:30-20:00',
           title: '大阪環球影城 (USJ) 全日遊',
-          description: '任天堂世界、哈利波特、小小兵等精彩設施',
+          description: '用APP掃描門票QRCode加入後(四個人)，進去先用APP抽整理劵。園區不可帶食物進去',
           transport: '走路',
           location: '環球影城',
           duration: '約11.5小時',
           coordinates: [34.6654, 135.4323],
           subway: 'ユニバーサルシティ駅',
-          mustEat: '奇諾比奧咖啡 (需抽號碼牌)、瑪利歐鬆餅三明治、奶油啤酒 (無酒精)、三根掃帚烤雞拼盤、小小兵夾心餅乾、火雞腿、吉拿棒',
+          mustEat: 'Happiness Café 小小兵主題快餐 (紐約區)、奇諾比奧咖啡 (任天堂世界)、耀西點心島飲料罐：香菇飲料杯 (任天堂世界)',
           mustVisit: '超級任天堂世界、哈利波特魔法世界、小小兵樂園',
           details: {
             japaneseInfo: null,
-            notes: '飯店就在車站樓上。必吃：奇諾比奧咖啡、奶油啤酒、三根掃帚烤雞、火雞腿',
+            notes: '飯店樓下即是車站與園區入口。用APP掃描門票QRCode，進去先用APP抽整理劵。園區必吃必喝：Happiness Café 小小兵主題快餐、奇諾比奧咖啡、耀西點心島香菇飲料杯',
             kkdayLink: null
           }
         },
