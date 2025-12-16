@@ -186,6 +186,9 @@
               <div v-for="hotel in travelInfo.hotels" :key="hotel.name" class="border-l-4 border-green-400 pl-4">
                 <div class="font-semibold text-dark">{{ hotel.name }}</div>
                 <div class="text-sm text-gray-600">{{ hotel.dates }}</div>
+                <div v-if="hotel.address" class="text-sm text-gray-600">📍 {{ hotel.address }}</div>
+                <div v-if="hotel.email" class="text-sm text-gray-600">📧 {{ hotel.email }}</div>
+                <div v-if="hotel.contactForm" class="text-sm text-gray-600">📞 <a :href="hotel.contactForm" target="_blank" class="text-blue-600 hover:text-blue-800 underline">線上詢問表單</a></div>
                 <div class="space-y-1">
                   <button @click="openExternalLink(hotel.link)" class="text-sm text-blue-600 hover:text-blue-800 underline bg-transparent border-none cursor-pointer text-left">
                     查看飯店詳情 →
@@ -211,7 +214,29 @@
           <div class="mt-4 pt-4 border-t border-gray-200">
             <div class="flex justify-between items-center text-lg font-bold">
               <span>總計預估費用</span>
-              <span class="text-primary">NT$ {{ (63317 + 23236 + 15978 + 15282 + 7144 + 6668).toLocaleString() }}</span>
+              <span class="text-primary">NT$ {{ (63317 + 20615 + 11642 + 14565 + 7144 + 6668).toLocaleString() }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 護照資料 -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <h3 class="text-xl font-bold text-dark mb-4">🛂 護照資料</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div v-for="passport in travelInfo.passports" :key="passport.number" class="p-3 bg-gray-50 rounded">
+              <div class="font-semibold text-dark">{{ passport.name }}</div>
+              <div class="text-sm text-gray-600">護照號碼: {{ passport.number }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TODO LIST -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <h3 class="text-xl font-bold text-dark mb-4">📝 行前準備清單</h3>
+          <div class="space-y-2">
+            <div v-for="todo in travelInfo.todoList" :key="todo" class="flex items-center space-x-3 p-3 bg-gray-50 rounded">
+              <input type="checkbox" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
+              <span class="text-sm">{{ todo }}</span>
             </div>
           </div>
         </div>
@@ -550,14 +575,14 @@ export default {
       flights: [
         {
           date: '2026/01/16 (五)',
-          airline: '星宇航空 JX822',
+          airline: '星宇航空 JX822 [A359]',
           departure: '09:20 桃園機場 T1',
           arrival: '12:50 關西機場 T1',
           duration: '2小時30分鐘'
         },
         {
           date: '2026/01/22 (四)',
-          airline: '中華航空 CI153',
+          airline: '中華航空 CI153 [A321NEO]',
           departure: '14:30 關西機場 T1',
           arrival: '16:45 桃園機場 T2',
           duration: '3小時15分鐘'
@@ -567,26 +592,47 @@ export default {
         {
           name: 'Onyado Nono Kyoto Shichijo Natural Hot Spring',
           dates: '01/16~01/18 (住兩晚)',
+          address: '京都市下京区材木町491番地',
+          email: 'inn-nonokyoto@dormy-hotels.com',
           link: 'https://www.booking.com/hotel/jp/onyado-nono-kyoto-shichijo.zh-tw.html'
         },
         {
           name: 'KOKO HOTEL Osaka Namba Sennichimae',
           dates: '01/18~01/20 (住兩晚)',
+          address: '大阪府, 大阪, Chuo-ku, Sennichimae 1-3-7',
+          email: 'info-osaka_sennichimae@koko-hotels.com',
           link: 'https://www.booking.com/hotel/jp/koko-osaka-namba-sennichimae.zh-tw.html'
         },
         {
           name: 'THE SINGULARI HOTEL & SKYSPA at UNIVERSAL STUDIOS JAPAN',
           dates: '01/20~01/22 (住兩晚)',
+          address: '大阪府, 大阪, Konohana-ku Shimaya 6-2-25',
+          contactForm: 'https://www.candeohotels.com/en/contact/',
           link: 'https://www.booking.com/hotel/jp/singulari-hotel-skyspa-at-universal-studios-japan.zh-tw.html'
         }
       ],
       costs: [
         { item: '來回機票 x4人 (ezTravel訂購)', amount: 'NT$63,317' },
-        { item: '住宿 Onyado Nono Kyoto Shichijo 兩晚', amount: 'NT$23,236' },
-        { item: '住宿 KOKO HOTEL Osaka Namba 兩晚', amount: 'NT$15,978' },
-        { item: '住宿 THE SINGULARI HOTEL 兩晚', amount: 'NT$15,282' },
-        { item: 'KKDAY 天橋立一日遊 x4', amount: 'NT$7,144' },
-        { item: 'KKDAY 京都奈良一日遊 x4', amount: 'NT$6,668' }
+        { item: '住宿 Onyado Nono Kyoto Shichijo Natural Hot Spring 兩晚', amount: 'NT$20,615' },
+        { item: '住宿 KOKO HOTEL Osaka Namba Sennichimae 兩晚', amount: 'NT$11,642' },
+        { item: '住宿 THE SINGULARI HOTEL & SKYSPA at UNIVERSAL STUDIOS JAPAN 兩晚', amount: 'NT$14,565' },
+        { item: 'KKDAY日本天橋立一日遊 x4', amount: 'NT$7,144' },
+        { item: 'KKDAY【京都&奈良一日遊】嵐山・奈良公園・伏見稻荷大社 x4', amount: 'NT$6,668' }
+      ],
+      passports: [
+        { name: 'TING/CHINYUAN', number: '362619707' },
+        { name: 'LIU/CHIAHSIANG', number: '362619711' },
+        { name: 'QIU/CAIMIAN', number: '368976431' },
+        { name: 'TING/PEIEN', number: '362619698' }
+      ],
+      todoList: [
+        '購買上網SIM/eSIM卡',
+        '購買雪地防滑鞋套',
+        '購買iPhone 6S手機殼和背帶',
+        '預定KKDay一日遊行程',
+        '預定日本和服時間',
+        '投保旅遊不便險',
+        '預定機上餐點與座位(需付費？)'
       ]
     }
 
@@ -596,36 +642,36 @@ export default {
         {
           time: '08:00-15:00',
           title: '機場移動至京都',
-          description: '關西機場 → 京都車站 (JR HARUKA特急) → 飯店 Check-in',
+          description: '關西機場 → 京都車站 (領票/買卡) → 飯店 Check-in',
           transport: 'JR HARUKA 特急電車 + 計程車 x2',
           location: '關西機場 → 京都車站 → Onyado Nono Kyoto Shichijo',
-          duration: '約2.5小時',
+          duration: '約7小時',
           coordinates: [34.4320, 135.2304],
           subway: '關西機場站 → 京都車站 (JR HARUKA特急)',
           details: {
             japaneseInfo: '天然温泉 蓮花の湯 御宿 野乃 京都七条 までお願いします。\n(住所: 京都市下京区材木町491番地)',
-            notes: '有3個大行李，建議分2台車',
+            notes: '有3個大行李，務必叫2台車。入境領票、Check-in。距離約500公尺，有行李建議分2台車',
             kkdayLink: null
           }
         },
         {
           time: '15:30-17:30',
           title: '京都車站周邊探險 (分流活動)',
-          description: 'A組(長輩)：京都塔 | B組(小孩)：Yodobashi Camera 3F 玩具區',
+          description: 'A組(長輩)：京都塔 (欣賞京都市景) | B組(小孩)：Yodobashi Camera 3F 玩具區 (京都車站八條口方向)',
           transport: '走路',
           location: '京都車站',
           duration: '約2小時',
           coordinates: [34.9854, 135.7581],
           details: {
             japaneseInfo: null,
-            notes: '分流活動：A組京都塔(就在飯店對面)，B組玩具區(八條口方向)',
+            notes: '分流活動：飯店對面即是。A組京都塔欣賞京都市景，B組Yodobashi Camera 3F玩具區',
             kkdayLink: null
           }
         },
         {
           time: '18:00-20:00',
           title: '晚餐 - 東洋亭 (Porta 地下街店)',
-          description: '百年洋食漢堡排 (鋁箔包)、整顆番茄沙拉',
+          description: '必吃：百年洋食漢堡排 (鋁箔包著，打開熱氣騰騰)、整顆番茄沙拉',
           location: '京都車站 Porta 地下街',
           duration: '約2小時',
           coordinates: [34.9854, 135.7581],
@@ -637,7 +683,7 @@ export default {
           },
           details: {
             japaneseInfo: null,
-            notes: '京都車站地下街美食，排隊人多建議提早',
+            notes: '京都車站地下街美食',
             kkdayLink: null
           }
         }
@@ -1006,7 +1052,7 @@ export default {
         {
           time: '18:00-20:00',
           title: '返回飯店拿行李 & 移動至 USJ',
-          description: '走路回 KOKO HOTEL 取行李，搭計程車到環球影城飯店',
+          description: '走路回 KOKO HOTEL 取行李，叫計程車到環球影城飯店',
           transport: '走路 + 計程車 x2',
           location: 'The Singulari Hotel & Skyspa',
           duration: '約2小時',
@@ -1319,6 +1365,7 @@ export default {
         }
 
         navigator.geolocation.getCurrentPosition(
+
           (position) => {
             const { latitude, longitude } = position.coords
             userMarker.value = L.marker([latitude, longitude], {
