@@ -52,10 +52,10 @@ export const travelInfo = {
     { item: 'Day5 KKDAY【京都&奈良一日遊】金閣寺、嵐山、奈良公園、伏見稻荷大社 x4', amount: 'NT$6,240' }
   ],
   passports: [
-    { name: 'TING/CHINYUAN', number: '362619707' },
-    { name: 'LIU/CHIAHSIANG', number: '362619711' },
-    { name: 'QIU/CAIMIAN', number: '368976431' },
-    { name: 'TING/PEIEN', number: '362619698' }
+    { name: 'TING/CHINYUAN' },
+    { name: 'LIU/CHIAHSIANG' },
+    { name: 'QIU/CAIMIAN' },
+    { name: 'TING/PEIEN' }
   ],
   todoList: [
     '購買上網SIM/eSIM卡(eSIMGo)',
@@ -65,7 +65,7 @@ export const travelInfo = {
     '預定日本和服時間',
     '預定機上餐點與座位(需付費？)',
     '投保旅遊不便險(國泰or富邦)',
-    '填寫VJW(https://www.vjw.digital.go.jp/main/#/vjwplo001)',
+    '填寫日本入境單VJW(Visit Japan Web)',
     '線上購買環球影城門票 + 快通4',
     '線上購買JR HARUKA WEST QR火車票和選位(電子票)'
   ]
