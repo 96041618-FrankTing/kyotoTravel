@@ -332,7 +332,7 @@ Day5 KKDAY京都&奈良一日遊(金閣寺、嵐山、奈良公園、伏見稻�
 * 預定日本和服時間
 * 預定機上餐點與座位(需付費？)
 * 投保旅遊不便險(國泰or富邦)
-* 填寫[VJW(https://www.vjw.digital.go.jp/main/#/vjwplo001)]
+* 填寫日本入境單VJW(Visit Japan Web)
 * 線上購買環球影城門票 + 快通4
 * 線上購買JR HARUKA WEST QR火車票和選位(電子票)
 
