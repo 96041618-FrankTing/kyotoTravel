@@ -214,7 +214,7 @@
           <div class="mt-4 pt-4 border-t border-gray-200">
             <div class="flex justify-between items-center text-lg font-bold">
               <span>總計預估費用</span>
-              <span class="text-primary">NT$ {{ (63317 + 20615 + 11642 + 14565 + 7144 + 6668).toLocaleString() }}</span>
+              <span class="text-primary">NT$ {{ (63317 + 20615 + 11642 + 14565 + 7324 + 6240).toLocaleString() }}</span>
             </div>
           </div>
         </div>
@@ -616,8 +616,8 @@ export default {
         { item: '住宿 Onyado Nono Kyoto Shichijo Natural Hot Spring 兩晚', amount: 'NT$20,615' },
         { item: '住宿 KOKO HOTEL Osaka Namba Sennichimae 兩晚', amount: 'NT$11,642' },
         { item: '住宿 THE SINGULARI HOTEL & SKYSPA at UNIVERSAL STUDIOS JAPAN 兩晚', amount: 'NT$14,565' },
-        { item: 'KKDAY日本天橋立一日遊 x4', amount: 'NT$7,144' },
-        { item: 'KKDAY【京都&奈良一日遊】嵐山・奈良公園・伏見稻荷大社 x4', amount: 'NT$6,668' }
+        { item: 'Day3 KKDAY【大阪/京都出發】海之京都一日遊 x4', amount: 'NT$7,324' },
+        { item: 'Day5 KKDAY【京都&奈良一日遊】金閣寺、嵐山、奈良公園、伏見稻荷大社 x4', amount: 'NT$6,240' }
       ],
       passports: [
         { name: 'TING/CHINYUAN', number: '362619707' },
@@ -811,22 +811,22 @@ export default {
         {
           time: '08:00-08:30',
           title: '前往京都車站集合點',
-          description: '飯店出發前往京都車站八條口 Avanti 前',
+          description: '飯店出發前往京都車站八條口祭時計広場',
           transport: '計程車 x2',
-          location: '京都車站八條口 Avanti',
+          location: '京都車站八條口祭時計広場',
           duration: '約30分鐘',
           coordinates: [34.9854, 135.7581],
           subway: '京都車站',
           details: {
-            japaneseInfo: '京都駅八条口の「京都アバンティ（Avanti）」前までお願いします。',
-            notes: '有3個大行李，務必叫2台車。KKday集合點',
-            kkdayLink: 'https://www.kkday.com/zh-tw/product/25439'
+            japaneseInfo: '京都駅八条口の「祭時計広場（まつりどけいひろば）」までお願いします。',
+            notes: '有3個大行李，務必叫2台車。KKday集合點：京都車站八条口祭時計広場',
+            kkdayLink: 'https://www.kkday.com/zh-tw/product/154074'
           }
         },
         {
-          time: '08:30-18:30',
-          title: 'KKday 天橋立・伊根舟屋一日遊 (京都出發/大阪下車)',
-          description: '伊根舟屋遊覽船餵海鷗、天橋立纜車看飛龍觀/昇龍觀',
+          time: '08:00-18:00',
+          title: 'KKDAY【大阪/京都出發】海之京都一日遊｜伊根灣遊船・伊根舟屋・天橋立',
+          description: '[京都出發] 08:00集合 → 伊根舟屋遊覽船餵海鷗、天橋立纜車看飛龍觀/昇龍觀 → [大阪下車] 18:00抵達大阪日本橋蟹道樂東店',
           transport: 'KKday 巴士一日遊',
           location: '天橋立、伊根舟屋',
           duration: '約10小時',
@@ -843,14 +843,14 @@ export default {
           },
           details: {
             japaneseInfo: null,
-            notes: '搭乘遊覽船餵海鷗(請自備蝦味先)、天橋立纜車看飛龍觀。午餐自理(文殊地區)，推薦花蛤丼',
-            kkdayLink: 'https://www.kkday.com/zh-tw/product/25439'
+            notes: '京都車站八条口祭時計広場 08:00集合，大阪日本橋蟹道樂東店 18:00下車。搭乘遊覽船餵海鷗(請自備蝦味先)、天橋立纜車看飛龍觀。午餐自理(文殊地區)，推薦花蛤丼',
+            kkdayLink: 'https://www.kkday.com/zh-tw/product/154074'
           }
         },
         {
-          time: '18:30-19:30',
+          time: '18:00-19:00',
           title: '抵達大阪・走路去飯店',
-          description: '蟹道樂道頓堀東店下車 → 推行李步行至 KOKO HOTEL',
+          description: '大阪日本橋蟹道樂東店下車 → 推行李步行至 KOKO HOTEL',
           transport: '走路',
           location: 'KOKO HOTEL Osaka Namba Sennichimae',
           duration: '約4分鐘 (300公尺)',
@@ -858,7 +858,7 @@ export default {
           subway: '日本橋站附近',
           details: {
             japaneseInfo: null,
-            notes: '步行約300公尺(4分鐘)，雖有行李但路程很短且平坦，不需叫車',
+            notes: 'KKday於大阪日本橋蟹道樂東店 18:00下車。步行約300公尺(4分鐘)至飯店，雖有行李但路程很短且平坦，不需叫車',
             kkdayLink: null
           }
         },
@@ -1022,48 +1022,48 @@ export default {
           }
         },
         {
-          time: '08:30-09:00',
+          time: '07:30-07:50',
           title: '前往集合地點',
-          description: '走路前往蟹道樂道頓堀東店集合',
+          description: '走路前往 VIP Villa難波集合',
           transport: '走路',
-          location: '大阪蟹道樂道頓堀東店',
-          duration: '約4-6分鐘',
+          location: 'VIP Villa難波',
+          duration: '約5-8分鐘',
           coordinates: [34.6686, 135.5011],
           subway: '日本橋站附近',
           details: {
-            japaneseInfo: '「かに道楽 道頓堀東店（ひがしてん）」の前までお願いします。\n(住所: 大阪市中央区道頓堀1-1-3)\n※日本橋駅の近く、堺筋沿いです。',
-            notes: 'KKday嵐山奈良一日遊集合點，走路約4-6分鐘非常近',
-            kkdayLink: 'https://www.kkday.com/zh-tw/product/270423'
+            japaneseInfo: '「VIP Villa（ヴィップヴィラ）なんば」までお願いします。',
+            notes: 'KKday集合點：VIP Villa難波 07:50集合，走路約5-8分鐘',
+            kkdayLink: 'https://www.kkday.com/zh-tw/product/13894'
           }
         },
         {
-          time: '09:00-18:00',
-          title: 'KKday 嵐山・奈良・伏見稻荷一日遊',
-          description: '嵐山竹林、奈良餵鹿、伏見稻荷千本鳥居',
+          time: '07:50-19:10',
+          title: 'KKDAY【京都&奈良一日遊】金閣寺、嵐山(午餐自理)、伏見稻荷大社、奈良公園',
+          description: '[大阪出發] 07:50集合/VIP Villa難波 → 金閣寺 → 嵐山竹林(午餐自理) → 伏見稻荷千本鳥居 → 奈良餵鹿 → [大阪下車] 19:10抵達/VIP Villa難波',
           transport: '觀光遊覽車',
-          location: '嵐山 → 奈良 → 伏見稻荷',
-          duration: '約9小時',
+          location: '金閣寺 → 嵐山 → 伏見稻荷 → 奈良',
+          duration: '約11小時20分',
           coordinates: [35.0142, 135.7483],
           mustEat: '嵐山：中村屋可樂餅、% Arabica Coffee、Miffy Sakura Kitchen | 奈良：中谷堂麻糬、大佛布丁 | 伏見稻荷：稻荷壽司',
-          mustVisit: '嵐山竹林、奈良餵鹿、伏見稻荷千本鳥居',
+          mustVisit: '金閣寺、嵐山竹林、伏見稻荷千本鳥居、奈良餵鹿',
           details: {
             japaneseInfo: null,
-            notes: '嵐山竹林+奈良餵鹿+伏見稻荷。必吃：中村屋可樂餅、中谷堂麻糬、大佛布丁',
-            kkdayLink: 'https://www.kkday.com/zh-tw/product/270423'
+            notes: 'VIP Villa難波 07:50集合，19:10回到VIP Villa難波下車。金閣寺→嵐山竹林(午餐自理)→伏見稻荷→奈良餵鹿。必吃：中村屋可樂餅、中谷堂麻糬、大佛布丁',
+            kkdayLink: 'https://www.kkday.com/zh-tw/product/13894'
           }
         },
         {
-          time: '18:00-20:00',
+          time: '19:10-20:30',
           title: '返回飯店拿行李 & 移動至 USJ',
-          description: '走路回 KOKO HOTEL 取行李，叫計程車到環球影城飯店',
+          description: 'VIP Villa難波下車 → 走路回 KOKO HOTEL 取行李 → 叫計程車到環球影城飯店',
           transport: '走路 + 計程車 x2',
           location: 'The Singulari Hotel & Skyspa',
-          duration: '約2小時',
+          duration: '約1小時20分',
           coordinates: [34.6654, 135.4323],
           subway: 'ユニバーサルシティ駅',
           details: {
             japaneseInfo: 'ユニバーサルシティ駅の「ザ・シンギュラリホテル & スカイスパ」までお願いします。\n(住所: 大阪市此花区島屋6丁目2-25)',
-            notes: '解散後走路回KOKO HOTEL(4分鐘)取行李，叫2台計程車(有行李)前往USJ飯店',
+            notes: 'VIP Villa難波 19:10下車後走路回KOKO HOTEL(約5-8分鐘)取行李，叫2台計程車(有行李)前往USJ飯店',
             kkdayLink: null
           }
         },

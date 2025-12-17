@@ -301,11 +301,13 @@ https://www.booking.com/hotel/jp/singulari-hotel-skyspa-at-universal-studios-jap
 
 
 ## KKDAY一日團資訊
-* KKDAY日本天橋立一日遊(京都伊根舟屋＆伊根灣遊船) | [京都出發] 08:30集合/京都站八条口巴士站 | [大阪下車] 預計18:30抵達
-https://www.kkday.com/zh-tw/product/25439-amanohashidate-day-trip-kyoto-ine-funaya-ine-bay-cruise-depart-from-osaka?pkg_oid=1837362&go_date=2026-01-18&2f739f0761f57fa891a5e4cf82339fb5=4
+* Day3 KKDAY【大阪/京都出發】海之京都一日遊｜伊根灣遊船・伊根舟屋・天橋立
+[京都出發] 08:00集合/京都車站八条口祭時計広場 | [大阪下車] 18:00抵達/大阪日本橋蟹道樂東店 
+https://www.kkday.com/zh-tw/product/154074-kyoto-by-the-sea-day-tour-amanohashidate-ine-funaya?pkg_oid=1844037&go_date=2026-01-18&869a86fad997ad236f2b482468357f08=4
 
-* KKDAY【京都&奈良一日遊】嵐山・奈良公園・伏見稻荷大社｜[大阪出發] 7:45集合/大阪近鐵日本橋2號出口
-https://www.kkday.com/zh-tw/product/270423-kyoto-nara-day-tour-arashiyama-nara-park-fushimi-inari-bamboo?pkg_oid=1820162&go_date=2026-01-20&14a0e6e90225bee341b3b430e49faf1d=1&c6dc2fc8d6dfba51f0f2dfbbb44f09be=3
+* Day5 KKDAY【京都&奈良一日遊】金閣寺、嵐山(午餐自理)、伏見稻荷大社、奈良公園
+[大阪出發] 7:50集合/VIP Villa難波 | [大阪下車] 19:10抵達/VIP Villa難波
+https://www.kkday.com/zh-tw/product/13894-kyoto-nara-ushimi-inari-taisha-shrine-arashiyama-nara-park?pkg_oid=716952&go_date=2026-01-20&f60a743db366b76fb072d421e3df607a=3&6deba73d66b0ba8521243f2d5eada132=1
 
 
 ## 費用估算
@@ -313,8 +315,8 @@ https://www.kkday.com/zh-tw/product/270423-kyoto-nara-day-tour-arashiyama-nara-p
 住宿 Onyado Nono Kyoto Shichijo Natural Hot Spring 兩晚：NT.20615
 住宿 KOKO HOTEL Osaka Namba Sennichimae 兩晚：NT.11642
 住宿 THE SINGULARI HOTEL & SKYSPA at UNIVERSAL STUDIOS JAPAN 兩晚：NT.14565
-KKDAY日本天橋立一日遊x4：NT.7144
-KKDAY京都&奈良一日遊(嵐山・奈良公園・伏見稻荷大社)x4：NT.6668
+Day3 KKDAY日本天橋立一日遊x4：NT.7324
+Day5 KKDAY京都&奈良一日遊(金閣寺、嵐山、奈良公園、伏見稻荷大社)x4：NT.6240
 
 ## 護照資料：姓名與護照號碼
 * TING/CHINYUAN：362619707
