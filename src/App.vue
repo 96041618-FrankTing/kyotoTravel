@@ -491,7 +491,7 @@
       </div>
 
       <!-- Budget Modal -->
-      <div v-if="showBudgetModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto" @click="showBudgetModal = false">
+      <div v-if="showBudgetModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-4 overflow-y-auto" @click="showBudgetModal = false">
         <div class="bg-white rounded-lg shadow-xl max-w-6xl w-full my-8" @click.stop>
           <div class="sticky top-0 bg-gradient-to-r from-green-500 to-blue-500 text-white p-6 rounded-t-lg z-10">
             <div class="flex justify-between items-center">
@@ -499,7 +499,7 @@
                 <h3 class="text-2xl font-bold">💰 京阪古都七日遊・預算規劃表</h3>
                 <p class="text-sm opacity-90 mt-1">匯率基準: 0.225 (台幣/日圓) | 人數: 4人 (3大1老1小) | 天數: 7天6夜</p>
               </div>
-              <button @click="showBudgetModal = false" class="text-white hover:bg-white hover:bg-opacity-20 rounded-full w-10 h-10 flex items-center justify-center text-2xl transition-colors">&times;</button>
+              <button @click.stop="showBudgetModal = false" class="text-white hover:bg-white hover:bg-opacity-20 rounded-full w-10 h-10 flex items-center justify-center text-2xl transition-colors">&times;</button>
             </div>
           </div>
 
@@ -725,7 +725,7 @@
           </div>
 
           <div class="sticky bottom-0 bg-gray-100 p-4 rounded-b-lg flex justify-end space-x-3">
-            <button @click="showBudgetModal = false" class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors">
+            <button @click.stop="showBudgetModal = false" class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors">
               關閉
             </button>
           </div>
@@ -1487,6 +1487,7 @@ export default {
     return {
       activeDay,
       showMap,
+      showBudgetModal,
       selectedItinerary,
       showDetailModal,
       showWeatherModal,

@@ -1007,6 +1007,93 @@ export default {
       }
     }
 
+    // ⭐ 頁面可見性變化處理（需在 onMounted 前定義以便在 onUnmounted 中移除）
+    const handleVisibilityChange = () => {
+      if (!isSharingLocation.value) return
+
+      if (document.hidden) {
+        // 📱 切換到背景：立即上傳快照
+        console.log('📱 App switching to background, capturing snapshot...')
+        trackingMode.value = 'background'
+        
+        // ⭐ 記錄背景切換
+        logEvent('切換到背景', { 
+          currentLocation: myLocation.value ? {
+            lat: myLocation.value.lat.toFixed(6),
+            lng: myLocation.value.lng.toFixed(6)
+          } : null,
+          backgroundFetchSupported: backgroundFetchSupported.value
+        })
+        
+        if (myLocation.value && database && myUserId.value) {
+          uploadLocationToFirebase() // 立即上傳當前位置
+          console.log('📸 Background snapshot captured')
+          
+          // ⭐ 方案 1: 如果支援 Background Fetch，註冊背景同步
+          if (backgroundFetchSupported.value) {
+            setTimeout(() => {
+              registerBackgroundFetch()
+              console.log('🔄 Background Fetch registered for periodic sync')
+              logEvent('註冊 Background Fetch', { interval: '15分鐘' })
+            }, 2000) // 延遲 2 秒避免與立即快照衝突
+          }
+        }
+
+        // 降低更新頻率（實際上會被 iOS 暫停）
+        adjustUpdateInterval(UPDATE_INTERVAL_BACKGROUND)
+        locationStatus.value = backgroundFetchSupported.value ? '🔄 背景同步中' : '🔋 背景模式'
+      } else {
+        // 📱 返回前景：恢復實時追蹤
+        console.log('📱 App returning to foreground, resuming real-time tracking...')
+        trackingMode.value = 'foreground'
+        
+        // ⭐ 記錄返回前景
+        logEvent('返回前景', { 
+          resumeTracking: true
+        })
+        
+        // 立即上傳一次以通知其他用戶
+        if (myLocation.value && database && myUserId.value) {
+          uploadLocationToFirebase()
+          console.log('✅ Foreground resumed, location updated')
+        }
+
+        // 恢復高頻更新
+        adjustUpdateInterval(UPDATE_INTERVAL_FOREGROUND)
+        locationStatus.value = '📡 實時分享中'
+      }
+    }
+
+    // ⭐ 頁面關閉前處理
+    const handlePageHide = (event) => {
+      if (!isSharingLocation.value || !myLocation.value) return
+
+      console.log('🚪 Page hiding, sending final beacon...')
+
+      // 使用 sendBeacon 確保資料能送出（即使頁面關閉）
+      const data = JSON.stringify({
+        id: myUserId.value,
+        name: myUserInfo.value.name,
+        emoji: myUserInfo.value.emoji,
+        lat: myLocation.value.lat,
+        lng: myLocation.value.lng,
+        accuracy: myLocation.value.accuracy,
+        timestamp: Date.now(),
+        status: 'pagehide',
+        pagehideAt: Date.now()
+      })
+
+      // Firebase Realtime Database 使用 REST API
+      const firebaseUrl = `https://kyoto-travel-2026-default-rtdb.firebaseio.com/locations/${myUserId.value}.json`
+      
+      try {
+        navigator.sendBeacon(firebaseUrl, data)
+        console.log('📤 Beacon sent successfully')
+      } catch (error) {
+        console.error('❌ Beacon send failed:', error)
+      }
+    }
+
     // 組件掛載
     onMounted(async () => {
       console.log('🔧 LocationShare mounted, isLocationEnabled:', props.isLocationEnabled)
@@ -1070,105 +1157,14 @@ export default {
       }
 
       // ⭐ 方案 5 核心：監聽頁面可見性變化（前景/背景切換）
-      const handleVisibilityChange = () => {
-        if (!isSharingLocation.value) return
-
-        if (document.hidden) {
-          // 📱 切換到背景：立即上傳快照
-          console.log('📱 App switching to background, capturing snapshot...')
-          trackingMode.value = 'background'
-          
-          // ⭐ 記錄背景切換
-          logEvent('切換到背景', { 
-            currentLocation: myLocation.value ? {
-              lat: myLocation.value.lat.toFixed(6),
-              lng: myLocation.value.lng.toFixed(6)
-            } : null,
-            backgroundFetchSupported: backgroundFetchSupported.value
-          })
-          
-          if (myLocation.value && database && myUserId.value) {
-            uploadLocationToFirebase() // 立即上傳當前位置
-            console.log('📸 Background snapshot captured')
-            
-            // ⭐ 方案 1: 如果支援 Background Fetch，註冊背景同步
-            if (backgroundFetchSupported.value) {
-              setTimeout(() => {
-                registerBackgroundFetch()
-                console.log('🔄 Background Fetch registered for periodic sync')
-                logEvent('註冊 Background Fetch', { interval: '15分鐘' })
-              }, 2000) // 延遲 2 秒避免與立即快照衝突
-            }
-          }
-
-          // 降低更新頻率（實際上會被 iOS 暫停）
-          adjustUpdateInterval(UPDATE_INTERVAL_BACKGROUND)
-          locationStatus.value = backgroundFetchSupported.value ? '🔄 背景同步中' : '🔋 背景模式'
-        } else {
-          // 📱 返回前景：恢復實時追蹤
-          console.log('📱 App returning to foreground, resuming real-time tracking...')
-          trackingMode.value = 'foreground'
-          
-          // ⭐ 記錄返回前景
-          logEvent('返回前景', { 
-            resumeTracking: true
-          })
-          
-          // 立即上傳一次以通知其他用戶
-          if (myLocation.value && database && myUserId.value) {
-            uploadLocationToFirebase()
-            console.log('✅ Foreground resumed, location updated')
-          }
-
-          // 恢復高頻更新
-          adjustUpdateInterval(UPDATE_INTERVAL_FOREGROUND)
-          locationStatus.value = '📡 實時分享中'
-        }
-      }
-
       document.addEventListener('visibilitychange', handleVisibilityChange)
-
-      // ⭐ 方案 5 新增：pagehide 事件（頁面關閉前最後快照）
-      const handlePageHide = (event) => {
-        if (!isSharingLocation.value || !myLocation.value) return
-
-        console.log('🚪 Page hiding, sending final beacon...')
-
-        // 使用 sendBeacon 確保資料能送出（即使頁面關閉）
-        const data = JSON.stringify({
-          id: myUserId.value,
-          name: myUserInfo.value.name,
-          emoji: myUserInfo.value.emoji,
-          lat: myLocation.value.lat,
-          lng: myLocation.value.lng,
-          accuracy: myLocation.value.accuracy,
-          timestamp: Date.now(),
-          status: 'pagehide',
-          pagehideAt: Date.now()
-        })
-
-        // Firebase Realtime Database 使用 REST API
-        const firebaseUrl = `https://kyoto-travel-2026-default-rtdb.firebaseio.com/locations/${myUserId.value}.json`
-        
-        try {
-          navigator.sendBeacon(firebaseUrl, data)
-          console.log('📤 Beacon sent successfully')
-        } catch (error) {
-          console.error('❌ Beacon send failed:', error)
-        }
-      }
-
       window.addEventListener('pagehide', handlePageHide)
-
-      // 組件卸載時移除監聽
-      onUnmounted(() => {
-        document.removeEventListener('visibilitychange', handleVisibilityChange)
-        window.removeEventListener('pagehide', handlePageHide)
-      })
     })
 
-    // 組件卸載
+    // 組件卸載時移除所有監聽器
     onUnmounted(() => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      window.removeEventListener('pagehide', handlePageHide)
       stopLocationSharing()
       destroyMap()
     })
@@ -1181,6 +1177,7 @@ export default {
       otherUsers,
       lastUpdateTime,
       mapContainer,
+      notificationPermissionGranted,
       toggleLocationSharing,
       centerMapOnUser,
       formatTimeAgo,
