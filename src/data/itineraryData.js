@@ -175,22 +175,22 @@ export const itineraryData = {
   ],
   day3: [
     {
-      time: '07:00-08:00',
-      title: '飯店早餐',
-      description: '吃飽一點，今天車程較長',
+      time: '06:30-07:30',
+      title: '飯店早餐/退房',
+      description: '吃飽一點，車程較長',
       transport: '飯店內',
       location: 'Onyado Nono Kyoto Shichijo',
       duration: '約1小時',
       coordinates: [34.9877, 135.7551],
       details: {
         japaneseInfo: null,
-        notes: '飯店餐廳',
+        notes: '飯店餐廳，早餐後辦理退房',
         kkdayLink: null
       }
     },
     {
-      time: '08:00-08:30',
-      title: '前往京都車站集合點',
+      time: '07:30-08:00',
+      title: '飯店出發前往集合點',
       description: '飯店出發前往京都車站八條口祭時計広場',
       transport: '計程車 x2',
       location: '京都車站八條口祭時計広場',
@@ -199,14 +199,14 @@ export const itineraryData = {
       subway: '京都車站',
       details: {
         japaneseInfo: '京都駅八条口の「祭時計広場（まつりどけいひろば）」までお願いします。',
-        notes: '有3個大行李，務必叫2台車。KKday集合點：京都車站八条口祭時計広場 08:00集合',
-        kkdayLink: 'https://www.kkday.com/zh-tw/product/154074'
+        notes: '有3個大行李，務必叫2台車。詳細地點請依憑證',
+        kkdayLink: 'https://www.kkday.com/zh-tw/product/269936'
       }
     },
     {
-      time: '08:00-18:00',
-      title: 'KKDAY【大阪/京都出發】海之京都一日遊｜伊根灣遊船・伊根舟屋・天橋立',
-      description: '[京都出發] 08:00集合/京都車站八条口祭時計広場 → 伊根舟屋遊覽船餵海鷗、天橋立纜車看飛龍觀 → [大阪下車] 18:00抵達/大阪日本橋蟹道樂東店',
+      time: '08:30-18:30',
+      title: 'KKday 天橋立・伊根舟屋一日遊 (京都出發/大阪下車)',
+      description: '伊根舟屋餵海鷗 (船上)、天橋立飛龍觀 (纜車/吊椅)',
       transport: 'KKday 巴士一日遊',
       location: '天橋立、伊根舟屋',
       duration: '約10小時',
@@ -216,29 +216,29 @@ export const itineraryData = {
       mustVisit: '伊根舟屋餵海鷗 (自備蝦味先)、天橋立纜車',
       restaurants: {
         lunch: [
-          { name: 'はまや食堂 Hamaya Shokudo', location: '天橋立智恩寺', note: '花蛤丼、烏龍麵，座位多出餐快' },
-          { name: '橋立大丸本店', location: '天橋立', note: '海鮮丼、團體定食，環境寬敞' },
+          { name: 'はまや食堂 Hamaya', location: '天橋立智恩寺', note: '智恩寺對面，出餐快' },
+          { name: '橋立大丸', location: '天橋立', note: '空間大' },
           { name: 'Cafe du Pin', location: '天橋立運河旁', note: '麵包和簡餐' }
         ]
       },
       details: {
         japaneseInfo: null,
-        notes: '京都車站八条口祭時計広場 08:00集合，大阪日本橋蟹道樂東店 18:00下車。伊根舟屋餵海鷗 (船上)、天橋立飛龍觀 (纜車/吊椅)。午餐自理(天橋立/文殊地區)，特色必吃：花蛤丼。推薦店家：はまや食堂(智恩寺對面，出餐快)、橋立大丸(空間大)',
-        kkdayLink: 'https://www.kkday.com/zh-tw/product/154074'
+        notes: '伊根舟屋餵海鷗 (船上)、天橋立飛龍觀 (纜車/吊椅)。午餐推薦(天橋立/文殊地區自理)：特色必吃花蛤丼。推薦店家：はまや食堂(Hamaya)(智恩寺對面，出餐快)、橋立大丸(空間大)',
+        kkdayLink: 'https://www.kkday.com/zh-tw/product/269936'
       }
     },
     {
-      time: '18:00-19:00',
+      time: '18:30-19:30',
       title: '抵達大阪・走路去飯店',
-      description: '大阪日本橋蟹道樂東店下車 → 推行李步行至 KOKO HOTEL',
+      description: '大阪近鐵日本橋車站 2 號出口下車 → 推行李步行至 KOKO HOTEL',
       transport: '走路',
       location: 'KOKO HOTEL Osaka Namba Sennichimae',
       duration: '約4-5分鐘 (350公尺)',
       coordinates: [34.6658, 135.5043],
-      subway: '日本橋站附近',
+      subway: '日本橋站 2號出口',
       details: {
         japaneseInfo: null,
-        notes: '下車點：大阪近鐵日本橋車站 2 號出口。步行距離僅約 350 公尺 (4-5 分鐘)，下車後轉個彎就到飯店，非常輕鬆，不需叫計程車',
+        notes: '下車點：大阪近鐵日本橋車站 2 號出口。步行距離僅約 350 公尺 (4-5 分鐘)，下車後轉個彎就到飯店，非常輕鬆，不用叫計程車',
         kkdayLink: null
       }
     },
@@ -296,218 +296,29 @@ export const itineraryData = {
     },
     {
       time: '11:00-13:00',
-      title: '大阪城公園 (搭小火車)',
-      description: '參觀大阪城天守閣，搭路面小火車',
-      transport: '地鐵',
+      title: '大阪城公園 (二選一行程)',
+      description: 'A. 御座船 (輕鬆)：搭船遊護城河 (20分鐘)，不用爬樓梯 | B. 天守閣 (歷史)：需爬樓梯或排電梯，可看風景',
+      transport: '地鐵 (簡單直達)',
       location: '大阪城公園',
       duration: '約2小時',
       coordinates: [34.6873, 135.5262],
-      subway: '難波站 (御堂筋線) → 本町站 (轉中央線) → 谷町四丁目站',
-      mustEat: '抹茶冰淇淋 (天守閣前廣場)',
-      mustVisit: '大阪城御座船 (戴金色斗笠遊護城河)、路面小火車',
+      subway: '難波站 (御堂筋線) → 本町 (轉中央線) → 森之宮站 (Morinomiya) 3-B出口',
+      mustVisit: '路面小火車 (Road Train)、御座船 (輕鬆推薦)、天守閣 (現場依體力/天氣決定)',
       details: {
         japaneseInfo: null,
-        notes: '搭乘路面小火車直達天守閣。必玩：御座船(戴金色斗笠)、抹茶冰淇淋',
-        kkdayLink: null
-      }
-    },
-    {
-      time: '14:30-16:00',
-      title: 'Mipig Cafe 迷你豬體驗 (親子大推!)',
-      description: '與可愛迷你豬互動',
-      transport: '計程車 x1',
-      location: 'Mipig Cafe 京都店 (錦市場附近)',
-      duration: '約1.5小時',
-      coordinates: [35.0080, 135.7680],
-      details: {
-        japaneseInfo: '「mipig cafe（マイピッグカフェ）京都店」までお願いします。\n(住所: 京都市中京区新京極通四条上る中之町560-2)\n※錦市場の近くです。',
-        notes: '親子大推！迷你豬療癒體驗',
-        kkdayLink: null
-      }
-    },
-    {
-      time: '16:30-18:30',
-      title: '錦市場 & 祇園',
-      description: '逛「京都的廚房」，漫步祇園花見小路',
-      transport: '走路',
-      location: '錦市場 & 祇園',
-      duration: '約2小時',
-      coordinates: [35.0044, 135.7740],
-      mustEat: '史努比茶屋饅頭、三木雞卵玉子燒、豆乳甜甜圈',
-      details: {
-        japaneseInfo: null,
-        notes: '必吃：史努比茶屋饅頭、三木雞卵玉子燒、豆乳甜甜圈',
-        kkdayLink: null
-      }
-    },
-    {
-      time: '19:00',
-      title: '晚餐 - 河原町/先斗町周邊',
-      description: '柚子元 (柚子豬肉火鍋) 或名代炸豬排',
-      location: '祇園/河原町',
-      duration: '約1小時',
-      coordinates: [35.0044, 135.7740],
-      dinnerOptions: '柚子元 (柚子豬肉火鍋)、名代炸豬排 Katsukura 三條本店',
-      restaurants: {
-        dinner: [
-          { name: '柚子元 Yuzugen', location: '京都河原町', note: '柚子豬肉火鍋，湯頭清爽適合冬天' },
-          { name: '名代炸豬排 Katsukura 三條本店', location: '京都三條', note: '京都最好吃的炸豬排之一' }
-        ]
-      },
-      details: {
-        japaneseInfo: null,
-        notes: '推薦柚子鍋(湯頭清爽適合冬天)或京都最好吃的炸豬排',
-        kkdayLink: null
-      }
-    }
-  ],
-  day3: [
-    {
-      time: '07:00-08:00',
-      title: '飯店早餐',
-      description: '吃飽一點，今天車程較長',
-      transport: '飯店內',
-      location: 'Onyado Nono Kyoto Shichijo',
-      duration: '約1小時',
-      coordinates: [34.9877, 135.7551],
-      details: {
-        japaneseInfo: null,
-        notes: '飯店餐廳',
-        kkdayLink: null
-      }
-    },
-    {
-      time: '08:00-08:30',
-      title: '前往京都車站集合點',
-      description: '飯店出發前往京都車站八條口祭時計広場',
-      transport: '計程車 x2',
-      location: '京都車站八條口祭時計広場',
-      duration: '約30分鐘',
-      coordinates: [34.9854, 135.7581],
-      subway: '京都車站',
-      details: {
-        japaneseInfo: '京都駅八条口の「祭時計広場（まつりどけいひろば）」までお願いします。',
-        notes: '有3個大行李，務必叫2台車。KKday集合點：京都車站八条口祭時計広場',
-        kkdayLink: 'https://www.kkday.com/zh-tw/product/154074'
-      }
-    },
-    {
-      time: '08:00-18:00',
-      title: 'KKDAY【大阪/京都出發】海之京都一日遊｜伊根灣遊船・伊根舟屋・天橋立',
-      description: '[京都出發] 08:00集合 → 伊根舟屋遊覽船餵海鷗、天橋立纜車看飛龍觀/昇龍觀 → [大阪下車] 18:00抵達大阪日本橋蟹道樂東店',
-      transport: 'KKday 巴士一日遊',
-      location: '天橋立、伊根舟屋',
-      duration: '約10小時',
-      coordinates: [35.5667, 135.1833],
-      mustEat: '花蛤丼 (あさり丼)',
-      lunchOptions: 'はまや食堂 (花蛤丼、烏龍麵)、橋立大丸本店 (海鮮丼、團體定食)、Cafe du Pin (麵包簡餐)',
-      mustVisit: '伊根舟屋餵海鷗 (自備蝦味先)、天橋立纜車',
-      restaurants: {
-        lunch: [
-          { name: 'はまや食堂 Hamaya Shokudo', location: '天橋立智恩寺', note: '花蛤丼、烏龍麵，座位多出餐快' },
-          { name: '橋立大丸本店', location: '天橋立', note: '海鮮丼、團體定食，環境寬敞' },
-          { name: 'Cafe du Pin', location: '天橋立運河旁', note: '麵包和簡餐' }
-        ]
-      },
-      details: {
-        japaneseInfo: null,
-        notes: '京都車站八条口祭時計広場 08:00集合，大阪日本橋蟹道樂東店 18:00下車。搭乘遊覽船餵海鷗(請自備蝦味先)、天橋立纜車看飛龍觀。午餐自理(文殊地區)，推薦花蛤丼',
-        kkdayLink: 'https://www.kkday.com/zh-tw/product/154074'
-      }
-    },
-    {
-      time: '18:00-19:00',
-      title: '抵達大阪・走路去飯店',
-      description: '大阪日本橋蟹道樂東店下車 → 推行李步行至 KOKO HOTEL',
-      transport: '走路',
-      location: 'KOKO HOTEL Osaka Namba Sennichimae',
-      duration: '約4分鐘 (300公尺)',
-      coordinates: [34.6658, 135.5043],
-      subway: '日本橋站附近',
-      details: {
-        japaneseInfo: null,
-        notes: 'KKday於大阪日本橋蟹道樂東店 18:00下車。步行約300公尺(4分鐘)至飯店，雖有行李但路程很短且平坦，不需叫車',
-        kkdayLink: null
-      }
-    },
-    {
-      time: '20:00',
-      title: '晚餐 - 千日前/日本橋周邊',
-      description: '飯店附近美食',
-      location: '千日前',
-      duration: '約1小時',
-      coordinates: [34.6686, 135.5011],
-      dinnerOptions: '千房大阪燒、神座拉麵千日前店 (蔬菜湯頭)、わなか章魚燒',
-      restaurants: {
-        dinner: [
-          { name: '千房大阪燒 Chibo', location: '大阪千日前', note: '大阪燒名店' },
-          { name: '神座拉麵 Kamukura 千日前店', location: '大阪千日前', note: '蔬菜湯頭拉麵，口味清甜' },
-          { name: 'わなか章魚燒 Wanaka', location: '大阪千日前', note: '千日前總店，必吃大阪章魚燒' }
-        ]
-      },
-      details: {
-        japaneseInfo: null,
-        notes: '千房大阪燒、神座拉麵(蔬菜湯頭清甜)、わなか章魚燒千日前總店',
-        kkdayLink: null
-      }
-    }
-  ],
-  day4: [
-    {
-      time: '08:30-09:30',
-      title: '飯店早餐',
-      description: '享受飯店自助早餐',
-      transport: '飯店內',
-      location: 'KOKO HOTEL Osaka Namba',
-      duration: '約1小時',
-      coordinates: [34.6658, 135.5043],
-      details: {
-        japaneseInfo: null,
-        notes: '飯店餐廳',
-        kkdayLink: null
-      }
-    },
-    {
-      time: '09:30-10:30',
-      title: '難波八阪神社',
-      description: '巨大獅子頭舞台 (吸厄運)',
-      transport: '走路',
-      location: '難波八阪神社',
-      duration: '約1小時',
-      coordinates: [34.6628, 135.5011],
-      mustVisit: '巨大獅子頭舞台',
-      details: {
-        japaneseInfo: null,
-        notes: '離飯店約10-12分鐘',
-        kkdayLink: null
-      }
-    },
-    {
-      time: '11:00-13:00',
-      title: '大阪城公園 (搭小火車)',
-      description: '參觀大阪城天守閣，搭路面小火車',
-      transport: '地鐵',
-      location: '大阪城公園',
-      duration: '約2小時',
-      coordinates: [34.6873, 135.5262],
-      subway: '難波站 (御堂筋線) → 本町站 (轉中央線) → 谷町四丁目站',
-      mustEat: '抹茶冰淇淋 (天守閣前廣場)',
-      mustVisit: '大阪城御座船 (戴金色斗笠遊護城河)、路面小火車',
-      details: {
-        japaneseInfo: null,
-        notes: '搭乘路面小火車直達天守閣。必玩：御座船(戴金色斗笠)、抹茶冰淇淋',
+        notes: '走回難波站 (約 8 分鐘) → 搭御堂筋線 → 本町轉中央線 → 森之宮站下車。站內指引：3-B 出口 (有電梯)，出口即是公園入口和小火車站。園內移動：搭乘路面小火車 (Road Train)',
         kkdayLink: null
       }
     },
     {
       time: '13:30-15:30',
-      title: '黑門市場 & 午餐 (邊走邊吃)',
+      title: '黑門市場 & 午餐',
       description: '大阪知名市場，品嚐新鮮海鮮',
-      transport: '計程車 x1',
+      transport: '地鐵',
       location: '黑門市場',
       duration: '約2小時',
       coordinates: [34.6686, 135.5011],
-      subway: '日本橋站附近',
+      subway: '森之宮站 (中央線) → 堺筋本町 (轉堺筋線) → 日本橋站 10號出口',
       mustEat: '黑門三平 (現切生魚片、大蝦)、石橋食品 (關東煮)、丸善食肉店 (現烤和牛串)',
       restaurants: {
         lunch: [
@@ -517,8 +328,8 @@ export const itineraryData = {
         ]
       },
       details: {
-        japaneseInfo: '「黒門市場（くろもんいちば）」の入り口までお願いします。\n(日本橋駅の近くです)',
-        notes: '午餐推薦邊走邊吃：黑門三平生魚片、石橋關東煮、丸善和牛串',
+        japaneseInfo: null,
+        notes: '森之宮站 → 中央線 → 堺筋本町轉堺筋線 → 日本橋站。站內指引：10 號出口出來就是黑門市場。午餐推薦邊走邊吃：黑門三平生魚片、石橋關東煮、丸善和牛串',
         kkdayLink: null
       }
     },
@@ -562,26 +373,26 @@ export const itineraryData = {
   ],
   day5: [
     {
-      time: '07:00-07:30',
+      time: '06:30-06:40',
       title: '退房與寄放行李',
       description: '辦理退房，將3個大行李寄放在 KOKO HOTEL 櫃檯',
       transport: '飯店內',
       location: 'KOKO HOTEL Osaka Namba',
-      duration: '約30分鐘',
+      duration: '約10分鐘',
       coordinates: [34.6658, 135.5043],
       details: {
         japaneseInfo: null,
-        notes: '將行李寄放在飯店櫃檯，告知晚上回來拿',
+        notes: '退房，行李寄放 KOKO HOTEL 櫃檯',
         kkdayLink: null
       }
     },
     {
-      time: '07:30-08:30',
+      time: '06:40-07:30',
       title: '飯店早餐',
       description: '快速吃早餐，準備出發',
       transport: '飯店內',
       location: 'KOKO HOTEL Osaka Namba',
-      duration: '約1小時',
+      duration: '約50分鐘',
       coordinates: [34.6658, 135.5043],
       details: {
         japaneseInfo: null,
@@ -590,7 +401,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '08:30-09:00',
+      time: '07:30-07:50',
       title: '前往集合地點',
       description: '走路前往 VIP Villa難波集合',
       transport: '走路',
@@ -600,14 +411,14 @@ export const itineraryData = {
       subway: '日本橋站附近',
       details: {
         japaneseInfo: null,
-        notes: 'KKday集合點：VIP Villa難波 09:00集合。走路約 7-10 分鐘 (約 650 公尺)，往難波車站方向走',
+        notes: 'KOKO HOTEL → VIP Villa 難波 (KKday 集合點)。走路約 7-10 分鐘 (約 650 公尺)。往難波車站方向走，請依憑證地圖為準',
         kkdayLink: 'https://www.kkday.com/zh-tw/product/13894'
       }
     },
     {
-      time: '09:00-18:00',
-      title: 'KKDAY【京都&奈良一日遊】金閣寺、嵐山(午餐自理)、伏見稻荷大社、奈良公園',
-      description: '[大阪出發] 09:00集合/VIP Villa難波 → 金閣寺 → 嵐山竹林(午餐自理) → 伏見稻荷千本鳥居 → 奈良餵鹿 → [大阪下車] 18:00抵達/VIP Villa難波',
+      time: '08:00-18:00',
+      title: 'KKday 嵐山・奈良・伏見稻荷一日遊',
+      description: '金閣寺 → 嵐山竹林 → 伏見稻荷千本鳥居 → 奈良公園餵鹿',
       transport: '觀光遊覽車',
       location: '金閣寺 → 嵐山 → 伏見稻荷 → 奈良',
       duration: '約9小時',
@@ -616,7 +427,7 @@ export const itineraryData = {
       mustVisit: '金閣寺、嵐山竹林、伏見稻荷千本鳥居、奈良公園餵鹿',
       details: {
         japaneseInfo: null,
-        notes: 'VIP Villa難波 09:00集合，18:00回到VIP Villa難波下車。重點：嵐山竹林、奈良公園餵鹿、伏見稻荷千本鳥居。必吃：嵐山可樂餅 (中村屋)、奈良中谷堂麻糬',
+        notes: '[大阪出發] 08:00集合/VIP Villa難波 → 金閣寺 → 嵐山竹林(午餐自理) → 伏見稻荷千本鳥居 → 奈良餵鹿 → [大阪下車] 18:00抵達/VIP Villa難波。重點：嵐山竹林、奈良公園餵鹿、伏見稻荷千本鳥居。必吃：嵐山可樂餅 (中村屋)、奈良中谷堂麻糬',
         kkdayLink: 'https://www.kkday.com/zh-tw/product/13894'
       }
     },
@@ -631,7 +442,7 @@ export const itineraryData = {
       subway: 'ユニバーサルシティ駅',
       details: {
         japaneseInfo: 'ユニバーサルシティ駅の「ザ・シンギュラリホテル & スカイスパ」までお願いします。\n(住所: 大阪市此花区島屋6丁目2-25)',
-        notes: 'VIP Villa難波 19:10下車後走路回KOKO HOTEL(約5-8分鐘)取行李，叫2台計程車(有行李)前往USJ飯店',
+        notes: 'VIP Villa難波下車 → 走路回 KOKO HOTEL 取行李 → 叫計程車到環球影城飯店。方案 A (電車 - 轉乘1次)：走至近鐵日本橋站 → 搭阪神難波線至西九條 → 轉JR夢咲線至Universal City (飯店在車站旁)。方案 B (計程車 - 分2台)：直接叫車直達飯店 (約 ¥5000/台)',
         kkdayLink: null
       }
     },

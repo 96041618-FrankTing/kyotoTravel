@@ -887,10 +887,10 @@ export default {
     const getCurrentDayTitle = () => {
       const dayMap = {
         day1: 'Day 1 - 抵達京都・鐵道與溫泉放鬆',
-        day2: 'Day 2 - 京都經典：清水寺・小豬療癒・祇園',
+        day2: 'Day 2 - 京都經典：清水寺・和服體驗・人力車・祇園',
         day3: 'Day 3 - 海之京都：天橋立・伊根舟屋 (移動日)',
-        day4: 'Day 4 - 大阪市區自由散策',
-        day5: 'Day 5 - 古都巡禮：嵐山・奈良・伏見稻荷',
+        day4: 'Day 4 - 大阪市區自由散策 (電車體驗日)',
+        day5: 'Day 5 - KKDAY一日團：金閣寺/嵐山/伏見稻荷/奈良 (移動日)',
         day6: 'Day 6 - 大阪環球影城 (USJ)',
         day7: 'Day 7 - 輕鬆返台'
       }
