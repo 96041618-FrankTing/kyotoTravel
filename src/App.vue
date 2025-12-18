@@ -203,8 +203,14 @@
         </div>
 
         <!-- 費用估算 -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <h3 class="text-xl font-bold text-dark mb-4">💰 費用估算 (4人總計)</h3>
+        <div 
+          class="bg-white rounded-lg shadow-md p-6 cursor-pointer hover:shadow-xl transition-all duration-300 border-2 border-transparent hover:border-primary"
+          @click="showBudgetModal = true"
+        >
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xl font-bold text-dark">💰 費用估算 (4人總計)</h3>
+            <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">點擊查看詳情 →</span>
+          </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div v-for="cost in travelInfo.costs" :key="cost.item" class="flex justify-between items-center p-3 bg-gray-50 rounded">
               <span class="text-sm">{{ cost.item }}</span>
@@ -215,6 +221,9 @@
             <div class="flex justify-between items-center text-lg font-bold">
               <span>總計預估費用</span>
               <span class="text-primary">NT$ {{ (63317 + 20615 + 11642 + 14565 + 7324 + 6240).toLocaleString() }}</span>
+            </div>
+            <div class="text-sm text-gray-600 mt-2 text-center">
+              💡 點擊查看完整預算規劃表
             </div>
           </div>
         </div>
@@ -480,6 +489,248 @@
           </div>
         </div>
       </div>
+
+      <!-- Budget Modal -->
+      <div v-if="showBudgetModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto" @click="showBudgetModal = false">
+        <div class="bg-white rounded-lg shadow-xl max-w-6xl w-full my-8" @click.stop>
+          <div class="sticky top-0 bg-gradient-to-r from-green-500 to-blue-500 text-white p-6 rounded-t-lg z-10">
+            <div class="flex justify-between items-center">
+              <div>
+                <h3 class="text-2xl font-bold">💰 京阪古都七日遊・預算規劃表</h3>
+                <p class="text-sm opacity-90 mt-1">匯率基準: 0.225 (台幣/日圓) | 人數: 4人 (3大1老1小) | 天數: 7天6夜</p>
+              </div>
+              <button @click="showBudgetModal = false" class="text-white hover:bg-white hover:bg-opacity-20 rounded-full w-10 h-10 flex items-center justify-center text-2xl transition-colors">&times;</button>
+            </div>
+          </div>
+
+          <div class="p-6 space-y-6 max-h-[70vh] overflow-y-auto">
+            <!-- Part A: 台灣預付項目 -->
+            <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-6">
+              <div class="flex items-center mb-4">
+                <span class="text-3xl mr-3">🅰️</span>
+                <div>
+                  <h4 class="text-xl font-bold text-gray-800">Part A. 台灣預付項目 (刷卡)</h4>
+                  <p class="text-sm text-gray-600">建議在出發前完成付款，金額不變</p>
+                </div>
+              </div>
+              
+              <div class="space-y-2">
+                <div v-for="item in travelInfo.budget.prepaidInTaiwan.items" :key="item.name" 
+                     class="bg-white rounded-lg p-4 flex items-center justify-between shadow-sm hover:shadow-md transition-shadow">
+                  <div class="flex-1">
+                    <div class="flex items-center space-x-2">
+                      <span class="font-semibold text-gray-800">{{ item.name }}</span>
+                      <span v-if="item.status === 'completed'" class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">✓ 已完成</span>
+                      <span v-else class="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded">⏳ 待處理</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-1">{{ item.note }}</p>
+                  </div>
+                  <div class="text-right ml-4">
+                    <div class="text-lg font-bold text-primary">NT$ {{ item.amount.toLocaleString() }}</div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="mt-4 pt-4 border-t-2 border-blue-300">
+                <div class="flex justify-between items-center bg-blue-200 rounded-lg p-4">
+                  <span class="text-lg font-bold text-gray-800">【A. 預付小計】</span>
+                  <div class="text-right">
+                    <div class="text-2xl font-bold text-primary">NT$ {{ travelInfo.budget.prepaidInTaiwan.subtotal.toLocaleString() }}</div>
+                    <div class="text-sm text-gray-600">平均每人約 NT$ {{ travelInfo.budget.prepaidInTaiwan.perPerson.toLocaleString() }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Part B: 日本當地支出 -->
+            <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-6">
+              <div class="flex items-center mb-4">
+                <span class="text-3xl mr-3">🅱️</span>
+                <div>
+                  <h4 class="text-xl font-bold text-gray-800">Part B. 日本當地支出 (日圓)</h4>
+                  <p class="text-sm text-gray-600">已扣除早餐與點心費用，僅保留午晚餐與交通門票</p>
+                </div>
+              </div>
+
+              <!-- 餐飲費用 -->
+              <div class="bg-white rounded-lg p-4 mb-4 shadow-sm">
+                <h5 class="font-bold text-gray-800 mb-3 flex items-center">
+                  <span class="text-xl mr-2">🍽️</span>
+                  1. 餐飲費用 (7天)
+                </h5>
+                <div class="grid grid-cols-2 gap-4 mb-3">
+                  <div class="bg-gray-50 p-3 rounded">
+                    <div class="text-sm text-gray-600">總額</div>
+                    <div class="text-lg font-bold text-primary">¥{{ travelInfo.budget.localExpenses.dining.total.toLocaleString() }}</div>
+                    <div class="text-xs text-gray-500">(約 NT$ {{ travelInfo.budget.localExpenses.dining.totalNTD.toLocaleString() }})</div>
+                  </div>
+                  <div class="bg-gray-50 p-3 rounded">
+                    <div class="text-sm text-gray-600">平均每人每天</div>
+                    <div class="text-lg font-bold text-primary">¥{{ travelInfo.budget.localExpenses.dining.perPersonPerDay.toLocaleString() }}</div>
+                  </div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 text-sm">
+                  <div class="bg-blue-50 p-2 rounded text-center">
+                    <div class="text-gray-600">早餐</div>
+                    <div class="font-semibold">¥{{ travelInfo.budget.localExpenses.dining.breakdown.breakfast }}</div>
+                    <div class="text-xs text-gray-500">飯店包含</div>
+                  </div>
+                  <div class="bg-blue-50 p-2 rounded text-center">
+                    <div class="text-gray-600">午餐</div>
+                    <div class="font-semibold">¥{{ travelInfo.budget.localExpenses.dining.breakdown.lunch.toLocaleString() }}</div>
+                    <div class="text-xs text-gray-500">定食/海鮮丼</div>
+                  </div>
+                  <div class="bg-blue-50 p-2 rounded text-center">
+                    <div class="text-gray-600">晚餐</div>
+                    <div class="font-semibold">¥{{ travelInfo.budget.localExpenses.dining.breakdown.dinner.toLocaleString() }}</div>
+                    <div class="text-xs text-gray-500">燒肉/鍋物</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 當地交通 -->
+              <div class="bg-white rounded-lg p-4 mb-4 shadow-sm">
+                <h5 class="font-bold text-gray-800 mb-3 flex items-center">
+                  <span class="text-xl mr-2">🚕</span>
+                  2. 當地交通 (含計程車)
+                </h5>
+                <div class="bg-gray-50 p-3 rounded mb-3">
+                  <div class="flex justify-between items-center">
+                    <span class="text-gray-600">預估總額</span>
+                    <div class="text-right">
+                      <div class="text-lg font-bold text-primary">¥{{ travelInfo.budget.localExpenses.transportation.total.toLocaleString() }}</div>
+                      <div class="text-xs text-gray-500">(約 NT$ {{ travelInfo.budget.localExpenses.transportation.totalNTD.toLocaleString() }})</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="space-y-2">
+                  <div v-for="item in travelInfo.budget.localExpenses.transportation.items" :key="item.name" 
+                       class="flex items-start space-x-2 text-sm">
+                    <span class="text-blue-500">•</span>
+                    <div>
+                      <span class="font-semibold">{{ item.name }}:</span>
+                      <span class="text-gray-600 ml-1">{{ item.note }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 門票與體驗 -->
+              <div class="bg-white rounded-lg p-4 shadow-sm">
+                <h5 class="font-bold text-gray-800 mb-3 flex items-center">
+                  <span class="text-xl mr-2">🎫</span>
+                  3. 門票與體驗
+                </h5>
+                <div class="bg-gray-50 p-3 rounded mb-3">
+                  <div class="flex justify-between items-center">
+                    <span class="text-gray-600">預估總額</span>
+                    <div class="text-right">
+                      <div class="text-lg font-bold text-primary">¥{{ travelInfo.budget.localExpenses.tickets.total.toLocaleString() }}</div>
+                      <div class="text-xs text-gray-500">(約 NT$ {{ travelInfo.budget.localExpenses.tickets.totalNTD.toLocaleString() }})</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <div v-for="item in travelInfo.budget.localExpenses.tickets.items" :key="item.name" 
+                       class="bg-blue-50 p-3 rounded">
+                    <div class="font-semibold text-gray-800 text-sm">{{ item.name }}</div>
+                    <div class="text-lg font-bold text-primary">¥{{ item.amount.toLocaleString() }}</div>
+                    <div v-if="item.note" class="text-xs text-gray-500 mt-1">{{ item.note }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 現金兌換策略 -->
+            <div class="bg-gradient-to-br from-yellow-50 to-orange-100 rounded-lg p-6">
+              <h4 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                <span class="text-2xl mr-2">💵</span>
+                現金兌換策略
+              </h4>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-white rounded-lg p-4 shadow-sm">
+                  <div class="text-sm text-gray-600 mb-1">建議兌換現金</div>
+                  <div class="text-3xl font-bold text-primary mb-2">¥{{ travelInfo.budget.cashStrategy.recommended.toLocaleString() }}</div>
+                  <div class="text-sm text-gray-500">(約 NT$ {{ travelInfo.budget.cashStrategy.recommendedNTD.toLocaleString() }})</div>
+                  <div class="mt-3 pt-3 border-t border-gray-200">
+                    <div class="text-sm text-gray-600 mb-1">用途</div>
+                    <div class="text-sm">{{ travelInfo.budget.cashStrategy.usage }}</div>
+                  </div>
+                  <div class="mt-3 pt-3 border-t border-gray-200">
+                    <div class="text-sm text-gray-600 mb-1">分配建議</div>
+                    <div class="text-sm font-semibold text-orange-600">{{ travelInfo.budget.cashStrategy.distribution }}</div>
+                  </div>
+                </div>
+
+                <div class="bg-white rounded-lg p-4 shadow-sm">
+                  <div class="text-sm text-gray-600 mb-1">建議刷卡支付</div>
+                  <div class="text-3xl font-bold text-primary mb-2">¥{{ travelInfo.budget.cardStrategy.recommended.toLocaleString() }}</div>
+                  <div class="text-sm text-gray-500">(約 NT$ {{ travelInfo.budget.cardStrategy.recommendedNTD.toLocaleString() }})</div>
+                  <div class="mt-3 pt-3 border-t border-gray-200">
+                    <div class="text-sm text-gray-600 mb-1">用途</div>
+                    <div class="text-sm">{{ travelInfo.budget.cardStrategy.usage }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 總預算彙整 -->
+            <div class="bg-gradient-to-br from-purple-50 to-pink-100 rounded-lg p-6">
+              <h4 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                <span class="text-2xl mr-2">📊</span>
+                總預算彙整
+              </h4>
+              
+              <div class="space-y-3">
+                <div class="bg-white rounded-lg p-4 flex justify-between items-center shadow-sm">
+                  <span class="text-gray-700">A. 台灣預付</span>
+                  <div class="text-right">
+                    <div class="text-xl font-bold text-primary">NT$ {{ travelInfo.budget.summary.prepaidNTD.toLocaleString() }}</div>
+                    <div class="text-sm text-gray-500">69%</div>
+                  </div>
+                </div>
+                <div class="bg-white rounded-lg p-4 flex justify-between items-center shadow-sm">
+                  <span class="text-gray-700">B. 當地支出</span>
+                  <div class="text-right">
+                    <div class="text-xl font-bold text-primary">NT$ {{ travelInfo.budget.summary.localNTD.toLocaleString() }}</div>
+                    <div class="text-sm text-gray-500">31%</div>
+                  </div>
+                </div>
+                <div class="bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg p-5 text-white">
+                  <div class="flex justify-between items-center">
+                    <span class="text-lg font-bold">總計 (不含購物)</span>
+                    <div class="text-right">
+                      <div class="text-3xl font-bold">NT$ {{ travelInfo.budget.summary.totalNTD.toLocaleString() }}</div>
+                      <div class="text-sm opacity-90">平均每人 NT$ {{ travelInfo.budget.summary.perPersonNTD.toLocaleString() }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-4 bg-white rounded-lg p-4 border-2 border-purple-300">
+                <div class="flex items-start space-x-2">
+                  <span class="text-2xl">💡</span>
+                  <div>
+                    <div class="font-bold text-gray-800 mb-1">資金準備建議</div>
+                    <div class="text-sm text-gray-600">
+                      預算變得更精簡了！若包含個人購物金，每人準備 
+                      <span class="font-bold text-primary text-lg">NT$ {{ travelInfo.budget.summary.recommendedPerPerson.toLocaleString() }}</span> 
+                      左右即可玩得非常舒適。
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sticky bottom-0 bg-gray-100 p-4 rounded-b-lg flex justify-end space-x-3">
+            <button @click="showBudgetModal = false" class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors">
+              關閉
+            </button>
+          </div>
+        </div>
+      </div>
     </main>
 
     <!-- 貓咪大戰爭行走動畫 -->
@@ -537,6 +788,7 @@ export default {
   setup() {
     const activeDay = ref('overview')
     const showMap = ref(false)
+    const showBudgetModal = ref(false)
     
     // 開發者模式相關
     const showDevSettings = ref(false)

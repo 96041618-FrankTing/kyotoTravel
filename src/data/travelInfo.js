@@ -60,7 +60,6 @@ export const travelInfo = {
   todoList: [
     '購買上網SIM/eSIM卡(eSIMGo)',
     '購買雪地防滑鞋套',
-    '購買iPhone 6S手機殼和背帶',
     '預定KKDay一日遊行程',
     '預定日本和服時間',
     '預定機上餐點與座位(需付費？)',
@@ -68,5 +67,75 @@ export const travelInfo = {
     '填寫日本入境單VJW(Visit Japan Web)',
     '線上購買環球影城門票 + 快通4',
     '線上購買JR HARUKA WEST QR火車票和選位(電子票)'
-  ]
+  ],
+  budget: {
+    exchangeRate: 0.225,
+    people: 4,
+    days: 7,
+    prepaidInTaiwan: {
+      items: [
+        { name: '來回機票', amount: 63317, note: '已確認 (星宇/華航)', status: 'completed' },
+        { name: '住宿費 (6晚)', amount: 46822, note: '已確認 (3間飯店，含早餐)', status: 'completed' },
+        { name: 'KKday 行程', amount: 13564, note: 'Day3 天橋立 + Day5 嵐山奈良', status: 'pending' },
+        { name: 'USJ 門票', amount: 7800, note: '1-Day Pass (3大1小)', status: 'pending' },
+        { name: 'USJ 快速通關', amount: 18000, note: '(浮動) 預估快通4 @$4500/人', status: 'pending' },
+        { name: 'HARUKA 車票', amount: 3200, note: '機場→京都 (單程)', status: 'pending' },
+        { name: '網卡/保險', amount: 3000, note: 'eSIM x3 + 漫遊 + 旅平險', status: 'pending' }
+      ],
+      subtotal: 155703,
+      perPerson: 38925
+    },
+    localExpenses: {
+      dining: {
+        total: 210000,
+        totalNTD: 47250,
+        perPersonPerDay: 7500,
+        breakdown: {
+          breakfast: 0,
+          lunch: 2500,
+          dinner: 5000
+        },
+        note: '早餐飯店包含'
+      },
+      transportation: {
+        total: 50000,
+        totalNTD: 11250,
+        items: [
+          { name: '京都移動', note: 'Day1 & Day2 計程車' },
+          { name: '大阪移動', note: 'Day3 & Day5 搬家計程車 (長途)' },
+          { name: '機場交通', note: 'Day7 利木津巴士 (約 ¥6,300)' },
+          { name: 'ICOCA儲值', note: '每人預抓 ¥3,000 (地鐵/備用)' }
+        ]
+      },
+      tickets: {
+        total: 48000,
+        totalNTD: 10800,
+        items: [
+          { name: '和服體驗 (4人)', amount: 24000 },
+          { name: '人力車 (2台)', amount: 10000 },
+          { name: '小景點門票', amount: 12000, note: '清水寺/大阪城等' },
+          { name: '餵食體驗', amount: 2000, note: '鹿仙貝/蝦味先' }
+        ]
+      },
+      subtotal: 69300
+    },
+    cashStrategy: {
+      recommended: 120000,
+      recommendedNTD: 27000,
+      usage: 'ICOCA 儲值、計程車、路邊攤(錦市場/黑門市場)、人力車、自動販賣機',
+      distribution: '3 位大人身上各帶 ¥40,000 現金即可'
+    },
+    cardStrategy: {
+      recommended: 188000,
+      recommendedNTD: 42300,
+      usage: '午晚餐大餐 (燒肉/東洋亭)、和服店、百貨公司購物、USJ 園區內消費'
+    },
+    summary: {
+      prepaidNTD: 155703,
+      localNTD: 69300,
+      totalNTD: 225003,
+      perPersonNTD: 56250,
+      recommendedPerPerson: 60000
+    }
+  }
 }
