@@ -231,11 +231,59 @@
         <!-- 護照資料 -->
         <div class="bg-white rounded-lg shadow-md p-6">
           <h3 class="text-xl font-bold text-dark mb-4">🛂 護照資料</h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div v-for="passport in travelInfo.passports" :key="passport.number" class="p-3 bg-gray-50 rounded">
-              <div class="font-semibold text-dark">{{ passport.name }}</div>
-              <div class="text-sm text-gray-600">護照號碼: {{ passport.number }}</div>
+          
+          <!-- 未登入狀態 -->
+          <div v-if="!isFamilyLoggedIn" class="text-center py-8">
+            <div class="text-6xl mb-4">🔒</div>
+            <p class="text-gray-600 text-lg mb-2">此為機敏資料</p>
+            <p class="text-gray-500 text-sm">請先至隱藏設定頁面登入家庭帳號，以解鎖此資料</p>
+            <p class="text-gray-400 text-xs mt-2">💡 提示：連續點擊標題 5 次可開啟設定頁面</p>
+          </div>
+          
+          <!-- 載入中狀態 -->
+          <div v-else-if="passportsLoading" class="text-center py-8">
+            <div class="text-4xl mb-2">⏳</div>
+            <p class="text-gray-600">載入中...</p>
+          </div>
+          
+          <!-- 錯誤狀態 -->
+          <div v-else-if="passportsError" class="text-center py-8">
+            <div class="text-4xl mb-2">⚠️</div>
+            <p class="text-red-600">{{ passportsError }}</p>
+          </div>
+          
+          <!-- 已登入且有資料 -->
+          <div v-else-if="passportsData" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div 
+              v-for="(passport, key) in passportsData" 
+              :key="key" 
+              class="p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg border border-blue-200 shadow-sm hover:shadow-md transition-shadow"
+            >
+              <div class="flex items-center justify-between mb-3">
+                <div class="font-bold text-blue-900 text-lg">{{ passport.name }}</div>
+                <div class="text-xs text-blue-600 bg-blue-200 px-2 py-1 rounded font-semibold">{{ key }}</div>
+              </div>
+              <div class="space-y-2 text-sm">
+                <div class="flex items-start text-blue-800">
+                  <span class="font-semibold w-24 flex-shrink-0">護照號碼:</span>
+                  <span class="font-mono text-blue-900 font-semibold">{{ passport.passport_no }}</span>
+                </div>
+                <div class="flex items-start text-blue-700">
+                  <span class="font-semibold w-24 flex-shrink-0">效期:</span>
+                  <span>{{ passport.expiry }}</span>
+                </div>
+                <div class="flex items-start text-blue-700">
+                  <span class="font-semibold w-24 flex-shrink-0">出生日期:</span>
+                  <span>{{ passport.birthday }}</span>
+                </div>
+              </div>
             </div>
+          </div>
+          
+          <!-- 已登入但無資料 -->
+          <div v-else class="text-center py-8">
+            <div class="text-4xl mb-2">📭</div>
+            <p class="text-gray-600">暫無護照資料</p>
           </div>
         </div>
 
@@ -776,6 +824,9 @@ import TransparentAnimation from './components/TransparentAnimation.vue'
 // 導入行程數據
 import { travelInfo } from './data/travelInfo.js'
 import { itineraryData } from './data/itineraryData.js'
+// 導入 Firebase
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { getDatabase, ref as dbRef, get, child } from 'firebase/database'
 
 export default {
   name: 'App',
@@ -789,6 +840,12 @@ export default {
     const activeDay = ref('overview')
     const showMap = ref(false)
     const showBudgetModal = ref(false)
+    
+    // 🔐 護照資料相關 (Firebase Auth & Realtime Database)
+    const isFamilyLoggedIn = ref(false)
+    const passportsData = ref(null)
+    const passportsLoading = ref(false)
+    const passportsError = ref('')
     
     // 開發者模式相關
     const showDevSettings = ref(false)
@@ -934,6 +991,42 @@ export default {
 
       // 使用現有的 openExternalLink 函數打開連結
       openExternalLink(googleMapsUrl)
+    }
+    
+    // 🔐 讀取護照資料
+    const fetchPassportsData = async () => {
+      if (!isFamilyLoggedIn.value) {
+        console.log('🔒 Not logged in, skipping passport data fetch')
+        return
+      }
+      
+      passportsLoading.value = true
+      passportsError.value = ''
+      
+      try {
+        console.log('📖 Fetching passports data from Firebase...')
+        const db = getDatabase()
+        const dbReference = dbRef(db)
+        const snapshot = await get(child(dbReference, 'passports'))
+        
+        if (snapshot.exists()) {
+          passportsData.value = snapshot.val()
+          console.log('✅ Passports data loaded:', passportsData.value)
+        } else {
+          console.log('⚠️ No passports data found')
+          passportsData.value = null
+        }
+      } catch (error) {
+        console.error('❌ Failed to fetch passports:', error)
+        
+        if (error.code === 'PERMISSION_DENIED') {
+          passportsError.value = '🔒 權限不足，無法讀取護照資料'
+        } else {
+          passportsError.value = `❌ 讀取失敗: ${error.message}`
+        }
+      } finally {
+        passportsLoading.value = false
+      }
     }
 
     const initializeMap = () => {
@@ -1398,6 +1491,22 @@ export default {
     onMounted(() => {
       loadDevSettings()
       
+      // 🔐 監聽 Firebase Auth 狀態變化
+      const auth = getAuth()
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          console.log('✅ User logged in:', user.email)
+          isFamilyLoggedIn.value = true
+          // 自動讀取護照資料
+          fetchPassportsData()
+        } else {
+          console.log('🔓 User logged out')
+          isFamilyLoggedIn.value = false
+          passportsData.value = null
+          passportsError.value = ''
+        }
+      })
+      
       // 載入語音列表(某些瀏覽器需要)
       if (speechSynthesis.getVoices().length === 0) {
         speechSynthesis.addEventListener('voiceschanged', () => {
@@ -1500,6 +1609,11 @@ export default {
       openExternalLink,
       openGoogleMaps,
       currentWeather,
+      // 護照資料
+      isFamilyLoggedIn,
+      passportsData,
+      passportsLoading,
+      passportsError,
       // 開發者模式
       showDevSettings,
       devSettings,

@@ -127,6 +127,44 @@
           </div>
         </section>
 
+        <!-- 家庭帳號登入 -->
+        <section class="settings-section family-login-section">
+          <h3 class="section-title">🔐 家庭帳號登入 (解鎖總覽頁機敏資料)</h3>
+          
+          <div class="login-form">
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input 
+                v-model="familyEmail" 
+                type="email" 
+                class="form-input" 
+                placeholder="請輸入家庭共用帳號"
+                autocomplete="email"
+              >
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">密碼</label>
+              <input 
+                v-model="familyPassword" 
+                type="password" 
+                class="form-input" 
+                placeholder="請輸入密碼"
+                autocomplete="current-password"
+                @keyup.enter="loginToFamilyAccount"
+              >
+            </div>
+            
+            <button @click="loginToFamilyAccount" class="login-btn">
+              🔓 登入
+            </button>
+            
+            <div v-if="loginMessage" class="login-message" :class="loginStatus">
+              {{ loginMessage }}
+            </div>
+          </div>
+        </section>
+
         <!-- 危險操作 -->
         <section class="settings-section danger-section">
           <h3 class="section-title">⚠️ 危險操作</h3>
@@ -235,6 +273,7 @@
 
 <script>
 import { ref, onMounted, computed } from 'vue'
+import { getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 
 export default {
   name: 'DevSettings',
@@ -256,6 +295,12 @@ export default {
       enableDebugLog: false,
       enablePerformanceMonitor: false
     })
+    
+    // ⭐ 家庭帳號登入相關
+    const familyEmail = ref('')
+    const familyPassword = ref('')
+    const loginMessage = ref('')
+    const loginStatus = ref('') // 'success', 'error', or ''
     
     // 用戶資訊
     const userInfo = ref({
@@ -316,9 +361,47 @@ export default {
       emit('close')
     }
 
-    // 清除所有資料
-    const clearAllData = () => {
-      if (confirm('⚠️ 確定要清除所有本地資料嗎？\n\n這將清除:\n• 語音通話聯絡人\n• 個人資訊\n• 所有設定\n\n此操作無法復原!')) {
+    // ⭐ 家庭帳號登入
+    const loginToFamilyAccount = async () => {
+      if (!familyEmail.value || !familyPassword.value) {
+        loginMessage.value = '請輸入帳號和密碼'
+        loginStatus.value = 'error'
+        return
+      }
+      
+      try {
+        loginMessage.value = '登入中...'
+        loginStatus.value = ''
+        
+        const auth = getAuth()
+        await signInWithEmailAndPassword(auth, familyEmail.value, familyPassword.value)
+        
+        loginMessage.value = '✅ 登入成功！現在可以查看機敏資料'
+        loginStatus.value = 'success'
+        
+        // 清空密碼
+        familyPassword.value = ''
+        
+        console.log('✅ Family account logged in')
+      } catch (error) {
+        console.error('❌ Login failed:', error)
+        loginMessage.value = `❌ 登入失敗: ${error.message}`
+        loginStatus.value = 'error'
+      }
+    }
+    
+    // 清除所有資料（包含登出）
+    const clearAllData = async () => {
+      if (confirm('⚠️ 確定要清除所有本地資料嗎？\n\n這將清除:\n• 語音通話聯絡人\n• 個人資訊\n• 所有設定\n• Firebase 登入狀態\n\n此操作無法復原!')) {
+        try {
+          // ⭐ 先登出 Firebase
+          const auth = getAuth()
+          await signOut(auth)
+          console.log('🔐 Firebase signed out')
+        } catch (error) {
+          console.error('⚠️ Sign out error:', error)
+        }
+        
         const devSettings = localStorage.getItem('devSettings')
         localStorage.clear()
         if (devSettings) {
@@ -329,9 +412,18 @@ export default {
       }
     }
 
-    // 重置設定
-    const resetSettings = () => {
-      if (confirm('確定要重置所有開發者設定嗎？')) {
+    // 重置設定（包含登出）
+    const resetSettings = async () => {
+      if (confirm('確定要重置所有開發者設定嗎？\n\n這將同時登出 Firebase 帳號')) {
+        try {
+          // ⭐ 先登出 Firebase
+          const auth = getAuth()
+          await signOut(auth)
+          console.log('🔐 Firebase signed out during reset')
+        } catch (error) {
+          console.error('⚠️ Sign out error:', error)
+        }
+        
         settings.value = {
           enableVoiceCall: false,
           enableMap: false,
@@ -340,7 +432,7 @@ export default {
           enablePerformanceMonitor: false
         }
         saveSettings()
-        alert('✅ 已重置為預設設定')
+        alert('✅ 已重置為預設設定並登出')
       }
     }
 
@@ -515,6 +607,11 @@ LocalStorage: ${storageUsed.value}
       settings,
       userInfo,
       emojiList,
+      familyEmail,
+      familyPassword,
+      loginMessage,
+      loginStatus,
+      loginToFamilyAccount,
       saveSettings,
       saveUserInfo,
       selectEmoji,
@@ -656,6 +753,61 @@ LocalStorage: ${storageUsed.value}
   background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
   border-radius: 12px;
   padding: 20px;
+}
+
+/* 家庭帳號登入區塊 */
+.family-login-section {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.login-btn {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.login-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.login-btn:active {
+  transform: translateY(0);
+}
+
+.login-message {
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.login-message.success {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+.login-message.error {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
 }
 
 .user-info-form {
