@@ -48,8 +48,26 @@ export const travelInfo = {
     { item: '住宿 Onyado Nono Kyoto Shichijo Natural Hot Spring 兩晚', amount: 'NT$20,615' },
     { item: '住宿 KOKO HOTEL Osaka Namba Sennichimae 兩晚', amount: 'NT$11,642' },
     { item: '住宿 THE SINGULARI HOTEL & SKYSPA at UNIVERSAL STUDIOS JAPAN 兩晚', amount: 'NT$14,565' },
-    { item: 'Day3 KKDAY【大阪/京都出發】海之京都一日遊 x4', amount: 'NT$7,324' },
-    { item: 'Day5 KKDAY【京都&奈良一日遊】金閣寺、嵐山、奈良公園、伏見稻荷大社 x4', amount: 'NT$6,240' }
+    { item: 'Day3 KKDAY【大阪/京都出發】海之京都一日遊｜伊根灣遊船・伊根舟屋・天橋立 x4', amount: 'NT$7,324' },
+    { item: 'Day5 KKDAY【京都&奈良一日遊】金閣寺、嵐山(午餐自理)、伏見稻荷大社、奈良公園 x4', amount: 'NT$6,240' }
+  ],
+  kkdayTours: [
+    {
+      day: 'Day3',
+      name: '【大阪/京都出發】海之京都一日遊｜伊根灣遊船・伊根舟屋・天橋立',
+      departureOption: '[京都出發] 08:00集合/京都車站八条口祭時計広場',
+      arrivalOption: '[大阪下車] 18:00抵達/大阪日本橋蟹道樂東店',
+      link: 'https://www.kkday.com/zh-tw/product/154074-kyoto-by-the-sea-day-tour-amanohashidate-ine-funaya?pkg_oid=1844037&go_date=2026-01-18&869a86fad997ad236f2b482468357f08=4',
+      cost: 'NT$7,324'
+    },
+    {
+      day: 'Day5',
+      name: '【京都&奈良一日遊】金閣寺、嵐山(午餐自理)、伏見稻荷大社、奈良公園',
+      departureOption: '[大阪出發] 07:50集合/VIP Villa難波',
+      arrivalOption: '[大阪下車] 19:10抵達/VIP Villa難波',
+      link: 'https://www.kkday.com/zh-tw/product/13894-kyoto-nara-ushimi-inari-taisha-shrine-arashiyama-nara-park?pkg_oid=716952&go_date=2026-01-20&f60a743db366b76fb072d421e3df607a=3&6deba73d66b0ba8521243f2d5eada132=1',
+      cost: 'NT$6,240'
+    }
   ],
   passports: [
     { name: 'TING/CHINYUAN' },

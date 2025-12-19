@@ -200,11 +200,11 @@ export const itineraryData = {
       details: {
         japaneseInfo: '京都駅八条口の「祭時計広場（まつりどけいひろば）」までお願いします。',
         notes: '有3個大行李，務必叫2台車。詳細地點請依憑證',
-        kkdayLink: 'https://www.kkday.com/zh-tw/product/269936'
+        kkdayLink: 'https://www.kkday.com/zh-tw/product/154074'
       }
     },
     {
-      time: '08:30-18:30',
+      time: '08:00-18:00',
       title: 'KKday 天橋立・伊根舟屋一日遊 (京都出發/大阪下車)',
       description: '伊根舟屋餵海鷗 (船上)、天橋立飛龍觀 (纜車/吊椅)',
       transport: 'KKday 巴士一日遊',
@@ -224,11 +224,11 @@ export const itineraryData = {
       details: {
         japaneseInfo: null,
         notes: '伊根舟屋餵海鷗 (船上)、天橋立飛龍觀 (纜車/吊椅)。午餐推薦(天橋立/文殊地區自理)：特色必吃花蛤丼。推薦店家：はまや食堂(Hamaya)(智恩寺對面，出餐快)、橋立大丸(空間大)',
-        kkdayLink: 'https://www.kkday.com/zh-tw/product/269936'
+        kkdayLink: 'https://www.kkday.com/zh-tw/product/154074'
       }
     },
     {
-      time: '18:30-19:30',
+      time: '18:00-19:30',
       title: '抵達大阪・走路去飯店',
       description: '大阪近鐵日本橋車站 2 號出口下車 → 推行李步行至 KOKO HOTEL',
       transport: '走路',
@@ -243,7 +243,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '20:00',
+      time: '19:30',
       title: '晚餐 - 千日前/日本橋周邊',
       description: '飯店附近美食',
       location: '千日前',
@@ -387,52 +387,37 @@ export const itineraryData = {
       }
     },
     {
-      time: '06:40-07:30',
-      title: '飯店早餐',
-      description: '快速吃早餐，準備出發',
-      transport: '飯店內',
-      location: 'KOKO HOTEL Osaka Namba',
-      duration: '約50分鐘',
+      time: '06:40-07:50',
+      title: '飯店早餐 & 前往集合地點',
+      description: '快速吃早餐，然後走路前往 VIP Villa難波集合',
+      transport: '飯店內 + 走路',
+      location: 'KOKO HOTEL → VIP Villa難波',
+      duration: '約1小時10分鐘',
       coordinates: [34.6658, 135.5043],
       details: {
         japaneseInfo: null,
-        notes: '飯店餐廳',
+        notes: '飯店餐廳用餐後，走路約 7-10 分鐘 (約 650 公尺) 到 VIP Villa 難波 (KKday 集合點)。往難波車站方向走，請依憑證地圖為準',
         kkdayLink: null
       }
     },
     {
-      time: '07:30-07:50',
-      title: '前往集合地點',
-      description: '走路前往 VIP Villa難波集合',
-      transport: '走路',
-      location: 'VIP Villa難波',
-      duration: '約7-10分鐘',
-      coordinates: [34.6686, 135.5011],
-      subway: '日本橋站附近',
-      details: {
-        japaneseInfo: null,
-        notes: 'KOKO HOTEL → VIP Villa 難波 (KKday 集合點)。走路約 7-10 分鐘 (約 650 公尺)。往難波車站方向走，請依憑證地圖為準',
-        kkdayLink: 'https://www.kkday.com/zh-tw/product/13894'
-      }
-    },
-    {
-      time: '08:00-18:00',
-      title: 'KKday 嵐山・奈良・伏見稻荷一日遊',
+      time: '07:50-19:10',
+      title: 'KKday 金閣寺・嵐山・伏見稻荷・奈良一日遊',
       description: '金閣寺 → 嵐山竹林 → 伏見稻荷千本鳥居 → 奈良公園餵鹿',
       transport: '觀光遊覽車',
       location: '金閣寺 → 嵐山 → 伏見稻荷 → 奈良',
-      duration: '約9小時',
+      duration: '約11小時20分',
       coordinates: [35.0142, 135.7483],
       mustEat: '嵐山：中村屋可樂餅、% Arabica Coffee | 奈良：中谷堂麻糬、大佛布丁',
       mustVisit: '金閣寺、嵐山竹林、伏見稻荷千本鳥居、奈良公園餵鹿',
       details: {
         japaneseInfo: null,
-        notes: '[大阪出發] 08:00集合/VIP Villa難波 → 金閣寺 → 嵐山竹林(午餐自理) → 伏見稻荷千本鳥居 → 奈良餵鹿 → [大阪下車] 18:00抵達/VIP Villa難波。重點：嵐山竹林、奈良公園餵鹿、伏見稻荷千本鳥居。必吃：嵐山可樂餅 (中村屋)、奈良中谷堂麻糬',
+        notes: '[大阪出發] 07:50集合/VIP Villa難波 → 金閣寺 → 嵐山竹林(午餐自理) → 伏見稻荷千本鳥居 → 奈良餵鹿 → [大阪下車] 19:10抵達/VIP Villa難波。重點：嵐山竹林、奈良公園餵鹿、伏見稻荷千本鳥居。必吃：嵐山可樂餅 (中村屋)、奈良中谷堂麻糬',
         kkdayLink: 'https://www.kkday.com/zh-tw/product/13894'
       }
     },
     {
-      time: '18:00-20:30',
+      time: '19:10-20:30',
       title: '返回飯店拿行李 & 移動至 USJ',
       description: 'VIP Villa難波下車 → 走路回 KOKO HOTEL 取行李 → 叫計程車到環球影城飯店',
       transport: '走路 + 計程車 x2',
@@ -447,7 +432,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '20:00',
+      time: '20:30',
       title: '晚餐 - USJ CityWalk',
       description: '環球影城 CityWalk 區享用晚餐',
       location: '環球影城 CityWalk',
