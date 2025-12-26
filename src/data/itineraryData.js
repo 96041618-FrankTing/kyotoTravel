@@ -3,48 +3,49 @@ export const itineraryData = {
     {
       time: '08:00-15:00',
       title: '機場移動至京都',
-      description: '關西機場 → 京都車站 (領票/買卡) → 飯店 Check-in',
-      transport: 'JR HARUKA 特急電車 + 計程車 x2',
+      description: '關西機場 → 京都車站 (領票/買卡) → 走地下通道至飯店 Check-in',
+      transport: 'JR HARUKA 特急電車',
       location: '關西機場 → 京都車站 → Onyado Nono Kyoto Shichijo',
       duration: '約7小時',
       coordinates: [34.4320, 135.2304],
       subway: '關西機場站 → 京都車站 (JR HARUKA特急)',
       details: {
-        japaneseInfo: '天然温泉 蓮花の湯 御宿 野乃 京都七条 までお願いします。\n(住所: 京都市下京区材木町491番地)',
-        notes: '有3個大行李，務必叫2台車。入境領票、Check-in。距離約500公尺，有行李建議分2台車',
+        japaneseInfo: '京都駅の中央口から地下通路を通って「御宿 野乃 京都七条」までお願いします。\n(住所: 京都市下京区材木町491番地)',
+        notes: '入境領票、Check-in。全程走地下通道可避寒避雨，推行李也方便。飯店距離出口很近。',
         kkdayLink: null
       }
     },
     {
       time: '15:30-17:30',
-      title: '京都車站周邊探險 (分流活動)',
-      description: 'A組(長輩)：京都塔 (欣賞京都市景) | B組(小孩)：Yodobashi Camera 3F 玩具區 (京都車站八條口方向)',
+      title: '京都車站周邊探險 & 採購',
+      description: 'Yodobashi Camera 京都店 (友都八喜)',
       transport: '走路',
       location: '京都車站',
       duration: '約2小時',
       coordinates: [34.9854, 135.7581],
       details: {
         japaneseInfo: null,
-        notes: '分流活動：飯店對面即是。A組京都塔欣賞京都市景，B組Yodobashi Camera 3F玩具區',
+        notes: '全體活動：飯店對面即是。3F 玩具區：模型、轉蛋、電玩，小孩天堂。4F/5F 服飾區：大型 Uniqlo 與 GU，若禦寒衣物帶不夠可直接在此補貨。B1 超市區 (LOPIA)：必逛！這是日本著名的平價大型超市。建議在這裡買齊這幾天要吃的日本草莓、橘子、大瓶飲料、零食回飯店冰箱放，價格比超商便宜非常多。',
         kkdayLink: null
       }
     },
     {
       time: '18:00-20:00',
-      title: '晚餐 - 東洋亭 (Porta 地下街店)',
-      description: '必吃：百年洋食漢堡排 (鋁箔包著，打開熱氣騰騰)、整顆番茄沙拉',
-      location: '京都車站 Porta 地下街',
+      title: '晚餐',
+      description: '東洋亭 (Porta 地下街店) 或 鳥貴族 (京都七條店)',
+      location: '京都車站 Porta 地下街 或 京都七條',
       duration: '約2小時',
       coordinates: [34.9854, 135.7581],
       mustEat: '百年洋食漢堡排、整顆番茄沙拉',
       restaurants: {
         dinner: [
-          { name: '東洋亭 Porta店', location: '京都車站 Porta地下街', note: '百年洋食漢堡排、整顆番茄沙拉' }
+          { name: '東洋亭 Porta店', location: '京都車站 Porta地下街', note: '百年洋食漢堡排 (鋁箔包著，打開熱氣騰騰)、整顆番茄沙拉' },
+          { name: '鳥貴族 京都七條店', location: '京都七條', note: '全品項均一價的平價串燒居酒屋，離飯店走路僅 3 分鐘，氣氛輕鬆，適合作為第一晚的放鬆餐或宵夜' }
         ]
       },
       details: {
         japaneseInfo: null,
-        notes: '京都車站地下街美食',
+        notes: '推薦餐廳 1：東洋亭 (Porta 地下街店) - 必吃：百年洋食漢堡排、整顆番茄沙拉。推薦餐廳 2：鳥貴族 (京都七條店) - 特色：全品項均一價的平價串燒居酒屋。',
         kkdayLink: null
       }
     }
@@ -53,7 +54,7 @@ export const itineraryData = {
     {
       time: '08:00-09:00',
       title: '飯店早餐',
-      description: '享用豐富的日式/西式自助餐',
+      description: '享用飯店著名的自助早餐',
       transport: '飯店內',
       location: 'Onyado Nono Kyoto Shichijo',
       duration: '約1小時',
@@ -65,110 +66,118 @@ export const itineraryData = {
       }
     },
     {
-      time: '09:00-12:00',
-      title: '和服體驗 & 清水寺參拜',
-      description: '換和服：建議預約清水寺附近店家 (如岡本、夢館等) | 參拜：清水舞台、地主神社 | 拍照：穿和服在清水舞台與紅門拍照',
-      transport: '計程車 x1 (強烈建議)',
-      location: '清水寺',
-      duration: '約3小時',
-      coordinates: [34.9949, 135.7850],
-      mustVisit: '清水舞台、地主神社',
+      time: '09:00-11:30',
+      title: '八坂神社周邊 & 和服體驗',
+      description: '八坂神社(和服體驗)',
+      transport: '計程車 x1',
+      location: '八坂神社',
+      duration: '約2.5小時',
+      coordinates: [35.0036, 135.7810],
+      mustVisit: '八坂神社、圓山公園',
       details: {
-        japaneseInfo: '清水寺の近くの「七味家本舗（しちみやほんぽ）」の前までお願いします。\n(坂道を上がりきったところです)',
-        notes: '建議直接搭車到預約的和服店或七味家本舖。省力關鍵：請司機開到高處，避免穿和服爬長坡。貼心提醒：若長輩怕木屐不好走，可讓長輩穿自己的舒適鞋子',
+        japaneseInfo: '八坂神社（やさかじんじゃ）の近くまでお願いします。\n(祇園の交差点付近です)',
+        notes: '活動：1. 和服換裝：預約 9:00 開門的店家 (建議找八坂神社/祇園附近的店，如岡本祇園店、梨花和服等)。2. 拍照與散步：換好裝後，先在八坂神社朱紅色樓門、圓山公園拍照。',
         kkdayLink: null
       }
     },
     {
-      time: '12:00-13:30',
-      title: '二三年坂散策 & 午餐 (久坐休息)',
-      description: '沿著石板路慢慢往下走',
+      time: '11:30-13:00',
+      title: '午餐 (和服友善)',
+      description: '在祇園/八坂神社周邊用餐',
+      transport: '走路',
+      location: '祇園/八坂神社',
+      duration: '約1.5小時',
+      coordinates: [35.0036, 135.7810],
+      lunchOptions: '祇園牛禪 (壽喜燒/涮涮鍋)、權兵衛 (親子丼/烏龍麵)、Izuju (鯖魚壽司)',
+      restaurants: {
+        lunch: [
+          { name: '祇園牛禪', location: '祇園', note: '壽喜燒/涮涮鍋 (空間大)' },
+          { name: '權兵衛 Gonbei', location: '祇園', note: '親子丼/烏龍麵老店 (適合長輩)' },
+          { name: 'Izuju いづ重', location: '祇園', note: '鯖魚壽司名店 (可外帶去圓山公園吃)' }
+        ]
+      },
+      details: {
+        japaneseInfo: null,
+        notes: '地點：在祇園/八坂神社周邊用餐。推薦：祇園牛禪 (壽喜燒/涮涮鍋，空間大)、權兵衛 (親子丼/烏龍麵老店，適合長輩)、Izuju (鯖魚壽司名店，可外帶去圓山公園吃)。',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '13:00-13:30',
+      title: '移動至清水寺 (避開上坡)',
+      description: '搭車到清水寺上方',
+      transport: '計程車 x1',
+      location: '清水寺',
+      duration: '約30分鐘',
+      coordinates: [34.9949, 135.7850],
+      details: {
+        japaneseInfo: '清水寺の茶わん坂（ちゃわんざか）、仁王門の近くまでお願いします。\n(坂道を上がりきったところです)',
+        notes: '關鍵策略：穿著和服不適合走長上坡，吃飽後直接搭車到清水寺上方。指定下車點：茶碗坂 (Chawanzaka) 靠近仁王門處。這樣下車走幾步路就是清水寺門口了。',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '13:30-15:00',
+      title: '清水寺參拜',
+      description: '參拜清水舞台、地主神社、音羽之瀧',
+      transport: '走路',
+      location: '清水寺',
+      duration: '約1.5小時',
+      coordinates: [34.9949, 135.7850],
+      mustVisit: '清水舞台、地主神社、音羽之瀧',
+      details: {
+        japaneseInfo: null,
+        notes: '活動：參拜清水舞台、地主神社、音羽之瀧。穿和服在這裡拍照是經典中的經典。',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '15:00-16:30',
+      title: '二三年坂散策 (回程下坡)',
+      description: '從清水寺走下來 → 三年坂 → 二年坂',
       transport: '走路',
       location: '二三年坂',
       duration: '約1.5小時',
       coordinates: [35.0064, 135.7850],
-      lunchOptions: '奧丹清水 (湯豆腐)、阿古屋茶屋 (茶泡飯吃到飽)、藤菜美 (現烤醬油糰子、洛水)',
-      restaurants: {
-        lunch: [
-          { name: '奧丹清水 Okutan', location: '京都清水寺', note: '湯豆腐料理，擁有優美庭園，環境清幽，可脫鞋在塌塌米上徹底放鬆，非常適合穿和服用餐與長輩休息' },
-          { name: '阿古屋茶屋 Akoya', location: '京都清水寺二年坂', note: '茶泡飯吃到飽(需排隊)' },
-          { name: '藤菜美 Fujinami', location: '京都清水寺', note: '現烤醬油糰子、洛水(抹茶水)' }
-        ]
-      },
+      mustVisit: '三年坂、二年坂',
       details: {
         japaneseInfo: null,
-        notes: '午餐推薦(建議預約)：奧丹清水湯豆腐擁有優美庭園，環境清幽，可脫鞋在塌塌米上徹底放鬆，非常適合穿和服用餐與長輩休息',
+        notes: '路線：從清水寺走下來 → 三年坂 → 二年坂。這段路是下坡，穿和服走起來比較輕鬆。必逛/必吃：藤菜美 (糰子)、橡子共和國 (龍貓)、Starbucks 二寧坂茶屋店 (榻榻米星巴克)。',
         kkdayLink: null
       }
     },
     {
-      time: '13:30-14:30',
-      title: '⭐ 膝蓋救星：觀光人力車 (Ebisuya)',
-      description: '穿和服搭人力車，拍照效果極佳，又能讓長輩與小孩休息看風景',
-      transport: '人力車 (Jinrikisha)',
-      location: '高台寺 → 八坂神社 / 圓山公園',
+      time: '16:30-17:30',
+      title: '歸還和服 & 祇園散策',
+      description: '一路逛回八坂神社附近的店家歸還和服',
+      transport: '走路',
+      location: '祇園',
       duration: '約1小時',
       coordinates: [35.0036, 135.7810],
-      mustVisit: '人力車體驗',
       details: {
         japaneseInfo: null,
-        notes: '在高台寺/二年坂附近找「えびす屋」車夫。指定從高台寺附近搭到八坂神社/圓山公園。優點：穿和服走路很累，搭人力車拍照效果極佳，又能讓長輩與小孩休息看風景，不用走路就能移動到下個景點',
+        notes: '歸還和服。若長輩累了，可以在這段路安排人力車代步回到和服店。',
         kkdayLink: null
       }
     },
     {
-      time: '14:30-16:30',
-      title: '八坂神社 & 祇園散策',
-      description: '參拜八坂神社，漫步祇園花見小路',
-      transport: '走路',
-      location: '八坂神社 & 祇園',
-      duration: '約2小時',
-      coordinates: [35.0036, 135.7810],
-      mustVisit: '八坂神社、祇園花見小路',
-      restaurants: {
-        snack: [
-          { name: '茶寮都路里', location: '祇園', note: '抹茶聖代' },
-          { name: '鍵善良房', location: '祇園', note: '黑糖葛切，環境安靜' }
-        ]
-      },
-      details: {
-        japaneseInfo: null,
-        notes: '人力車下車後即是平地。下午茶(歇腳點)：茶寮都路里抹茶聖代、鍵善良房黑糖葛切',
-        kkdayLink: null
-      }
-    },
-    {
-      time: '16:30-18:00',
-      title: '錦市場 (京都的廚房)',
-      description: '從祇園過橋即達四條河原町，直走進錦市場',
-      transport: '走路',
-      location: '錦市場',
-      duration: '約1.5小時',
-      coordinates: [35.0044, 135.7740],
-      mustEat: '三木雞卵 (玉子燒)、豆乳甜甜圈、史努比茶屋饅頭',
-      details: {
-        japaneseInfo: null,
-        notes: '體驗市場熱鬧氣氛。必吃：三木雞卵玉子燒、豆乳甜甜圈、史努比茶屋饅頭。備註：若長輩此時已累，可隨時搭計程車回飯店休息，年輕人繼續逛',
-        kkdayLink: null
-      }
-    },
-    {
-      time: '19:00',
-      title: '晚餐 - 河原町/先斗町周邊',
-      description: '柚子元 (柚子鍋) 或名代炸豬排',
-      location: '祇園/河原町',
+      time: '18:00',
+      title: '晚餐',
+      description: '柚子元 (先斗町) 或 鳥貴族 (京都七條店) 或 名代炸豬排',
+      location: '先斗町 或 京都七條',
       duration: '約1小時',
       coordinates: [35.0044, 135.7740],
-      dinnerOptions: '柚子元 (柚子鍋)、名代炸豬排 Katsukura 三條本店',
+      dinnerOptions: '柚子元 (柚子豬肉火鍋)、鳥貴族 (串燒)、名代炸豬排',
       restaurants: {
         dinner: [
-          { name: '柚子元 Yuzugen', location: '京都河原町', note: '柚子鍋，湯頭清爽適合冬天' },
-          { name: '名代炸豬排 Katsukura 三條本店', location: '京都三條', note: '京都最好吃的炸豬排之一' }
+          { name: '柚子元 Yuzugen', location: '先斗町', note: '柚子豬肉火鍋 (湯頭清爽)' },
+          { name: '鳥貴族 京都七條店', location: '京都七條', note: '全品項均一價的平價串燒居酒屋' },
+          { name: '名代炸豬排', location: '京都', note: '炸豬排名店' }
         ]
       },
       details: {
         japaneseInfo: null,
-        notes: '推薦柚子鍋(湯頭清爽適合冬天)或京都最好吃的炸豬排',
+        notes: '推薦餐廳 1：柚子元 (先斗町) - 必吃：柚子豬肉火鍋 (湯頭清爽)。推薦餐廳 2：鳥貴族 (京都七條店) - 若中午吃太飽或想早點回飯店休息。推薦餐廳 3：名代炸豬排。',
         kkdayLink: null
       }
     }
