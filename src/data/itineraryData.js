@@ -294,93 +294,124 @@ export const itineraryData = {
       }
     },
     {
-      time: '09:30-10:30',
+      time: '08:50-10:10',
       title: '難波八阪神社',
       description: '巨大獅子頭舞台 (吸厄運)',
       transport: '走路',
       location: '難波八阪神社',
-      duration: '約1小時',
+      duration: '約1小時20分鐘',
       coordinates: [34.6628, 135.5011],
       mustVisit: '巨大獅子頭舞台',
       details: {
         japaneseInfo: null,
-        notes: '離飯店約10-12分鐘',
+        notes: '飯店步行約 10-12 分鐘，拍攝巨大的獅子頭舞台',
         kkdayLink: null
       }
     },
     {
-      time: '11:00-13:00',
-      title: '通天閣 & 新世界 (含午餐)',
-      description: '參觀通天閣展望台、玩溜滑梯',
-      transport: '地鐵御堂筋線',
-      location: '通天閣、新世界',
-      duration: '約2小時',
-      coordinates: [34.6525, 135.5063],
-      subway: '御堂筋線至動物園前站',
-      mustEat: '串炸 (Kushikatsu)',
-      lunchOptions: '串炸達摩 (串かつだるま) 通天閣店',
-      restaurants: {
-        lunch: [
-          { name: '串炸達摩 Kushikatsu Daruma 通天閣店', location: '大阪新世界', note: '大阪名物，酥脆麵衣沾取特製醬汁（注意不可二次沾醬），適合小孩與大人嘗試' }
-        ]
-      },
-      details: {
-        japaneseInfo: null,
-        notes: '交通：搭乘地鐵御堂筋線至「動物園前站」。活動：參觀通天閣展望台、玩溜滑梯。午餐推薦：新世界著名的「串炸 (Kushikatsu)」。推薦店家：串炸達摩 (串かつだるま) 通天閣店。',
-        kkdayLink: null
-      }
-    },
-    {
-      time: '13:30-15:30',
+      time: '10:30-12:45',
       title: '大阪城公園',
-      description: '搭乘路面小火車，推薦預約大阪城御座船遊護城河',
+      description: '搭乘路面小火車進入園區，體驗大阪城御座船遊覽護城河',
       transport: '地鐵',
       location: '大阪城公園',
-      duration: '約2小時',
+      duration: '約2小時15分鐘',
       coordinates: [34.6873, 135.5262],
-      subway: '森之宮站 3-B出口 (有電梯)',
+      subway: '難波站 (御堂筋線) → 本町 (轉中央線) → 森之宮站 (3-B出口有電梯)',
       mustVisit: '路面小火車、大阪城御座船',
       details: {
         japaneseInfo: null,
-        notes: '交通：地鐵「森之宮站」3-B 出口 (有電梯)。活動：搭乘路面小火車，推薦預約「大阪城御座船」遊護城河。',
+        notes: '交通：難波站 (御堂筋線) → 本町 (轉中央線) → 森之宮站 (3-B出口有電梯)。活動：搭乘路面小火車進入園區，體驗大阪城御座船遊覽護城河。',
         kkdayLink: null
       }
     },
     {
-      time: '16:00-19:00',
-      title: '心齋橋 PARCO & 大丸 (小孩天堂)',
-      description: '購物血拼，參觀寶可夢中心、任天堂商店',
-      transport: '走路',
-      location: '心齋橋 PARCO & 大丸',
-      duration: '約3小時',
-      coordinates: [34.6739, 135.5011],
-      subway: '心齋橋站',
-      mustVisit: '9F Pokemon Center DX・Jump Shop、6F 橡子共和國・樂高・哥吉拉商店、B1/2F Harbs蛋糕',
-      mustEat: 'Harbs 水果千層蛋糕 (長輩休息好去處)',
-      details: {
-        japaneseInfo: null,
-        notes: '黑門市場走過去約15分鐘。必逛：9F寶可夢中心、6F橡子共和國、B1 Harbs蛋糕',
-        kkdayLink: null
-      }
-    },
-    {
-      time: '19:00',
-      title: '晚餐 - 燒肉',
-      description: '國產牛燒肉放題 Aburiya 或播重壽喜燒',
-      location: '心齋橋/道頓堀',
-      duration: '約1小時',
-      coordinates: [34.6739, 135.5011],
-      dinnerOptions: '千房大阪燒、大起水產迴轉壽司、神座拉麵',
+      time: '13:15-15:00',
+      title: '新世界散策 & 串炸午餐',
+      description: '與通天閣合影拍照，並享用串炸達摩或橫綱串炸',
+      transport: '地鐵',
+      location: '新世界、通天閣',
+      duration: '約1小時45分鐘',
+      coordinates: [34.6525, 135.5063],
+      subway: '森之宮站 (中央線) → 堺筋本町 (轉堺筋線) → 動物園前站',
+      mustEat: '串炸 (Kushikatsu)',
+      lunchOptions: '串炸達摩或橫綱串炸',
       restaurants: {
-        dinner: [
-          { name: '千房大阪燒 Chibo', location: '大阪道頓堀', note: '大阪燒名店' },
-          { name: '大起水產迴轉壽司', location: '大阪道頓堀', note: '迴轉壽司' },
-          { name: '神座拉麵 Kamukura', location: '大阪道頓堀', note: '蔬菜湯頭拉麵' }
+        lunch: [
+          { name: '串炸達摩 Kushikatsu Daruma', location: '大阪新世界', note: '大阪名物串炸' },
+          { name: '橫綱串炸', location: '大阪新世界', note: '知名串炸店' }
         ]
       },
       details: {
         japaneseInfo: null,
-        notes: '推薦國產牛燒肉放題Aburiya(強烈建議預約)或播重壽喜燒(適合長輩)',
+        notes: '交通：森之宮站 (中央線) → 堺筋本町 (轉堺筋線) → 動物園前站。活動：與通天閣合影拍照，並享用串炸達摩或橫綱串炸。',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '15:15-16:45',
+      title: '阿倍野 HARUKAS 300 展望台',
+      description: '日本最高樓 360 度俯瞰大阪',
+      transport: '地鐵',
+      location: '阿倍野 HARUKAS 300',
+      duration: '約1小時30分鐘',
+      coordinates: [34.6461, 135.5148],
+      subway: '動物園前站 (御堂筋線) → 天王寺站',
+      mustVisit: 'HARUKAS 300 展望台',
+      details: {
+        japaneseInfo: null,
+        notes: '交通：動物園前站 (御堂筋線) → 天王寺站。亮點：日本最高樓 360 度俯瞰大阪，適合在全室內空間休息看景。',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '17:00-18:50',
+      title: '心齋橋 PARCO & 道頓堀精華行程',
+      description: '逛 6F 玩具/寶可夢區/橡子共和國，體驗唐吉訶德惠比壽摩天輪',
+      transport: '地鐵',
+      location: '心齋橋 PARCO、道頓堀',
+      duration: '約1小時50分鐘',
+      coordinates: [34.6739, 135.5011],
+      subway: '天王寺站 (御堂筋線) → 心齋橋站',
+      mustVisit: '6F 玩具/寶可夢區/橡子共和國、唐吉訶德惠比壽摩天輪',
+      mustEat: '章魚燒 (道樂 Wanaka 或 本家)',
+      details: {
+        japaneseInfo: null,
+        notes: '交通：天王寺站 (御堂筋線) → 心齋橋站。活動1：逛 6F 玩具/寶可夢區/橡子共和國。活動2：唐吉訶德惠比壽摩天輪，從河岸高處俯瞰道頓堀夜景。小吃墊胃：搭船前買章魚燒（如：道樂 Wanaka 或 本家）墊肚子。',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '19:00-19:30',
+      title: '道頓堀水上觀光船 (Wonder Cruise)',
+      description: '體驗夜晚最華麗的格力高跑跑人燈海',
+      transport: '步行',
+      location: '道頓堀',
+      duration: '約30分鐘',
+      coordinates: [34.6686, 135.5011],
+      mustVisit: 'Wonder Cruise',
+      details: {
+        japaneseInfo: null,
+        notes: '已預約 19:00 班次，準時搭船，體驗夜晚最華麗的格力高跑跑人燈海。',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '19:30',
+      title: '晚餐',
+      description: '千房大阪燒 或 大起水產迴轉壽司',
+      location: '道頓堀',
+      duration: '約1小時',
+      coordinates: [34.6686, 135.5011],
+      dinnerOptions: '千房大阪燒、大起水產迴轉壽司',
+      restaurants: {
+        dinner: [
+          { name: '千房大阪燒 Chibo', location: '大阪道頓堀', note: '大阪燒名店' },
+          { name: '大起水產迴轉壽司', location: '大阪道頓堀', note: '迴轉壽司' }
+        ]
+      },
+      details: {
+        japaneseInfo: null,
+        notes: '推薦千房大阪燒或大起水產迴轉壽司',
         kkdayLink: null
       }
     }
