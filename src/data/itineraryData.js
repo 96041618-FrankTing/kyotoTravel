@@ -3,7 +3,7 @@ export const itineraryData = {
     {
       time: '08:00-15:00',
       title: '機場移動至京都',
-      description: '關西機場 → 京都車站 (領票/買卡) → 走地下通道至飯店 Check-in',
+      description: '台灣 → 關西機場 → 京都車站 (領票/買卡) → 走地下通道至飯店 Check-in',
       transport: 'JR HARUKA 特急電車',
       location: '關西機場 → 京都車站 → Onyado Nono Kyoto Shichijo',
       duration: '約7小時',
@@ -88,12 +88,13 @@ export const itineraryData = {
       location: '祇園/八坂神社',
       duration: '約1.5小時',
       coordinates: [35.0036, 135.7810],
-      lunchOptions: '祇園牛禪 (壽喜燒/涮涮鍋)、權兵衛 (親子丼/烏龍麵)、Izuju (鯖魚壽司)',
+      lunchOptions: '祇園牛禪 (壽喜燒/涮涮鍋)、權兵衛 (親子丼/烏龍麵)、Izuju (鯖魚壽司)、十二段家百年壽喜燒',
       restaurants: {
         lunch: [
           { name: '祇園牛禪', location: '祇園', note: '壽喜燒/涮涮鍋 (空間大)' },
           { name: '權兵衛 Gonbei', location: '祇園', note: '親子丼/烏龍麵老店 (適合長輩)' },
-          { name: 'Izuju いづ重', location: '祇園', note: '鯖魚壽司名店 (可外帶去圓山公園吃)' }
+          { name: 'Izuju いづ重', location: '祇園', note: '鯖魚壽司名店 (可外帶去圓山公園吃)' },
+          { name: '十二段家百年壽喜燒', location: '祇園', note: '百年壽喜燒老店' }
         ]
       },
       details: {
@@ -258,11 +259,15 @@ export const itineraryData = {
       location: '千日前',
       duration: '約1小時',
       coordinates: [34.6686, 135.5011],
-      dinnerOptions: '千房大阪燒、神座拉麵千日前店 (蔬菜湯頭)、章魚燒 道樂 Wanaka',
+      dinnerOptions: '大起水產迴轉壽司、元祿壽司、神座拉麵千日前店 (蔬菜湯頭)、千房大阪燒、元祖大阪章魚燒、播重 (壽喜燒)、章魚燒 道樂 Wanaka',
       restaurants: {
         dinner: [
-          { name: '千房大阪燒 Chibo', location: '大阪千日前', note: '大阪燒名店' },
+          { name: '大起水產迴轉壽司', location: '大阪千日前', note: '迴轉壽司' },
+          { name: '元祿壽司', location: '大阪千日前', note: '壽司' },
           { name: '神座拉麵 Kamukura 千日前店', location: '大阪千日前', note: '蔬菜湯頭拉麵，口味清甜' },
+          { name: '千房大阪燒 Chibo', location: '大阪千日前', note: '大阪燒名店' },
+          { name: '元祖大阪章魚燒', location: '大阪千日前', note: '章魚燒' },
+          { name: '播重 Hariju', location: '大阪千日前', note: '壽喜燒老店' },
           { name: '章魚燒 道樂 Wanaka (わなか)', location: '大阪千日前', note: '必吃章魚燒' }
         ]
       },
@@ -305,40 +310,39 @@ export const itineraryData = {
     },
     {
       time: '11:00-13:00',
-      title: '大阪城公園 (二選一行程)',
-      description: 'A. 御座船 (輕鬆)：搭船遊護城河 (20分鐘)，不用爬樓梯 | B. 天守閣 (歷史)：需爬樓梯或排電梯，可看風景',
-      transport: '地鐵 (簡單直達)',
-      location: '大阪城公園',
+      title: '通天閣 & 新世界 (含午餐)',
+      description: '參觀通天閣展望台、玩溜滑梯',
+      transport: '地鐵御堂筋線',
+      location: '通天閣、新世界',
       duration: '約2小時',
-      coordinates: [34.6873, 135.5262],
-      subway: '難波站 (御堂筋線) → 本町 (轉中央線) → 森之宮站 (Morinomiya) 3-B出口',
-      mustVisit: '路面小火車 (Road Train)、御座船 (輕鬆推薦)、天守閣 (現場依體力/天氣決定)',
+      coordinates: [34.6525, 135.5063],
+      subway: '御堂筋線至動物園前站',
+      mustEat: '串炸 (Kushikatsu)',
+      lunchOptions: '串炸達摩 (串かつだるま) 通天閣店',
+      restaurants: {
+        lunch: [
+          { name: '串炸達摩 Kushikatsu Daruma 通天閣店', location: '大阪新世界', note: '大阪名物，酥脆麵衣沾取特製醬汁（注意不可二次沾醬），適合小孩與大人嘗試' }
+        ]
+      },
       details: {
         japaneseInfo: null,
-        notes: '走回難波站 (約 8 分鐘) → 搭御堂筋線 → 本町轉中央線 → 森之宮站下車。站內指引：3-B 出口 (有電梯)，出口即是公園入口和小火車站。園內移動：搭乘路面小火車 (Road Train)',
+        notes: '交通：搭乘地鐵御堂筋線至「動物園前站」。活動：參觀通天閣展望台、玩溜滑梯。午餐推薦：新世界著名的「串炸 (Kushikatsu)」。推薦店家：串炸達摩 (串かつだるま) 通天閣店。',
         kkdayLink: null
       }
     },
     {
       time: '13:30-15:30',
-      title: '黑門市場 & 午餐',
-      description: '大阪知名市場，品嚐新鮮海鮮',
+      title: '大阪城公園',
+      description: '搭乘路面小火車，推薦預約大阪城御座船遊護城河',
       transport: '地鐵',
-      location: '黑門市場',
+      location: '大阪城公園',
       duration: '約2小時',
-      coordinates: [34.6686, 135.5011],
-      subway: '森之宮站 (中央線) → 堺筋本町 (轉堺筋線) → 日本橋站 10號出口',
-      mustEat: '黑門三平 (現切生魚片、大蝦)、石橋食品 (關東煮)、丸善食肉店 (現烤和牛串)',
-      restaurants: {
-        lunch: [
-          { name: '黑門三平', location: '大阪黑門市場', note: '現切生魚片、大蝦(可內用)' },
-          { name: '石橋食品', location: '大阪黑門市場', note: '關東煮(蘿蔔燉得很爛)' },
-          { name: '丸善食肉店', location: '大阪黑門市場', note: '現烤和牛串(現場吃非常香)' }
-        ]
-      },
+      coordinates: [34.6873, 135.5262],
+      subway: '森之宮站 3-B出口 (有電梯)',
+      mustVisit: '路面小火車、大阪城御座船',
       details: {
         japaneseInfo: null,
-        notes: '森之宮站 → 中央線 → 堺筋本町轉堺筋線 → 日本橋站。站內指引：10 號出口出來就是黑門市場。午餐推薦邊走邊吃：黑門三平生魚片、石橋關東煮、丸善和牛串',
+        notes: '交通：地鐵「森之宮站」3-B 出口 (有電梯)。活動：搭乘路面小火車，推薦預約「大阪城御座船」遊護城河。',
         kkdayLink: null
       }
     },
@@ -366,11 +370,12 @@ export const itineraryData = {
       location: '心齋橋/道頓堀',
       duration: '約1小時',
       coordinates: [34.6739, 135.5011],
-      dinnerOptions: '國產牛燒肉放題 Aburiya (道頓堀御堂筋店，建議預約)、播重 Hariju (壽喜燒老店)',
+      dinnerOptions: '千房大阪燒、大起水產迴轉壽司、神座拉麵',
       restaurants: {
         dinner: [
-          { name: '國產牛燒肉放題 Aburiya 道頓堀御堂筋店', location: '大阪道頓堀', note: '高品質吃到飽，強烈建議預約' },
-          { name: '播重 Hariju', location: '大阪心齋橋', note: '壽喜燒老店，適合長輩' }
+          { name: '千房大阪燒 Chibo', location: '大阪道頓堀', note: '大阪燒名店' },
+          { name: '大起水產迴轉壽司', location: '大阪道頓堀', note: '迴轉壽司' },
+          { name: '神座拉麵 Kamukura', location: '大阪道頓堀', note: '蔬菜湯頭拉麵' }
         ]
       },
       details: {
@@ -417,7 +422,7 @@ export const itineraryData = {
       location: '金閣寺 → 嵐山 → 伏見稻荷 → 奈良',
       duration: '約11小時20分',
       coordinates: [35.0142, 135.7483],
-      mustEat: '嵐山：中村屋可樂餅、% Arabica Coffee | 奈良：中谷堂麻糬、大佛布丁',
+      mustEat: '嵐山：中村屋可樂餅、三忠豆腐茶屋、京豆庵冰淇淋(大豆)、京風特大煎餅 | 奈良：中谷堂麻糬、大佛布丁',
       mustVisit: '金閣寺、嵐山竹林、伏見稻荷千本鳥居、奈良公園餵鹿',
       details: {
         japaneseInfo: null,
@@ -427,36 +432,38 @@ export const itineraryData = {
     },
     {
       time: '19:10-20:30',
-      title: '返回飯店拿行李 & 移動至 USJ',
-      description: 'VIP Villa難波下車 → 走路回 KOKO HOTEL 取行李 → 叫計程車到環球影城飯店',
-      transport: '走路 + 計程車 x2',
-      location: 'The Singulari Hotel & Skyspa',
+      title: '晚餐 (難波下車處附近)',
+      description: '關鍵調整：先用餐再拿行李',
+      location: '難波站/VIP Villa附近',
       duration: '約1小時20分',
-      coordinates: [34.6654, 135.4323],
-      subway: 'ユニバーサルシティ駅',
-      details: {
-        japaneseInfo: 'ユニバーサルシティ駅の「ザ・シンギュラリホテル & スカイスパ」までお願いします。\n(住所: 大阪市此花区島屋6丁目2-25)',
-        notes: 'VIP Villa難波下車 → 走路回 KOKO HOTEL 取行李 → 叫計程車到環球影城飯店。方案 A (電車 - 轉乘1次)：走至近鐵日本橋站 → 搭阪神難波線至西九條 → 轉JR夢咲線至Universal City (飯店在車站旁)。方案 B (計程車 - 分2台)：直接叫車直達飯店 (約 ¥5000/台)',
-        kkdayLink: null
-      }
-    },
-    {
-      time: '20:30',
-      title: '晚餐 - USJ CityWalk',
-      description: '環球影城 CityWalk 區享用晚餐',
-      location: '環球影城 CityWalk',
-      duration: '約1小時',
-      coordinates: [34.6654, 135.4323],
-      dinnerOptions: '551 Horai (海鮮炒麵、肉包)、大阪章魚燒博物館 (甲賀流、會津屋)',
+      coordinates: [34.6658, 135.5043],
+      dinnerOptions: '551 Horai 蓬萊本店、難波肉劇場 (燒肉蓋飯)、松屋/吉野家、NAMBA CITY / NAMBA PARKS 內餐廳',
       restaurants: {
         dinner: [
-          { name: '551 Horai 蓬萊', location: '環球影城 CityWalk', note: '海鮮炒麵、肉包(可外帶)' },
-          { name: '大阪章魚燒博物館', location: '環球影城 CityWalk', note: '多家名店聚集(甲賀流、會津屋)' }
+          { name: '551 Horai 蓬萊本店', location: '大阪難波', note: '就在集合點附近' },
+          { name: '難波肉劇場', location: '大阪難波', note: '燒肉蓋飯' },
+          { name: '松屋/吉野家', location: '大阪難波', note: '快速簡單' },
+          { name: 'NAMBA CITY / NAMBA PARKS 內餐廳', location: '大阪難波', note: '選擇多且舒適' }
         ]
       },
       details: {
         japaneseInfo: null,
-        notes: '推薦551 Horai海鮮炒麵與肉包(可外帶)、章魚燒博物館',
+        notes: '用餐地點：難波站/VIP Villa 附近。推薦餐廳：551 Horai 蓬萊本店 (就在集合點附近)、難波肉劇場 (燒肉蓋飯) 或 松屋/吉野家 (快速簡單)、NAMBA CITY / NAMBA PARKS 內餐廳 (選擇多且舒適)。',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '20:30-21:30',
+      title: '取行李並移動至 USJ 飯店',
+      description: '走路回 KOKO HOTEL 取件行李，然後移動至環球影城飯店',
+      transport: '走路 + 電車',
+      location: 'The Singulari Hotel & Skyspa',
+      duration: '約1小時',
+      coordinates: [34.6654, 135.4323],
+      subway: '近鐵日本橋站 → 阪神難波線至西九條 → JR夢咲線至Universal City',
+      details: {
+        japaneseInfo: null,
+        notes: '1. 走路回 KOKO HOTEL 取件行李。2. 電車 (轉乘1次)：走至近鐵日本橋站 → 搭阪神難波線至西九條 → 轉JR夢咲線至Universal City。飯店在車站旁。',
         kkdayLink: null
       }
     }
