@@ -100,7 +100,6 @@
           <div class="bg-white rounded-lg shadow-md p-4">
             <h3 class="text-lg font-semibold text-primary mb-2">🚄 交通方式</h3>
             <p class="text-gray-700">JR HARUKA、ICOCA、KKday一日遊</p>
-            <p class="text-sm text-gray-500 mt-1">含丹後紅松號鐵道</p>
           </div>
           <div class="bg-white rounded-lg shadow-md p-4">
             <h3 class="text-lg font-semibold text-primary mb-2">🏨 住宿</h3>
@@ -299,13 +298,135 @@
         </div>
       </div>
 
-      <!-- Map Container (always in DOM) -->
-      <div v-show="activeDay !== 'overview' && showMap && devSettings.enableMap" class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+      <!-- Food Section -->
+      <div v-if="activeDay === 'food'" class="space-y-6">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold text-dark">美食指南</h2>
+          <TransparentAnimation
+            apng-source="image/battle-cats-walking.apng"
+            fallback-image="image/battle-cats-walking.gif"
+            alt-text="可愛貓咪散步"
+            width="60px"
+            height="60px"
+            class="food-cat-gif"
+          />
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- 大阪難波/道頓堀/日本橋/黑門市場 -->
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-xl font-bold text-primary mb-4">🏙️ 大阪難波/道頓堀/日本橋/黑門市場</h3>
+            <div class="space-y-3">
+              <div class="border-l-4 border-red-400 pl-4">
+                <h4 class="font-semibold text-dark">蟹道樂</h4>
+                <p class="text-sm text-gray-600 mb-2">蟹肉包</p>
+                <a href="https://maps.google.com/?q=蟹道樂+大阪" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 underline">🗺️ 查看地圖</a>
+              </div>
+              <div class="border-l-4 border-orange-400 pl-4">
+                <h4 class="font-semibold text-dark">わなかたこ焼き</h4>
+                <p class="text-sm text-gray-600 mb-2">傳統大阪章魚燒</p>
+                <a href="https://maps.google.com/?q=わなかたこ焼き+大阪" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 underline">🗺️ 查看地圖</a>
+              </div>
+              <div class="border-l-4 border-yellow-400 pl-4">
+                <h4 class="font-semibold text-dark">10円パン</h4>
+                <p class="text-sm text-gray-600 mb-2">10元麵包</p>
+                <a href="https://maps.google.com/?q=10円パン+大阪" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 underline">🗺️ 查看地圖</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 京都車站 -->
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-xl font-bold text-primary mb-4">🚉 京都車站</h3>
+            <div class="space-y-3">
+              <div class="border-l-4 border-purple-400 pl-4">
+                <h4 class="font-semibold text-dark">鳥貴族 (京都七條店)</h4>
+                <p class="text-sm text-gray-600 mb-2">平價串燒居酒屋</p>
+                <a href="https://maps.google.com/?q=鳥貴族+京都七條店" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 underline">🗺️ 查看地圖</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 嵐山商店街 -->
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-xl font-bold text-primary mb-4">🌸 嵐山商店街</h3>
+            <div class="space-y-3">
+              <div class="border-l-4 border-green-400 pl-4">
+                <h4 class="font-semibold text-dark">三忠 豆腐茶屋</h4>
+                <p class="text-sm text-gray-600 mb-2">傳統豆腐料理</p>
+                <a href="https://maps.google.com/?q=三忠+豆腐茶屋+嵐山" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 underline">🗺️ 查看地圖</a>
+              </div>
+              <div class="border-l-4 border-blue-400 pl-4">
+                <h4 class="font-semibold text-dark">京豆庵冰淇淋</h4>
+                <p class="text-sm text-gray-600 mb-2">大豆冰淇淋</p>
+                <a href="https://maps.google.com/?q=京豆庵+嵐山" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 underline">🗺️ 查看地圖</a>
+              </div>
+              <div class="border-l-4 border-pink-400 pl-4">
+                <h4 class="font-semibold text-dark">嵐山可樂餅 (中村屋)</h4>
+                <p class="text-sm text-gray-600 mb-2">經典可樂餅</p>
+                <a href="https://maps.google.com/?q=中村屋+嵐山" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 underline">🗺️ 查看地圖</a>
+              </div>
+              <div class="border-l-4 border-indigo-400 pl-4">
+                <h4 class="font-semibold text-dark">京風特大煎餅</h4>
+                <p class="text-sm text-gray-600 mb-2">京都風味煎餅</p>
+                <a href="https://maps.google.com/?q=京風特大煎餅+嵐山" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 underline">🗺️ 查看地圖</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 天橋立商店街 -->
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-xl font-bold text-primary mb-4">🌉 天橋立商店街</h3>
+            <div class="space-y-3">
+              <div class="border-l-4 border-teal-400 pl-4">
+                <h4 class="font-semibold text-dark">よし乃や</h4>
+                <p class="text-sm text-gray-600 mb-2">花蛤丼、海鮮丼</p>
+                <a href="https://maps.google.com/?q=よし乃や+天橋立" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 underline">🗺️ 查看地圖</a>
+              </div>
+              <div class="border-l-4 border-cyan-400 pl-4">
+                <h4 class="font-semibold text-dark">つるや食堂</h4>
+                <p class="text-sm text-gray-600 mb-2">海鮮丼、麵類、甜點</p>
+                <a href="https://maps.google.com/?q=つるや食堂+天橋立" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 underline">🗺️ 查看地圖</a>
+              </div>
+              <div class="border-l-4 border-lime-400 pl-4">
+                <h4 class="font-semibold text-dark">はしだて茶屋</h4>
+                <p class="text-sm text-gray-600 mb-2">花蛤丼、烤黑輪</p>
+                <a href="https://maps.google.com/?q=はしだて茶屋+天橋立" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 underline">🗺️ 查看地圖</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 京都祇園/八坂神社/四條河原町/錦市場 -->
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-xl font-bold text-primary mb-4">🎎 京都祇園/八坂神社/四條河原町/錦市場</h3>
+            <div class="space-y-3">
+              <div class="border-l-4 border-rose-400 pl-4">
+                <h4 class="font-semibold text-dark">らぁ〜めん京</h4>
+                <p class="text-sm text-gray-600 mb-2">京都拉麵</p>
+                <a href="https://maps.google.com/?q=らぁ〜めん京+祇園" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 underline">🗺️ 查看地圖</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 京都清水寺/二年坂/三年坂 -->
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-xl font-bold text-primary mb-4">🏛️ 京都清水寺/二年坂/三年坂</h3>
+            <div class="space-y-3">
+              <div class="border-l-4 border-amber-400 pl-4">
+                <h4 class="font-semibold text-dark">藤菜美</h4>
+                <p class="text-sm text-gray-600 mb-2">冰抹茶、傳統風味醬油丸子</p>
+                <a href="https://maps.google.com/?q=藤菜美+清水寺" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 underline">🗺️ 查看地圖</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-show="activeDay !== 'overview' && activeDay !== 'food' && showMap && devSettings.enableMap" class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
         <div id="map" class="h-96 w-full"></div>
       </div>
 
       <!-- Day Sections with Map -->
-      <div v-if="activeDay !== 'overview'" class="space-y-6">
+      <div v-if="activeDay !== 'overview' && activeDay !== 'food'" class="space-y-6">
         <div class="flex items-center justify-between">
           <h2 class="text-2xl font-bold text-dark flex-1">{{ getCurrentDayTitle() }}</h2>
           <button
@@ -873,13 +994,14 @@ export default {
 
     const days = [
       { id: 'overview', label: '總覽', location: '台灣', coords: [25.0330, 121.5654] },
-      { id: 'day1', label: 'Day 1 (五)', location: '京都', coords: [35.0116, 135.7681] },
-      { id: 'day2', label: 'Day 2 (六)', location: '京都', coords: [35.0116, 135.7681] },
-      { id: 'day3', label: 'Day 3 (日)', location: '關西', coords: [34.6937, 135.5023] },
-      { id: 'day4', label: 'Day 4 (一)', location: '大阪', coords: [34.6937, 135.5023] },
-      { id: 'day5', label: 'Day 5 (二)', location: '天橋立', coords: [35.5667, 135.1833] },
-      { id: 'day6', label: 'Day 6 (三)', location: '大阪', coords: [34.6937, 135.5023] },
-      { id: 'day7', label: 'Day 7 (四)', location: '關西機場', coords: [34.4320, 135.2304] }
+      { id: 'food', label: '美食', location: '關西', coords: [34.6937, 135.5023] },
+      { id: 'day1', label: 'Day 1 (1/16五)', location: '京都', coords: [35.0116, 135.7681] },
+      { id: 'day2', label: 'Day 2 (1/17六)', location: '京都', coords: [35.0116, 135.7681] },
+      { id: 'day3', label: 'Day 3 (1/18日)', location: '關西', coords: [34.6937, 135.5023] },
+      { id: 'day4', label: 'Day 4 (1/19一)', location: '大阪', coords: [34.6937, 135.5023] },
+      { id: 'day5', label: 'Day 5 (1/20二)', location: '天橋立', coords: [35.5667, 135.1833] },
+      { id: 'day6', label: 'Day 6 (1/21三)', location: '大阪', coords: [34.6937, 135.5023] },
+      { id: 'day7', label: 'Day 7 (1/22四)', location: '關西機場', coords: [34.4320, 135.2304] }
     ]
 
     // 數據已分離至 src/data/travelInfo.js 和 src/data/itineraryData.js
