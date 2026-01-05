@@ -1030,13 +1030,14 @@ export default {
       { id: 'snow-shoes', text: '購買雪地防滑鞋套', completed: false },
       { id: 'kkday-tours', text: '預定KKDay一日遊行程', completed: false },
       { id: 'kimono-booking', text: '預定日本和服時間', completed: false },
-      { id: 'meal-seats', text: '預定機上餐點與座位(需付費？)', completed: false },
+      { id: 'meal-seats', text: '預定機上餐點與座位選位(48~24H)', completed: false },
       { id: 'travel-insurance', text: '投保旅遊不便險(富邦)', completed: false },
+      { id: 'hotel-confirmation', text: '寫email確認三間飯店的訂房狀況，和確認KOKO HOTEL是否可寄放行李', completed: false },
       { id: 'japan-visa', text: '填寫日本入境單VJW(Visit Japan Web)', completed: false },
       { id: 'usj-tickets', text: '線上購買環球影城門票 + (快通4?)', completed: false },
       { id: 'jr-tickets', text: '線上購買JR HARUKA WEST QR火車票和選位(電子票)', completed: false },
       { id: 'print-documents', text: '列印文件/QRCODE: 環球影城門票、大阪觀光船email、', completed: false },
-      { id: 'power-bank', text: '行動電源', completed: false }
+      { id: 'power-bank', text: '多買一顆行動電源？', completed: false }
     ])
 
     // 從localStorage載入準備清單狀態
