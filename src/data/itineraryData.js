@@ -67,7 +67,7 @@ export const itineraryData = {
     },
     {
       time: '09:00-11:30',
-      title: '八坂神社周邊 & 和服體驗',
+      title: '和服體驗(璃光八坂店) & 八坂神社周邊',
       description: '八坂神社(和服體驗)',
       transport: '計程車 x1',
       location: '八坂神社',
@@ -76,13 +76,27 @@ export const itineraryData = {
       mustVisit: '八坂神社、圓山公園',
       details: {
         japaneseInfo: '八坂神社（やさかじんじゃ）の近くまでお願いします。\n(祇園の交差点付近です)',
-        notes: '活動：1. 和服換裝：預約 9:00 開門的店家 (建議找八坂神社/祇園附近的店，如岡本祇園店、梨花和服等)。2. 拍照與散步：換好裝後，先在八坂神社朱紅色樓門、圓山公園拍照。',
+        notes: '活動：1. 和服換裝：預約 9:00 開門的店家 (建議找八坂神社/祇園附近的店，如岡本祇園店、璃光和服，梨花和服等)。2. 拍照與散步：換好裝後，先在八坂神社朱紅色樓門、圓山公園拍照。',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '11:30-12:00',
+      title: '歸還和服',
+      description: '歸還和服',
+      transport: '走路',
+      location: '八坂神社附近',
+      duration: '約30分鐘',
+      coordinates: [35.0036, 135.7810],
+      details: {
+        japaneseInfo: null,
+        notes: '歸還和服裝',
         kkdayLink: null
       }
     },
     {
       time: '11:30-13:00',
-      title: '午餐 (和服友善)',
+      title: '午餐：在祇園/八坂神社周邊用餐',
       description: '在祇園/八坂神社周邊用餐',
       transport: '走路',
       location: '祇園/八坂神社',
@@ -146,23 +160,23 @@ export const itineraryData = {
     },
     {
       time: '16:30-17:30',
-      title: '歸還和服 & 祇園散策',
-      description: '一路逛回八坂神社附近的店家歸還和服',
+      title: '祇園＆四條河原町散策',
+      description: '一路逛回八坂神社附近',
       transport: '走路',
-      location: '祇園',
+      location: '祇園、四條河原町',
       duration: '約1小時',
       coordinates: [35.0036, 135.7810],
       details: {
         japaneseInfo: null,
-        notes: '歸還和服。若長輩累了，可以在這段路安排人力車代步回到和服店。',
+        notes: '一路逛回八坂神社附近。',
         kkdayLink: null
       }
     },
     {
       time: '18:00',
       title: '晚餐',
-      description: '柚子元 (先斗町) 或 鳥貴族 (京都七條店) 或 名代炸豬排',
-      location: '先斗町 或 京都七條',
+      description: '祇園鰻川藤 (Gion Unagi Kawato) - 鰻魚飯，需先預約',
+      location: '祇園',
       duration: '約1小時',
       coordinates: [35.0044, 135.7740],
       dinnerOptions: '祇園鰻川藤 (Gion Unagi Kawato)',
@@ -173,7 +187,7 @@ export const itineraryData = {
       },
       details: {
         japaneseInfo: null,
-        notes: '推薦餐廳 1：祇園鰻川藤 (Gion Unagi Kawato) - 鰻魚飯，環境優美需先訂位',
+        notes: '推薦餐廳：祇園鰻川藤 (Gion Unagi Kawato) - 鰻魚飯，環境優美需先預約',
         kkdayLink: null
       }
     }
@@ -275,7 +289,7 @@ export const itineraryData = {
   ],
   day4: [
     {
-      time: '08:30-09:30',
+      time: '07:30-08:30',
       title: '飯店早餐',
       description: '享受飯店自助早餐',
       transport: '飯店內',
@@ -289,27 +303,41 @@ export const itineraryData = {
       }
     },
     {
-      time: '08:50-10:10',
-      title: '難波八阪神社',
-      description: '巨大獅子頭舞台 (吸厄運)',
-      transport: '走路',
-      location: '難波八阪神社',
-      duration: '約1小時20分鐘',
-      coordinates: [34.6628, 135.5011],
-      mustVisit: '巨大獅子頭舞台',
+      time: '08:30',
+      title: '飯店出發',
+      description: '飯店出發，步行約10分鐘',
+      transport: '步行',
+      location: 'KOKO HOTEL Osaka Namba',
+      duration: '約10分鐘',
+      coordinates: [34.6658, 135.5043],
       details: {
         japaneseInfo: null,
-        notes: '飯店步行約 10-12 分鐘，拍攝巨大的獅子頭舞台',
+        notes: '步行前往難波八阪神社',
         kkdayLink: null
       }
     },
     {
-      time: '10:30-12:45',
+      time: '08:40-09:30',
+      title: '難波八阪神社',
+      description: '巨大獅子頭舞台 (吸厄運)',
+      transport: '步行',
+      location: '難波八阪神社',
+      duration: '約50分鐘',
+      coordinates: [34.6628, 135.5011],
+      mustVisit: '巨大獅子頭舞台',
+      details: {
+        japaneseInfo: null,
+        notes: '拍照巨大獅子頭舞台',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '09:30-11:00',
       title: '大阪城公園',
       description: '搭乘路面小火車進入園區，體驗大阪城御座船遊覽護城河',
       transport: '地鐵',
       location: '大阪城公園',
-      duration: '約2小時15分鐘',
+      duration: '約1小時30分鐘',
       coordinates: [34.6873, 135.5262],
       subway: '難波站 (御堂筋線) → 本町 (轉中央線) → 森之宮站 (3-B出口有電梯)',
       mustVisit: '路面小火車、大阪城御座船',
@@ -320,12 +348,12 @@ export const itineraryData = {
       }
     },
     {
-      time: '13:15-15:00',
+      time: '11:30-13:00',
       title: '新世界散策 & 串炸午餐',
       description: '與通天閣合影拍照，並享用串炸達摩或橫綱串炸',
       transport: '地鐵',
       location: '新世界、通天閣',
-      duration: '約1小時45分鐘',
+      duration: '約1小時30分鐘',
       coordinates: [34.6525, 135.5063],
       subway: '森之宮站 (中央線) → 堺筋本町 (轉堺筋線) → 動物園前站',
       mustEat: '串炸 (Kushikatsu)',
@@ -343,35 +371,54 @@ export const itineraryData = {
       }
     },
     {
-      time: '15:15-16:45',
-      title: '阿倍野 HARUKAS 300 展望台',
-      description: '日本最高樓 360 度俯瞰大阪',
+      time: '13:30-16:15',
+      title: 'NAMBA PARKS 或 心齋橋 PARCO (二選一)',
+      description: 'NAMBA PARKS：適合想看綠地花園、追求安靜休憩環境、且離難波飯店近。心齋橋 PARCO：適合 10 歲小孩想逛寶可夢中心、任天堂商店 (但人潮較擠)',
       transport: '地鐵',
-      location: '阿倍野 HARUKAS 300',
-      duration: '約1小時30分鐘',
-      coordinates: [34.6461, 135.5148],
-      subway: '動物園前站 (御堂筋線) → 天王寺站',
-      mustVisit: 'HARUKAS 300 展望台',
+      location: 'NAMBA PARKS 或 心齋橋 PARCO 百貨',
+      duration: '約2小時45分鐘',
+      coordinates: [34.6739, 135.5011],
+      subway: '動物園前站 (御堂筋線) → 天王寺站 (御堂筋線) → 心齋橋站',
+      mustVisit: 'NAMBA PARKS：綠地花園 | PARCO：6F 玩具/寶可夢區/橡子共和國',
       details: {
         japaneseInfo: null,
-        notes: '交通：動物園前站 (御堂筋線) → 天王寺站。亮點：日本最高樓 360 度俯瞰大阪，適合在全室內空間休息看景。',
+        notes: '* NAMBA PARKS：適合想看綠地花園、追求安靜休憩環境、且離難波飯店近。* 心齋橋 PARCO：適合 10 歲小孩想逛寶可夢中心、任天堂商店 (但人潮較擠)。',
         kkdayLink: null
       }
     },
     {
-      time: '17:00-18:50',
-      title: '心齋橋 PARCO & 道頓堀精華行程',
-      description: '逛 6F 玩具/寶可夢區/橡子共和國，體驗唐吉訶德惠比壽摩天輪',
-      transport: '地鐵',
-      location: '心齋橋 PARCO、道頓堀',
-      duration: '約1小時50分鐘',
-      coordinates: [34.6739, 135.5011],
-      subway: '天王寺站 (御堂筋線) → 心齋橋站',
-      mustVisit: '6F 玩具/寶可夢區/橡子共和國、唐吉訶德惠比壽摩天輪',
-      mustEat: '章魚燒 (道樂 Wanaka 或 本家)',
+      time: '16:15-17:00',
+      title: '唐吉訶德惠比壽摩天輪',
+      description: '搭乘摩天輪俯瞰道頓堀河景',
+      transport: '步行',
+      location: '道頓堀',
+      duration: '約45分鐘',
+      coordinates: [34.6686, 135.5011],
+      mustVisit: '唐吉訶德惠比壽摩天輪',
       details: {
         japaneseInfo: null,
-        notes: '交通：天王寺站 (御堂筋線) → 心齋橋站。活動1：逛 6F 玩具/寶可夢區/橡子共和國。活動2：唐吉訶德惠比壽摩天輪，從河岸高處俯瞰道頓堀夜景。小吃墊胃：搭船前買章魚燒（如：道樂 Wanaka 或 本家）墊肚子。',
+        notes: '搭乘摩天輪從河岸高處俯瞰道頓堀夜景。',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '17:20-18:45',
+      title: '晚餐時間',
+      description: '享用晚餐',
+      transport: '步行',
+      location: '道頓堀',
+      duration: '約1小時25分鐘',
+      coordinates: [34.6686, 135.5011],
+      dinnerOptions: '大起水產迴轉壽司或千房大阪燒',
+      restaurants: {
+        dinner: [
+          { name: '大起水產迴轉壽司', location: '大阪道頓堀', note: '平價迴轉壽司，高CP值與多樣性' },
+          { name: '千房大阪燒 Chibo', location: '大阪道頓堀', note: '大阪燒名店' }
+        ]
+      },
+      details: {
+        japaneseInfo: null,
+        notes: '推薦餐廳：大起水產迴轉壽司 或 千房大阪燒。需在 18:45 前用餐完畢，步行至碼頭報到。',
         kkdayLink: null
       }
     },
@@ -387,26 +434,6 @@ export const itineraryData = {
       details: {
         japaneseInfo: null,
         notes: '已預約 19:00 班次，準時搭船，體驗夜晚最華麗的格力高跑跑人燈海。',
-        kkdayLink: null
-      }
-    },
-    {
-      time: '19:30',
-      title: '晚餐',
-      description: '千房大阪燒 或 大起水產迴轉壽司',
-      location: '道頓堀',
-      duration: '約1小時',
-      coordinates: [34.6686, 135.5011],
-      dinnerOptions: '千房大阪燒、大起水產迴轉壽司',
-      restaurants: {
-        dinner: [
-          { name: '千房大阪燒 Chibo', location: '大阪道頓堀', note: '大阪燒名店' },
-          { name: '大起水產迴轉壽司', location: '大阪道頓堀', note: '迴轉壽司' }
-        ]
-      },
-      details: {
-        japaneseInfo: null,
-        notes: '推薦千房大阪燒或大起水產迴轉壽司',
         kkdayLink: null
       }
     }
@@ -427,16 +454,30 @@ export const itineraryData = {
       }
     },
     {
-      time: '06:40-07:50',
-      title: '飯店早餐 & 前往集合地點',
-      description: '快速吃早餐，然後走路前往 VIP Villa難波集合',
-      transport: '飯店內 + 走路',
-      location: 'KOKO HOTEL → VIP Villa難波',
-      duration: '約1小時10分鐘',
+      time: '06:40-07:30',
+      title: '飯店早餐',
+      description: '享用飯店早餐',
+      transport: '飯店內',
+      location: 'KOKO HOTEL Osaka Namba',
+      duration: '約50分鐘',
       coordinates: [34.6658, 135.5043],
       details: {
         japaneseInfo: null,
-        notes: '飯店餐廳用餐後，走路約 7-10 分鐘 (約 650 公尺) 到 VIP Villa 難波 (KKday 集合點)。往難波車站方向走，請依憑證地圖為準',
+        notes: '飯店餐廳',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '07:30-07:50',
+      title: '前往集合地點',
+      description: '走路前往 VIP Villa難波集合',
+      transport: '走路',
+      location: 'VIP Villa難波',
+      duration: '約20分鐘',
+      coordinates: [34.6658, 135.5043],
+      details: {
+        japaneseInfo: null,
+        notes: '走路約 7-10 分鐘 (約 650 公尺) 到 VIP Villa 難波 (KKday 集合點)。往難波車站方向走，請依憑證地圖為準',
         kkdayLink: null
       }
     },
@@ -457,29 +498,29 @@ export const itineraryData = {
       }
     },
     {
-      time: '19:10-20:30',
+      time: '19:10-20:00',
       title: '晚餐 (難波下車處附近)',
-      description: '關鍵調整：先用餐再拿行李',
+      description: '回飯店沿路的快速晚餐',
       location: '難波站/VIP Villa附近',
-      duration: '約1小時20分',
+      duration: '約50分鐘',
       coordinates: [34.6658, 135.5043],
-      dinnerOptions: '551 Horai 蓬萊本店、難波肉劇場 (燒肉蓋飯)、松屋/吉野家、NAMBA CITY / NAMBA PARKS 內餐廳',
+      dinnerOptions: '551 蓬萊 (NAMBA WALK 店/本店)、神座拉麵 (千日前店)、丸龜製麵 (千日前店)、松屋/吉野家',
       restaurants: {
         dinner: [
-          { name: '551 Horai 蓬萊本店', location: '大阪難波', note: '就在集合點附近' },
-          { name: '難波肉劇場', location: '大阪難波', note: '燒肉蓋飯' },
-          { name: '松屋/吉野家', location: '大阪難波', note: '快速簡單' },
-          { name: 'NAMBA CITY / NAMBA PARKS 內餐廳', location: '大阪難波', note: '選擇多且舒適' }
+          { name: '551 蓬萊 (NAMBA WALK 店/本店)', location: '大阪難波', note: '有現做的海鮮炒麵、炒飯或熱騰騰的包子，出餐極快' },
+          { name: '神座拉麵 (千日前店)', location: '大阪難波', note: '就在商店街入口，位置多、出餐快，蔬菜多且湯頭清爽適合長輩' },
+          { name: '丸龜製麵 (千日前店)', location: '大阪難波', note: '自助式烏龍麵，不用 10 分鐘就能吃上一碗熱麵，非常暖胃' },
+          { name: '松屋/吉野家', location: '大阪難波', note: '若真的想在 15 分鐘內解決，這是最穩定的選擇' }
         ]
       },
       details: {
         japaneseInfo: null,
-        notes: '用餐地點：難波站/VIP Villa 附近。推薦餐廳：551 Horai 蓬萊本店 (就在集合點附近)、難波肉劇場 (燒肉蓋飯) 或 松屋/吉野家 (快速簡單)、NAMBA CITY / NAMBA PARKS 內餐廳 (選擇多且舒適)。',
+        notes: '用餐地點：回飯店沿路的快速晚餐。推薦餐廳：551 蓬萊 (NAMBA WALK 店/本店)、神座拉麵 (千日前店)、丸龜製麵 (千日前店)、松屋/吉野家。',
         kkdayLink: null
       }
     },
     {
-      time: '20:30-21:30',
+      time: '20:00-21:00',
       title: '取行李並移動至 USJ 飯店',
       description: '走路回 KOKO HOTEL 取件行李，然後移動至環球影城飯店',
       transport: '走路 + 電車',

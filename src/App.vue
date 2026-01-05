@@ -108,58 +108,6 @@
           </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <h3 class="text-xl font-bold text-dark mb-4">行程亮點</h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="space-y-3">
-              <div class="flex items-start space-x-3">
-                <span class="text-2xl">🏛️</span>
-                <div>
-                  <h4 class="font-semibold text-dark">世界遺產巡禮</h4>
-                  <p class="text-sm text-gray-600">清水寺、金閣寺、伏見稻荷大社等</p>
-                </div>
-              </div>
-              <div class="flex items-start space-x-3">
-                <span class="text-2xl">🎌</span>
-                <div>
-                  <h4 class="font-semibold text-dark">傳統文化體驗</h4>
-                  <p class="text-sm text-gray-600">祇園藝伎、京都藝伎體驗</p>
-                </div>
-              </div>
-              <div class="flex items-start space-x-3">
-                <span class="text-2xl">🍜</span>
-                <div>
-                  <h4 class="font-semibold text-dark">美食探索</h4>
-                  <p class="text-sm text-gray-600">京都懷石料理、大阪章魚燒、鰻魚飯</p>
-                </div>
-              </div>
-            </div>
-            <div class="space-y-3">
-              <div class="flex items-start space-x-3">
-                <span class="text-2xl">🚄</span>
-                <div>
-                  <h4 class="font-semibold text-dark">交通便利</h4>
-                  <p class="text-sm text-gray-600">JR HARUKA直達、ICOCA一卡通</p>
-                </div>
-              </div>
-              <div class="flex items-start space-x-3">
-                <span class="text-2xl">🌸</span>
-                <div>
-                  <h4 class="font-semibold text-dark">四季之美</h4>
-                  <p class="text-sm text-gray-600">冬季賞雪、溫泉體驗</p>
-                </div>
-              </div>
-              <div class="flex items-start space-x-3">
-                <span class="text-2xl">🎢</span>
-                <div>
-                  <h4 class="font-semibold text-dark">主題樂園</h4>
-                  <p class="text-sm text-gray-600">環球影城、京都水族館</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <!-- 旅行資訊 -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <!-- 班機資訊 -->
@@ -286,13 +234,61 @@
           </div>
         </div>
 
-        <!-- TODO LIST -->
+        <!-- 行前準備清單 -->
         <div class="bg-white rounded-lg shadow-md p-6">
-          <h3 class="text-xl font-bold text-dark mb-4">📝 行前準備清單</h3>
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xl font-bold text-dark">📝 行前準備清單</h3>
+            <div class="text-sm text-gray-600">
+              已完成 {{ completedCount }} / {{ checklistItems.length }} 項
+            </div>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
+            <div
+              class="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-500 ease-out"
+              :style="{ width: `${(completedCount / checklistItems.length) * 100}%` }"
+            ></div>
+          </div>
+
+          <!-- Checklist Items -->
           <div class="space-y-2">
-            <div v-for="todo in travelInfo.todoList" :key="todo" class="flex items-center space-x-3 p-3 bg-gray-50 rounded">
-              <input type="checkbox" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
-              <span class="text-sm">{{ todo }}</span>
+            <div
+              v-for="item in checklistItems"
+              :key="item.id"
+              class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors"
+              @click="toggleChecklistItem(item.id)"
+            >
+              <div
+                class="w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-200"
+                :class="item.completed ? 'bg-green-500 border-green-500' : 'border-gray-300'"
+              >
+                <svg
+                  v-if="item.completed"
+                  class="w-3 h-3 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+              </div>
+              <span
+                class="flex-1 text-sm text-gray-800 transition-all duration-200"
+                :class="item.completed ? 'line-through text-gray-500' : ''"
+              >
+                {{ item.text }}
+              </span>
+              <div class="text-xs text-gray-400">
+                {{ item.completed ? '✅' : '⏳' }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Tips -->
+          <div class="mt-4 pt-4 border-t border-gray-200">
+            <div class="text-xs text-gray-500 text-center">
+              💡 點擊項目即可標記為完成/未完成
             </div>
           </div>
         </div>
@@ -315,22 +311,12 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <!-- 大阪難波/道頓堀/日本橋/黑門市場 -->
           <div class="bg-white rounded-lg shadow-md p-6">
-            <h3 class="text-xl font-bold text-primary mb-4">🏙️ 大阪難波/道頓堀/日本橋/黑門市場</h3>
+            <h3 class="text-xl font-bold text-primary mb-4">🏙️ 大阪難波/道頓堀/日本橋</h3>
             <div class="space-y-3">
-              <div class="border-l-4 border-red-400 pl-4">
-                <h4 class="font-semibold text-dark">蟹道樂</h4>
-                <p class="text-sm text-gray-600 mb-2">蟹肉包</p>
-                <a href="https://maps.google.com/?q=蟹道樂+大阪" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 underline">🗺️ 查看地圖</a>
-              </div>
-              <div class="border-l-4 border-orange-400 pl-4">
-                <h4 class="font-semibold text-dark">わなかたこ焼き</h4>
-                <p class="text-sm text-gray-600 mb-2">傳統大阪章魚燒</p>
-                <a href="https://maps.google.com/?q=わなかたこ焼き+大阪" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 underline">🗺️ 查看地圖</a>
-              </div>
-              <div class="border-l-4 border-yellow-400 pl-4">
-                <h4 class="font-semibold text-dark">10円パン</h4>
-                <p class="text-sm text-gray-600 mb-2">10元麵包</p>
-                <a href="https://maps.google.com/?q=10円パン+大阪" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 underline">🗺️ 查看地圖</a>
+              <div v-for="food in travelInfo.foodList.osakaNamba" :key="food.name" class="border-l-4 border-red-400 pl-4">
+                <h4 class="font-semibold text-dark">{{ food.name }}</h4>
+                <p class="text-sm text-gray-600 mb-2">{{ food.note }}</p>
+                <a :href="`https://maps.google.com/?q=${food.name}+大阪`" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 underline">🗺️ 查看地圖</a>
               </div>
             </div>
           </div>
@@ -339,10 +325,10 @@
           <div class="bg-white rounded-lg shadow-md p-6">
             <h3 class="text-xl font-bold text-primary mb-4">🚉 京都車站</h3>
             <div class="space-y-3">
-              <div class="border-l-4 border-purple-400 pl-4">
-                <h4 class="font-semibold text-dark">鳥貴族 (京都七條店)</h4>
-                <p class="text-sm text-gray-600 mb-2">平價串燒居酒屋</p>
-                <a href="https://maps.google.com/?q=鳥貴族+京都七條店" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 underline">🗺️ 查看地圖</a>
+              <div v-for="food in travelInfo.foodList.kyotoStation" :key="food.name" class="border-l-4 border-purple-400 pl-4">
+                <h4 class="font-semibold text-dark">{{ food.name }}</h4>
+                <p class="text-sm text-gray-600 mb-2">{{ food.note }}</p>
+                <a :href="`https://maps.google.com/?q=${food.name}+京都車站`" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 underline">🗺️ 查看地圖</a>
               </div>
             </div>
           </div>
@@ -351,25 +337,10 @@
           <div class="bg-white rounded-lg shadow-md p-6">
             <h3 class="text-xl font-bold text-primary mb-4">🌸 嵐山商店街</h3>
             <div class="space-y-3">
-              <div class="border-l-4 border-green-400 pl-4">
-                <h4 class="font-semibold text-dark">三忠 豆腐茶屋</h4>
-                <p class="text-sm text-gray-600 mb-2">傳統豆腐料理</p>
-                <a href="https://maps.google.com/?q=三忠+豆腐茶屋+嵐山" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 underline">🗺️ 查看地圖</a>
-              </div>
-              <div class="border-l-4 border-blue-400 pl-4">
-                <h4 class="font-semibold text-dark">京豆庵冰淇淋</h4>
-                <p class="text-sm text-gray-600 mb-2">大豆冰淇淋</p>
-                <a href="https://maps.google.com/?q=京豆庵+嵐山" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 underline">🗺️ 查看地圖</a>
-              </div>
-              <div class="border-l-4 border-pink-400 pl-4">
-                <h4 class="font-semibold text-dark">嵐山可樂餅 (中村屋)</h4>
-                <p class="text-sm text-gray-600 mb-2">經典可樂餅</p>
-                <a href="https://maps.google.com/?q=中村屋+嵐山" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 underline">🗺️ 查看地圖</a>
-              </div>
-              <div class="border-l-4 border-indigo-400 pl-4">
-                <h4 class="font-semibold text-dark">京風特大煎餅</h4>
-                <p class="text-sm text-gray-600 mb-2">京都風味煎餅</p>
-                <a href="https://maps.google.com/?q=京風特大煎餅+嵐山" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 underline">🗺️ 查看地圖</a>
+              <div v-for="food in travelInfo.foodList.arashiyama" :key="food.name" class="border-l-4 border-green-400 pl-4">
+                <h4 class="font-semibold text-dark">{{ food.name }}</h4>
+                <p class="text-sm text-gray-600 mb-2">{{ food.note }}</p>
+                <a :href="`https://maps.google.com/?q=${food.name}+嵐山`" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 underline">🗺️ 查看地圖</a>
               </div>
             </div>
           </div>
@@ -378,20 +349,10 @@
           <div class="bg-white rounded-lg shadow-md p-6">
             <h3 class="text-xl font-bold text-primary mb-4">🌉 天橋立商店街</h3>
             <div class="space-y-3">
-              <div class="border-l-4 border-teal-400 pl-4">
-                <h4 class="font-semibold text-dark">よし乃や</h4>
-                <p class="text-sm text-gray-600 mb-2">花蛤丼、海鮮丼</p>
-                <a href="https://maps.google.com/?q=よし乃や+天橋立" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 underline">🗺️ 查看地圖</a>
-              </div>
-              <div class="border-l-4 border-cyan-400 pl-4">
-                <h4 class="font-semibold text-dark">つるや食堂</h4>
-                <p class="text-sm text-gray-600 mb-2">海鮮丼、麵類、甜點</p>
-                <a href="https://maps.google.com/?q=つるや食堂+天橋立" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 underline">🗺️ 查看地圖</a>
-              </div>
-              <div class="border-l-4 border-lime-400 pl-4">
-                <h4 class="font-semibold text-dark">はしだて茶屋</h4>
-                <p class="text-sm text-gray-600 mb-2">花蛤丼、烤黑輪</p>
-                <a href="https://maps.google.com/?q=はしだて茶屋+天橋立" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 underline">🗺️ 查看地圖</a>
+              <div v-for="food in travelInfo.foodList.amanohashidate" :key="food.name" class="border-l-4 border-teal-400 pl-4">
+                <h4 class="font-semibold text-dark">{{ food.name }}</h4>
+                <p class="text-sm text-gray-600 mb-2">{{ food.note }}</p>
+                <a :href="`https://maps.google.com/?q=${food.name}+天橋立`" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 underline">🗺️ 查看地圖</a>
               </div>
             </div>
           </div>
@@ -400,10 +361,10 @@
           <div class="bg-white rounded-lg shadow-md p-6">
             <h3 class="text-xl font-bold text-primary mb-4">🎎 京都祇園/八坂神社/四條河原町/錦市場</h3>
             <div class="space-y-3">
-              <div class="border-l-4 border-rose-400 pl-4">
-                <h4 class="font-semibold text-dark">らぁ〜めん京</h4>
-                <p class="text-sm text-gray-600 mb-2">京都拉麵</p>
-                <a href="https://maps.google.com/?q=らぁ〜めん京+祇園" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 underline">🗺️ 查看地圖</a>
+              <div v-for="food in travelInfo.foodList.kyotoGion" :key="food.name" class="border-l-4 border-rose-400 pl-4">
+                <h4 class="font-semibold text-dark">{{ food.name }}</h4>
+                <p class="text-sm text-gray-600 mb-2">{{ food.note }}</p>
+                <a :href="`https://maps.google.com/?q=${food.name}+祇園`" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 underline">🗺️ 查看地圖</a>
               </div>
             </div>
           </div>
@@ -412,21 +373,78 @@
           <div class="bg-white rounded-lg shadow-md p-6">
             <h3 class="text-xl font-bold text-primary mb-4">🏛️ 京都清水寺/二年坂/三年坂</h3>
             <div class="space-y-3">
-              <div class="border-l-4 border-amber-400 pl-4">
-                <h4 class="font-semibold text-dark">藤菜美</h4>
-                <p class="text-sm text-gray-600 mb-2">冰抹茶、傳統風味醬油丸子</p>
-                <a href="https://maps.google.com/?q=藤菜美+清水寺" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 underline">🗺️ 查看地圖</a>
+              <div v-for="food in travelInfo.foodList.kyotoKiyomizu" :key="food.name" class="border-l-4 border-amber-400 pl-4">
+                <h4 class="font-semibold text-dark">{{ food.name }}</h4>
+                <p class="text-sm text-gray-600 mb-2">{{ food.note }}</p>
+                <a :href="`https://maps.google.com/?q=${food.name}+清水寺`" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 underline">🗺️ 查看地圖</a>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div v-show="activeDay !== 'overview' && activeDay !== 'food' && showMap && devSettings.enableMap" class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+
+      <!-- Attractions Section -->
+      <div v-if="activeDay === 'attractions'" class="space-y-6">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold text-dark">景點指南</h2>
+          <TransparentAnimation
+            apng-source="image/i-love-you.apng"
+            fallback-image="image/i-love-you.gif"
+            alt-text="可愛貓咪愛心"
+            width="60px"
+            height="60px"
+            class="attractions-cat-gif"
+          />
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div
+            v-for="attraction in attractionsData"
+            :key="attraction.id"
+            class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-200"
+          >
+            <div class="flex items-start justify-between mb-4">
+              <h3 class="text-xl font-bold text-primary">{{ attraction.name }}</h3>
+              <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">{{ attraction.category }}</span>
+            </div>
+            <p class="text-gray-700 mb-4">{{ attraction.description }}</p>
+            <div class="space-y-2 mb-4">
+              <div class="text-sm text-gray-600">
+                <span class="font-medium">📜 歷史源由：</span>
+                <span>{{ attraction.history }}</span>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <div class="flex items-center text-sm text-gray-600">
+                <span class="font-medium mr-2">🏷️ 亮點：</span>
+                <span>{{ attraction.highlights.join('、') }}</span>
+              </div>
+              <div class="flex items-center text-sm text-gray-600">
+                <span class="font-medium mr-2">🕐 最佳時間：</span>
+                <span>{{ attraction.bestTime }}</span>
+              </div>
+            </div>
+            <div class="mt-4 pt-4 border-t border-gray-200">
+              <a
+                :href="`https://maps.google.com/?q=${attraction.name}+${attraction.location}`"
+                target="_blank"
+                class="text-blue-600 hover:text-blue-800 underline text-sm"
+              >
+                🗺️ 查看地圖
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div v-show="activeDay !== 'overview' && activeDay !== 'food' && activeDay !== 'attractions' && showMap && devSettings.enableMap" class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
         <div id="map" class="h-96 w-full"></div>
       </div>
 
       <!-- Day Sections with Map -->
-      <div v-if="activeDay !== 'overview' && activeDay !== 'food'" class="space-y-6">
+      <div v-if="activeDay !== 'overview' && activeDay !== 'food' && activeDay !== 'attractions'" class="space-y-6">
         <div class="flex items-center justify-between">
           <h2 class="text-2xl font-bold text-dark flex-1">{{ getCurrentDayTitle() }}</h2>
           <button
@@ -935,7 +953,7 @@
 </template>
 
 <script>
-import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick, watch, computed } from 'vue'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import VoiceCall from './components/VoiceCall.vue'
@@ -945,6 +963,7 @@ import TransparentAnimation from './components/TransparentAnimation.vue'
 // 導入行程數據
 import { travelInfo } from './data/travelInfo.js'
 import { itineraryData } from './data/itineraryData.js'
+import { attractionsData } from './data/attractionsData.js'
 // 導入 Firebase
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { getDatabase, ref as dbRef, get, child } from 'firebase/database'
@@ -995,14 +1014,74 @@ export default {
     const days = [
       { id: 'overview', label: '總覽', location: '台灣', coords: [25.0330, 121.5654] },
       { id: 'food', label: '美食', location: '關西', coords: [34.6937, 135.5023] },
-      { id: 'day1', label: 'Day 1 (1/16五)', location: '京都', coords: [35.0116, 135.7681] },
-      { id: 'day2', label: 'Day 2 (1/17六)', location: '京都', coords: [35.0116, 135.7681] },
-      { id: 'day3', label: 'Day 3 (1/18日)', location: '關西', coords: [34.6937, 135.5023] },
-      { id: 'day4', label: 'Day 4 (1/19一)', location: '大阪', coords: [34.6937, 135.5023] },
-      { id: 'day5', label: 'Day 5 (1/20二)', location: '天橋立', coords: [35.5667, 135.1833] },
-      { id: 'day6', label: 'Day 6 (1/21三)', location: '大阪', coords: [34.6937, 135.5023] },
-      { id: 'day7', label: 'Day 7 (1/22四)', location: '關西機場', coords: [34.4320, 135.2304] }
+      { id: 'attractions', label: '景點', location: '關西', coords: [34.6937, 135.5023] },
+      { id: 'day1', label: 'D1(1/16五)', location: '京都', coords: [35.0116, 135.7681] },
+      { id: 'day2', label: 'D2(1/17六)', location: '京都', coords: [35.0116, 135.7681] },
+      { id: 'day3', label: 'D3(1/18日)', location: '關西', coords: [34.6937, 135.5023] },
+      { id: 'day4', label: 'D4(1/19一)', location: '大阪', coords: [34.6937, 135.5023] },
+      { id: 'day5', label: 'D5(1/20二)', location: '天橋立', coords: [35.5667, 135.1833] },
+      { id: 'day6', label: 'D6(1/21三)', location: '大阪', coords: [34.6937, 135.5023] },
+      { id: 'day7', label: 'D7(1/22四)', location: '關西機場', coords: [34.4320, 135.2304] }
     ]
+
+    // 準備清單數據
+    const checklistItems = ref([
+      { id: 'sim-card', text: '購買上網SIM/eSIM卡(eSIMGo)', completed: false },
+      { id: 'snow-shoes', text: '購買雪地防滑鞋套', completed: false },
+      { id: 'kkday-tours', text: '預定KKDay一日遊行程', completed: false },
+      { id: 'kimono-booking', text: '預定日本和服時間', completed: false },
+      { id: 'meal-seats', text: '預定機上餐點與座位(需付費？)', completed: false },
+      { id: 'travel-insurance', text: '投保旅遊不便險(富邦)', completed: false },
+      { id: 'japan-visa', text: '填寫日本入境單VJW(Visit Japan Web)', completed: false },
+      { id: 'usj-tickets', text: '線上購買環球影城門票 + (快通4?)', completed: false },
+      { id: 'jr-tickets', text: '線上購買JR HARUKA WEST QR火車票和選位(電子票)', completed: false },
+      { id: 'print-documents', text: '列印文件/QRCODE: 環球影城門票、大阪觀光船email、', completed: false },
+      { id: 'power-bank', text: '行動電源', completed: false }
+    ])
+
+    // 從localStorage載入準備清單狀態
+    const loadChecklist = () => {
+      const saved = localStorage.getItem('travelChecklist')
+      if (saved) {
+        try {
+          const savedItems = JSON.parse(saved)
+          checklistItems.value = checklistItems.value.map(item => ({
+            ...item,
+            completed: savedItems[item.id] || false
+          }))
+        } catch (error) {
+          console.error('Failed to load checklist:', error)
+        }
+      }
+    }
+
+    // 保存準備清單狀態到localStorage
+    const saveChecklist = () => {
+      const checklistData = {}
+      checklistItems.value.forEach(item => {
+        checklistData[item.id] = item.completed
+      })
+      localStorage.setItem('travelChecklist', JSON.stringify(checklistData))
+    }
+
+    // 切換項目完成狀態
+    const toggleChecklistItem = (itemId) => {
+      const item = checklistItems.value.find(item => item.id === itemId)
+      if (item) {
+        item.completed = !item.completed
+        saveChecklist()
+        
+        // 震動反饋（如果支援）
+        if (navigator.vibrate) {
+          navigator.vibrate(30)
+        }
+      }
+    }
+
+    // 計算完成項目數量
+    const completedCount = computed(() => {
+      return checklistItems.value.filter(item => item.completed).length
+    })
 
     // 數據已分離至 src/data/travelInfo.js 和 src/data/itineraryData.js
 
@@ -1612,6 +1691,7 @@ export default {
     // 在組件掛載時載入設定
     onMounted(() => {
       loadDevSettings()
+      loadChecklist() // 載入準備清單狀態
       
       // 🔐 監聽 Firebase Auth 狀態變化
       const auth = getAuth()
@@ -1723,7 +1803,12 @@ export default {
       showDetailModal,
       showWeatherModal,
       travelInfo,
+      attractionsData,
       days,
+      // 準備清單
+      checklistItems,
+      toggleChecklistItem,
+      completedCount,
       getCurrentDayTitle,
       getCurrentDayItinerary,
       openDetailModal,
@@ -1890,6 +1975,14 @@ button:active:not(:disabled), .nav-btn:active {
   height: 60px;
   object-fit: contain;
   animation: bounce 2s ease-in-out infinite;
+}
+
+/* Checklist 頁面的貓咪 GIF */
+.checklist-cat-gif {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  animation: cat-wiggle 2s ease-in-out infinite;
 }
 
 /* 彈跳動畫 */

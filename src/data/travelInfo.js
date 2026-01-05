@@ -81,7 +81,7 @@ export const travelInfo = {
       { name: '元祖大阪章魚燒', note: '' }
     ],
     kyotoStation: [
-      { name: '鳥貴族(京都七條店)', note: '串燒' }
+      { name: '鳥貴族(京都七條店)', note: '雞肉串燒' }
     ],
     arashiyama: [
       { name: '三忠 豆腐茶屋', note: '' },
