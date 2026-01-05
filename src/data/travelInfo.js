@@ -45,11 +45,11 @@ export const travelInfo = {
   ],
   costs: [
     { item: '來回機票 x4人 (ezTravel訂購)', amount: 'NT$63,317' },
-    { item: '住宿 Onyado Nono Kyoto Shichijo Natural Hot Spring 兩晚', amount: 'NT$20,615' },
-    { item: '住宿 KOKO HOTEL Osaka Namba Sennichimae 兩晚', amount: 'NT$11,642' },
+    { item: '住宿 Onyado Nono Kyoto Shichijo Natural Hot Spring 兩晚', amount: 'NT$17,529' },
+    { item: '住宿 KOKO HOTEL Osaka Namba Sennichimae 兩晚', amount: 'NT$12,530' },
     { item: '住宿 THE SINGULARI HOTEL & SKYSPA at UNIVERSAL STUDIOS JAPAN 兩晚', amount: 'NT$14,565' },
-    { item: 'Day3 KKDAY【大阪/京都出發】海之京都一日遊｜伊根灣遊船・伊根舟屋・天橋立 x4', amount: 'NT$7,324' },
-    { item: 'Day5 KKDAY【京都&奈良一日遊】金閣寺、嵐山(午餐自理)、伏見稻荷大社、奈良公園 x4', amount: 'NT$6,240' }
+    { item: 'Day3 KKDAY日本天橋立一日遊 x4', amount: 'NT$7,324' },
+    { item: 'Day5 KKDAY京都&奈良一日遊(金閣寺、嵐山、奈良公園、伏見稻荷大社) x4', amount: 'NT$6,240' }
   ],
   kkdayTours: [
     {
@@ -69,6 +69,39 @@ export const travelInfo = {
       cost: 'NT$6,240'
     }
   ],
+  foodList: {
+    osakaNamba: [
+      { name: '蟹道樂(道頓堀東店)', note: '蟹肉包' },
+      { name: '道樂 Wanaka (わなかたこ焼き)', note: '必吃，傳統大阪章魚燒' },
+      { name: '10円パン', note: '10元麵包' },
+      { name: '元祿壽司', note: '日本迴轉壽司創始店，價格親民，類似台灣的爭鮮' },
+      { name: '大起水產迴轉壽司', note: '平價迴轉壽司，高CP值與多樣性' },
+      { name: '神座拉麵(Kamukura)千日前店', note: '蔬菜湯頭，口味清甜' },
+      { name: '千房大阪燒 (Chibo)', note: '大阪燒名店' },
+      { name: '元祖大阪章魚燒', note: '' }
+    ],
+    kyotoStation: [
+      { name: '鳥貴族(京都七條店)', note: '串燒' }
+    ],
+    arashiyama: [
+      { name: '三忠 豆腐茶屋', note: '' },
+      { name: '京豆庵冰淇淋(大豆)', note: '' },
+      { name: '嵐山可樂餅(中村屋)', note: '' },
+      { name: '京風特大煎餅', note: '' }
+    ],
+    amanohashidate: [
+      { name: 'よし乃や', note: '花蛤丼、海鮮丼 (1F是土產伴手禮區,2F就是餐廳，靠近傘松公園這一側)' },
+      { name: 'つるや食堂', note: '海鮮丼、麵, 甜點 (出餐較慢)' },
+      { name: 'はしだて茶屋(橋立茶屋)', note: '花蛤丼、烤黑輪 (天橋立公園街近中間處，也就是天橋立松樹林內)' }
+    ],
+    kyotoGion: [
+      { name: 'らぁ〜めん京 (Ramen Miyako Gion Main Shop)', note: '八阪神社旁的拉麵店' },
+      { name: '祇園鰻川藤(Gion Unagi Kawato)', note: '鰻魚飯，環境優美需先訂位' }
+    ],
+    kyotoKiyomizu: [
+      { name: '藤菜美', note: '冰抹茶，傳統風味的醬油丸子專賣店' }
+    ]
+  },
   passports: [
     { name: 'TING/CHINYUAN' },
     { name: 'LIU/CHIAHSIANG' },
@@ -81,10 +114,12 @@ export const travelInfo = {
     '預定KKDay一日遊行程',
     '預定日本和服時間',
     '預定機上餐點與座位(需付費？)',
-    '投保旅遊不便險(國泰or富邦)',
+    '投保旅遊不便險(富邦)',
     '填寫日本入境單VJW(Visit Japan Web)',
-    '線上購買環球影城門票 + 快通4',
-    '線上購買JR HARUKA WEST QR火車票和選位(電子票)'
+    '線上購買環球影城門票 + (快通4?)',
+    '線上購買JR HARUKA WEST QR火車票和選位(電子票)',
+    '列印文件/QRCODE: 環球影城門票、大阪觀光船email、',
+    '行動電源'
   ],
   budget: {
     exchangeRate: 0.225,

@@ -88,18 +88,15 @@ export const itineraryData = {
       location: '祇園/八坂神社',
       duration: '約1.5小時',
       coordinates: [35.0036, 135.7810],
-      lunchOptions: '祇園牛禪 (壽喜燒/涮涮鍋)、權兵衛 (親子丼/烏龍麵)、Izuju (鯖魚壽司)、十二段家百年壽喜燒',
+      lunchOptions: 'らぁ〜めん京 (Ramen Miyako Gion Main Shop)',
       restaurants: {
         lunch: [
-          { name: '祇園牛禪', location: '祇園', note: '壽喜燒/涮涮鍋 (空間大)' },
-          { name: '權兵衛 Gonbei', location: '祇園', note: '親子丼/烏龍麵老店 (適合長輩)' },
-          { name: 'Izuju いづ重', location: '祇園', note: '鯖魚壽司名店 (可外帶去圓山公園吃)' },
-          { name: '十二段家百年壽喜燒', location: '祇園', note: '百年壽喜燒老店' }
+          { name: 'らぁ〜めん京 (Ramen Miyako Gion Main Shop)', location: '八阪神社旁', note: '拉麵店' }
         ]
       },
       details: {
         japaneseInfo: null,
-        notes: '地點：在祇園/八坂神社周邊用餐。推薦：祇園牛禪 (壽喜燒/涮涮鍋，空間大)、權兵衛 (親子丼/烏龍麵老店，適合長輩)、Izuju (鯖魚壽司名店，可外帶去圓山公園吃)。',
+        notes: '地點：在祇園/八坂神社周邊用餐。推薦：らぁ〜めん京 (Ramen Miyako Gion Main Shop) 八阪神社旁的拉麵店',
         kkdayLink: null
       }
     },
@@ -168,17 +165,15 @@ export const itineraryData = {
       location: '先斗町 或 京都七條',
       duration: '約1小時',
       coordinates: [35.0044, 135.7740],
-      dinnerOptions: '柚子元 (柚子豬肉火鍋)、鳥貴族 (串燒)、名代炸豬排',
+      dinnerOptions: '祇園鰻川藤 (Gion Unagi Kawato)',
       restaurants: {
         dinner: [
-          { name: '柚子元 Yuzugen', location: '先斗町', note: '柚子豬肉火鍋 (湯頭清爽)' },
-          { name: '鳥貴族 京都七條店', location: '京都七條', note: '全品項均一價的平價串燒居酒屋' },
-          { name: '名代炸豬排', location: '京都', note: '炸豬排名店' }
+          { name: '祇園鰻川藤 (Gion Unagi Kawato)', location: '祇園', note: '鰻魚飯，環境優美需先訂位' }
         ]
       },
       details: {
         japaneseInfo: null,
-        notes: '推薦餐廳 1：柚子元 (先斗町) - 必吃：柚子豬肉火鍋 (湯頭清爽)。推薦餐廳 2：鳥貴族 (京都七條店) - 若中午吃太飽或想早點回飯店休息。推薦餐廳 3：名代炸豬排。',
+        notes: '推薦餐廳 1：祇園鰻川藤 (Gion Unagi Kawato) - 鰻魚飯，環境優美需先訂位',
         kkdayLink: null
       }
     }

@@ -95,10 +95,7 @@
 
 * **地點：** 在祇園/八坂神社周邊用餐。
 * **推薦：**
-* **祇園牛禪：** 壽喜燒/涮涮鍋 (空間大)。
-* **權兵衛 (Gonbei)：** 親子丼/烏龍麵老店 (適合長輩)。
-* **Izuju (いづ重)：** 鯖魚壽司名店 (可外帶去圓山公園吃)。
-* **十二段家百年壽喜燒**
+* **らぁ〜めん京 (Ramen Miyako Gion Main Shop)** 八阪神社旁的拉麵店
 
 
 **【13:00 - 13:30】 移動至清水寺 (避開上坡)**
@@ -130,15 +127,8 @@
 
 **【18:00】 晚餐**
 
-* **推薦餐廳 1：柚子元 (先斗町)**
-* **必吃：** 柚子豬肉火鍋 (湯頭清爽)。
-
-
-* **推薦餐廳 2：鳥貴族 (京都七條店)**
-* 若中午吃太飽或想早點回飯店休息，可以搭車回飯店，去吃旁邊的鳥貴族。
-
-
-* **推薦餐廳 3：名代炸豬排**。
+* **推薦餐廳 1：祇園鰻川藤 (Gion Unagi Kawato)**
+* **推薦餐廳 2：名代炸豬排**
 
 ### ☔ 雨備與備用景點
 
@@ -179,18 +169,8 @@
 **【20:00】 晚餐**
 
 * **晚餐推薦 (飯店周邊 - 千日前/道頓堀/日本橋)：**
-1. **大起水產迴轉壽司**
-2. **元祿壽司**
-3. **神座拉麵 (Kamukura) 千日前店：** 蔬菜湯頭，口味清甜。
-4. **千房大阪燒 (Chibo)** 大阪燒名店
-5. **元祖大阪章魚燒**
-6. **播重 (Hariju)** (壽喜燒老店)
-7. **章魚燒 道樂 Wanaka (わなか)：** 必吃章魚燒。
-
-### ☔ 雨備與備用景點 (晚上)
-
-* **備案 1：唐吉訶德 道頓堀店** (離飯店走路 5 分鐘，有摩天輪，適合購物)。
-* **備案 2：Round 1 Stadium 千日前店** (就在飯店旁，大型室內娛樂中心，有夾娃娃機)。
+1. **神座拉麵 (Kamukura) 千日前店：** 蔬菜湯頭，口味清甜。
+2. **千房大阪燒 (Chibo)** 大阪燒名店
 
 ---
 
@@ -341,15 +321,18 @@
 
 * **Onyado Nono Kyoto Shichijo Natural Hot Spring**, 01/16~01/18 (住兩晚)
 * 住址：京都府, 京都, Shimogyo-ku Zaimokucho 491, 日本
-
+* Email:inn-nonokyoto@dormy-hotels.com
+* https://www.booking.com/hotel/jp/onyado-nono-kyoto-shichijo.zh-tw.html
 
 * **KOKO HOTEL Osaka Namba Sennichimae**, 01/18~01/20 (住兩晚)
 * 住址：大阪府, 大阪, Chuo-ku, Sennichimae 1-3-7, 日本
-
+* Email:info-osaka_sennichimae@koko-hotels.com
+* https://www.booking.com/hotel/jp/koko-osaka-namba-sennichimae.zh-tw.html
 
 * **THE SINGULARI HOTEL & SKYSPA at UNIVERSAL STUDIOS JAPAN**, 01/20~01/22（住兩晚)
 * 住址：大阪府, 大阪, Konohana-ku Shimaya 6-2-25, 日本
-
+* 線上詢問表單：https://www.candeohotels.com/en/contact/
+* https://www.booking.com/hotel/jp/singulari-hotel-skyspa-at-universal-studios-japan.zh-tw.html
 
 
 ## KKDAY一日團資訊
@@ -366,8 +349,8 @@
 ## 費用估算
 
 * 來回機票x4人 (ezTravel訂購)：NT.63317
-* 住宿 Onyado Nono Kyoto Shichijo Natural Hot Spring 兩晚：NT.20615
-* 住宿 KOKO HOTEL Osaka Namba Sennichimae 兩晚：NT.11642
+* 住宿 Onyado Nono Kyoto Shichijo Natural Hot Spring 兩晚：NT.17529
+* 住宿 KOKO HOTEL Osaka Namba Sennichimae 兩晚：NT.12530
 * 住宿 THE SINGULARI HOTEL & SKYSPA at UNIVERSAL STUDIOS JAPAN 兩晚：NT.14565
 * Day3 KKDAY日本天橋立一日遊x4：NT.7324
 * Day5 KKDAY京都&奈良一日遊(金閣寺、嵐山、奈良公園、伏見稻荷大社)x4：NT.6240
@@ -376,8 +359,13 @@
 
 * **大阪難波/道頓堀/日本橋/黑門市場**
 * 蟹道樂(道頓堀東店)：蟹肉包
-* わなかたこ焼き：傳統大阪章魚燒
+* 道樂 Wanaka (わなかたこ焼き)：必吃，傳統大阪章魚燒
 * 10円パン：10元麵包
+* 元祿壽司：日本迴轉壽司創始店，價格親民，類似台灣的爭鮮
+* 大起水產迴轉壽司：平價迴轉壽司，高CP值與多樣性
+* 神座拉麵(Kamukura)千日前店：蔬菜湯頭，口味清甜
+* 千房大阪燒 (Chibo)：大阪燒名店
+* 元祖大阪章魚燒
 
 * **京都車站**
 * 鳥貴族(京都七條店)：串燒
@@ -394,10 +382,14 @@
 * はしだて茶屋(橋立茶屋)：花蛤丼、烤黑輪 (天橋立公園街近中間處，也就是天橋立松樹林內)
 
 * **京都祇園/八坂神社/四條河原町/錦市場**
-* らぁ〜めん京：拉麵 (Ramen Miyako Gion Main Shop)
+* らぁ〜めん京 (Ramen Miyako Gion Main Shop)：八阪神社旁的拉麵店
+* 祇園鰻川藤(Gion Unagi Kawato)：鰻魚飯，環境優美需先訂位
 
 * **京都清水寺/二年坂/三年坂**
 * 藤菜美：冰抹茶，傳統風味的醬油丸子專賣店
+
+
+
 
 ## TODO LIST
 
@@ -406,7 +398,7 @@
 * 預定KKDay一日遊行程
 * 預定日本和服時間
 * 預定機上餐點與座位(需付費？)
-* 投保旅遊不便險(國泰or富邦)
+* 投保旅遊不便險(富邦)
 * 填寫日本入境單VJW(Visit Japan Web)
 * 線上購買環球影城門票 + (快通4?)
 * 線上購買JR HARUKA WEST QR火車票和選位(電子票)
