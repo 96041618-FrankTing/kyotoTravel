@@ -52,142 +52,163 @@ export const itineraryData = {
   ],
   day2: [
     {
-      time: '08:00-09:00',
-      title: '飯店早餐',
-      description: '享用飯店著名的自助早餐',
-      transport: '飯店內',
-      location: 'Onyado Nono Kyoto Shichijo',
-      duration: '約1小時',
-      coordinates: [34.9877, 135.7551],
+      time: '08:30-09:00',
+      title: '抵達璃光八坂店',
+      description: '換和服、上洗手間',
+      transport: '計程車 x1',
+      location: '八坂神社',
+      duration: '約30分鐘',
+      coordinates: [35.0036, 135.7810],
       details: {
-        japaneseInfo: null,
-        notes: '飯店餐廳',
+        japaneseInfo: '八坂神社（やさかじんじゃ）の近くまでお願いします。\n(祇園の交差点付近です)',
+        notes: '換和服、上洗手間',
         kkdayLink: null
       }
     },
     {
       time: '09:00-11:30',
-      title: '和服體驗(璃光八坂店) & 八坂神社周邊',
-      description: '八坂神社(和服體驗)',
-      transport: '計程車 x1',
-      location: '八坂神社',
+      title: '八坂神社 → 圓山公園 → 花見小路（和服拍照）',
+      description: '和服拍照路線（平坦、適合慢走）',
+      transport: '走路',
+      location: '八坂神社、圓山公園、花見小路',
       duration: '約2.5小時',
       coordinates: [35.0036, 135.7810],
-      mustVisit: '八坂神社、圓山公園',
+      mustVisit: '八坂神社本殿、圓山公園、花見小路',
       details: {
-        japaneseInfo: '八坂神社（やさかじんじゃ）の近くまでお願いします。\n(祇園の交差点付近です)',
-        notes: '活動：1. 和服換裝：預約 9:00 開門的店家 (建議找八坂神社/祇園附近的店，如岡本祇園店、璃光和服，梨花和服等)。2. 拍照與散步：換好裝後，先在八坂神社朱紅色樓門、圓山公園拍照。',
+        japaneseInfo: null,
+        notes: '拍照路線（平坦、適合慢走）：1. 八坂神社本殿  2. 圓山公園（椅子多、樹蔭多）3. 花見小路（早上人少、好拍）',
         kkdayLink: null
       }
     },
     {
       time: '11:30-12:00',
-      title: '歸還和服',
-      description: '歸還和服',
+      title: '返回璃光八坂店・歸還和服',
+      description: '換回一般衣物與好走的鞋、上洗手間、稍作休息',
       transport: '走路',
-      location: '八坂神社附近',
+      location: '璃光八坂店',
       duration: '約30分鐘',
       coordinates: [35.0036, 135.7810],
       details: {
         japaneseInfo: null,
-        notes: '歸還和服裝',
+        notes: '關鍵調整說明：拍照後立刻還和服，避免下午清水寺與二三年坂行走不便，上廁所困難',
         kkdayLink: null
       }
     },
     {
-      time: '11:30-13:00',
-      title: '午餐：在祇園/八坂神社周邊用餐',
-      description: '在祇園/八坂神社周邊用餐',
+      time: '12:15-13:30',
+      title: '午餐｜祇園 鰻川藤',
+      description: '鰻魚飯（熟食、口味溫和）',
       transport: '走路',
-      location: '祇園/八坂神社',
-      duration: '約1.5小時',
-      coordinates: [35.0036, 135.7810],
-      lunchOptions: 'らぁ〜めん京 (Ramen Miyako Gion Main Shop)',
+      location: '祇園',
+      duration: '約1小時15分',
+      coordinates: [35.0044, 135.7740],
+      mustEat: '鰻魚飯',
+      lunchOptions: '祇園 鰻川藤',
       restaurants: {
         lunch: [
-          { name: 'らぁ〜めん京 (Ramen Miyako Gion Main Shop)', location: '八阪神社旁', note: '拉麵店' }
+          { name: '祇園 鰻川藤', location: '祇園', note: '鰻魚飯（熟食、口味溫和），建議坐滿 60–75 分鐘，吃完不急著走' }
         ]
       },
       details: {
         japaneseInfo: null,
-        notes: '地點：在祇園/八坂神社周邊用餐。推薦：らぁ〜めん京 (Ramen Miyako Gion Main Shop) 八阪神社旁的拉麵店',
+        notes: '從八坂神社一帶步行可達。鰻魚飯（熟食、口味溫和）。建議坐滿 60–75 分鐘，吃完不急著走',
         kkdayLink: null
       }
     },
     {
-      time: '13:00-13:30',
-      title: '移動至清水寺 (避開上坡)',
-      description: '搭車到清水寺上方',
-      transport: '計程車 x1',
-      location: '清水寺',
+      time: '13:30-14:00',
+      title: '安井金比羅宮（縁切り縁結び）',
+      description: '縁切り縁結び碑',
+      transport: '走路',
+      location: '安井金比羅宮',
       duration: '約30分鐘',
+      coordinates: [35.0030, 135.7790],
+      mustVisit: '縁切り縁結び碑',
+      details: {
+        japaneseInfo: null,
+        notes: '從午餐地點步行約 8–10 分鐘。路線平坦，適合長輩。參拜重點：縁切り縁結び碑。可不鑽洞，只在旁邊合掌參拜或拍照。停留約 20–30 分鐘即可',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '14:00-14:20',
+      title: '搭計程車 → 清水道 / 五条坂',
+      description: '整天最重要的一次搭車，省去隱形上坡',
+      transport: '計程車 x1',
+      location: '清水道',
+      duration: '約20分鐘',
       coordinates: [34.9949, 135.7850],
       details: {
         japaneseInfo: '清水寺の茶わん坂（ちゃわんざか）、仁王門の近くまでお願いします。\n(坂道を上がりきったところです)',
-        notes: '關鍵策略：穿著和服不適合走長上坡，吃飽後直接搭車到清水寺上方。指定下車點：茶碗坂 (Chawanzaka) 靠近仁王門處。這樣下車走幾步路就是清水寺門口了。',
+        notes: '整天最重要的一次搭車。省去隱形上坡。下車後只剩短距離緩坡',
         kkdayLink: null
       }
     },
     {
-      time: '13:30-15:00',
-      title: '清水寺參拜',
-      description: '參拜清水舞台、地主神社、音羽之瀧',
+      time: '14:30-15:30',
+      title: '清水寺',
+      description: '清水舞台、本堂周邊',
       transport: '走路',
       location: '清水寺',
-      duration: '約1.5小時',
+      duration: '約1小時',
       coordinates: [34.9949, 135.7850],
-      mustVisit: '清水舞台、地主神社、音羽之瀧',
+      mustVisit: '清水舞台、本堂',
       details: {
         japaneseInfo: null,
-        notes: '活動：參拜清水舞台、地主神社、音羽之瀧。穿和服在這裡拍照是經典中的經典。',
+        notes: '建議參觀範圍：清水舞台、本堂周邊',
         kkdayLink: null
       }
     },
     {
-      time: '15:00-16:30',
-      title: '二三年坂散策 (回程下坡)',
-      description: '從清水寺走下來 → 三年坂 → 二年坂',
+      time: '15:30-17:00',
+      title: '二三年坂 → 產寧坂（一路下坡慢慢逛）',
+      description: '必逛/必吃店家',
       transport: '走路',
-      location: '二三年坂',
+      location: '二三年坂、產寧坂',
       duration: '約1.5小時',
       coordinates: [35.0064, 135.7850],
-      mustVisit: '三年坂、二年坂',
+      mustVisit: '二年坂 かさぎ屋、一保堂茶舖、Snoopy 茶屋、茶房 二三年坂',
+      mustEat: '熱紅豆湯（ぜんざい）、糰子、煎茶、抹茶＋和菓子',
       details: {
         japaneseInfo: null,
-        notes: '路線：從清水寺走下來 → 三年坂 → 二年坂。這段路是下坡，穿和服走起來比較輕鬆。必逛/必吃：藤菜美 (糰子)、橡子共和國 (龍貓)、Starbucks 二寧坂茶屋店 (榻榻米星巴克)。',
+        notes: '必逛/必吃（依動線）：🍡 二年坂 かさぎ屋（Kasagiya）推薦：熱紅豆湯（ぜんざい）、糰子，有座位，適合第一個休息點｜🍵 一保堂茶舖（清水店）推薦：煎茶、焙茶，可購買小包裝茶葉作為伴手禮｜🧸 Snoopy 茶屋 只逛不排隊，看裝潢、拍照即可｜🍵 茶房 二三年坂 推薦：抹茶＋和菓子，環境安靜，適合作為最後休息站。注意事項：石板路慢走、防滑鞋。此時已換回一般鞋，行走更安全',
         kkdayLink: null
       }
     },
     {
-      time: '16:30-17:30',
-      title: '祇園＆四條河原町散策',
-      description: '一路逛回八坂神社附近',
-      transport: '走路',
-      location: '祇園、四條河原町',
+      time: '17:30-18:30',
+      title: '晚餐（擇一，長輩友善）',
+      description: '京都站或附近區域晚餐',
+      transport: '走路或計程車',
+      location: '京都站、伊勢丹',
       duration: '約1小時',
-      coordinates: [35.0036, 135.7810],
-      details: {
-        japaneseInfo: null,
-        notes: '一路逛回八坂神社附近。',
-        kkdayLink: null
-      }
-    },
-    {
-      time: '18:00',
-      title: '晚餐',
-      description: '祇園鰻川藤 (Gion Unagi Kawato) - 鰻魚飯，需先預約',
-      location: '祇園',
-      duration: '約1小時',
-      coordinates: [35.0044, 135.7740],
-      dinnerOptions: '祇園鰻川藤 (Gion Unagi Kawato)',
+      coordinates: [34.9854, 135.7581],
+      dinnerOptions: '名代 とんかつ かつくら、京都勝牛、京都拉麵小路、奥丹（湯豆腐）',
       restaurants: {
         dinner: [
-          { name: '祇園鰻川藤 (Gion Unagi Kawato)', location: '祇園', note: '鰻魚飯，環境優美需先訂位' }
+          { name: '名代 とんかつ かつくら（京都站 / 伊勢丹）', location: '京都站', note: '🥇 炸豬排定食，非牛、全熟、座位舒適' },
+          { name: '京都勝牛（點豬排）', location: '京都站', note: '🥈 點餐時註明不要牛，分店多、方便' },
+          { name: '京都拉麵小路（京都站 10F）', location: '京都站', note: '🍜 建議選：雞白湯 / 醬油 / 鹽味拉麵，有電梯、選擇多' },
+          { name: '奥丹（湯豆腐）', location: '京都站附近', note: '🍲 清爽熟食，適合晚上想吃清淡一點' }
         ]
       },
       details: {
         japaneseInfo: null,
-        notes: '推薦餐廳：祇園鰻川藤 (Gion Unagi Kawato) - 鰻魚飯，環境優美需先預約',
+        notes: '推薦餐廳（擇一，長輩友善）：🥇 名代 とんかつ かつくら（京都站 / 伊勢丹）｜🥈 京都勝牛（點豬排）｜🍜 京都拉麵小路（京都站 10F）｜🍲 奥丹（湯豆腐）',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '19:00',
+      title: '返回飯店｜御宿野乃 京都七條',
+      description: '不再安排夜間景點，早點休息',
+      transport: '走路',
+      location: '御宿野乃 京都七條',
+      duration: '休息',
+      coordinates: [34.9877, 135.7551],
+      details: {
+        japaneseInfo: null,
+        notes: '不再安排夜間景點，早點休息',
         kkdayLink: null
       }
     }
@@ -289,151 +310,236 @@ export const itineraryData = {
   ],
   day4: [
     {
-      time: '07:30-08:30',
-      title: '飯店早餐',
-      description: '享受飯店自助早餐',
-      transport: '飯店內',
-      location: 'KOKO HOTEL Osaka Namba',
+      time: '08:30-09:00',
+      title: '飯店出發 → 森之宮站',
+      description: '地鐵移動約 15–20 分鐘',
+      transport: '地鐵',
+      location: '森之宮站',
+      duration: '約30分鐘',
+      coordinates: [34.6873, 135.5262],
+      subway: '日本橋站 → 森之宮站（中央線 / 長堀鶴見綠地線）',
+      details: {
+        japaneseInfo: null,
+        notes: '建議下車站：森之宮站（中央線 / 長堀鶴見綠地線）。出站後步行約 3–5 分鐘即可抵達大阪城路面小火車站',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '09:00-09:20',
+      title: '大阪城路面小火車（進城）',
+      description: '從森之宮站搭乘小火車進大阪城',
+      transport: '路面小火車',
+      location: '大阪城',
+      duration: '約20分鐘',
+      coordinates: [34.6873, 135.5262],
+      mustVisit: '大阪城路面小火車',
+      details: {
+        japaneseInfo: null,
+        notes: '從森之宮站搭乘小火車進大阪城。使用大阪周遊卡免費。坐著進入大阪城核心區。省去公園內 20 分鐘以上步行',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '09:20-10:30',
+      title: '大阪城天守閣',
+      description: '參觀天守閣及觀景台',
+      transport: '走路',
+      location: '大阪城天守閣',
+      duration: '約1小時10分',
+      coordinates: [34.6873, 135.5262],
+      mustVisit: '大阪城天守閣',
+      details: {
+        japaneseInfo: null,
+        notes: '使用大阪周遊卡免費入場。建議參觀重點樓層＋觀景台',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '10:30-11:00',
+      title: '（選擇性）大阪城御座船',
+      description: '船程約 20–30 分鐘',
+      transport: '遊船',
+      location: '大阪城護城河',
+      duration: '約30分鐘',
+      coordinates: [34.6873, 135.5262],
+      mustVisit: '大阪城御座船',
+      details: {
+        japaneseInfo: null,
+        notes: '船程約 20–30 分鐘。幾乎不需走路，輕鬆拍照',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '11:00-11:20',
+      title: '大阪城路面小火車（出城）',
+      description: '從天守閣周邊搭乘小火車回森之宮站',
+      transport: '路面小火車',
+      location: '森之宮站',
+      duration: '約20分鐘',
+      coordinates: [34.6873, 135.5262],
+      details: {
+        japaneseInfo: null,
+        notes: '從天守閣周邊搭乘小火車。搭乘方向：森之宮站。下車後步行 3–5 分鐘即可回到地鐵站',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '11:30-12:30',
+      title: '移動 → 新世界｜午餐',
+      description: '新世界 かわち屋 本店',
+      transport: '地鐵',
+      location: '新世界',
       duration: '約1小時',
-      coordinates: [34.6658, 135.5043],
+      coordinates: [34.6525, 135.5063],
+      subway: '森之宮站 → 中央線 → 堺筋本町 → 轉堺筋線 → 恵美須町站',
+      mustEat: '熟食定食、串炸',
+      lunchOptions: '新世界 かわち屋 本店',
+      restaurants: {
+        lunch: [
+          { name: '新世界 かわち屋 本店', location: '新世界', note: '熟食定食、串炸，建議60分鐘' }
+        ]
+      },
       details: {
         japaneseInfo: null,
-        notes: '飯店餐廳',
+        notes: '地鐵路線建議：森之宮站 → 中央線 → 堺筋本町，轉堺筋線 → 恵美須町站。午餐：新世界 かわち屋 本店 - 熟食定食、串炸，建議60分鐘',
         kkdayLink: null
       }
     },
     {
-      time: '08:30',
-      title: '飯店出發',
-      description: '飯店出發，步行約10分鐘',
-      transport: '步行',
-      location: 'KOKO HOTEL Osaka Namba',
-      duration: '約10分鐘',
-      coordinates: [34.6658, 135.5043],
+      time: '12:30-14:00',
+      title: '通天閣展望台＋新世界散步',
+      description: '展望台拍照＋新世界街區自由散步',
+      transport: '走路',
+      location: '通天閣、新世界',
+      duration: '約1.5小時',
+      coordinates: [34.6525, 135.5063],
+      mustVisit: '通天閣展望台',
       details: {
         japaneseInfo: null,
-        notes: '步行前往難波八阪神社',
+        notes: '步行 3–5 分鐘。使用大阪周遊卡登通天閣。展望台拍照後慢慢下樓。新世界街區自由散步',
         kkdayLink: null
       }
     },
     {
-      time: '08:40-09:30',
-      title: '難波八阪神社',
-      description: '巨大獅子頭舞台 (吸厄運)',
-      transport: '步行',
+      time: '14:00-14:30',
+      title: '移動 → 難波八阪神社',
+      description: '地鐵返回日本橋站，步行約 5 分鐘',
+      transport: '地鐵＋走路',
       location: '難波八阪神社',
-      duration: '約50分鐘',
+      duration: '約30分鐘',
+      coordinates: [34.6628, 135.5011],
+      subway: '恵美須町站 → 日本橋站',
+      details: {
+        japaneseInfo: null,
+        notes: '地鐵返回日本橋站。步行約 5 分鐘',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '14:30-14:50',
+      title: '難波八阪神社',
+      description: '拍照、參拜',
+      transport: '走路',
+      location: '難波八阪神社',
+      duration: '約20分鐘',
       coordinates: [34.6628, 135.5011],
       mustVisit: '巨大獅子頭舞台',
       details: {
         japaneseInfo: null,
-        notes: '拍照巨大獅子頭舞台',
+        notes: '拍照、參拜。停留約 15–20 分鐘',
         kkdayLink: null
       }
     },
     {
-      time: '09:30-11:00',
-      title: '大阪城公園',
-      description: '搭乘路面小火車進入園區，體驗大阪城御座船遊覽護城河',
-      transport: '地鐵',
-      location: '大阪城公園',
-      duration: '約1小時30分鐘',
-      coordinates: [34.6873, 135.5262],
-      subway: '難波站 (御堂筋線) → 本町 (轉中央線) → 森之宮站 (3-B出口有電梯)',
-      mustVisit: '路面小火車、大阪城御座船',
-      details: {
-        japaneseInfo: null,
-        notes: '交通：難波站 (御堂筋線) → 本町 (轉中央線) → 森之宮站 (3-B出口有電梯)。活動：搭乘路面小火車進入園區，體驗大阪城御座船遊覽護城河。',
-        kkdayLink: null
-      }
-    },
-    {
-      time: '11:30-13:00',
-      title: '新世界散策 & 串炸午餐',
-      description: '與通天閣合影拍照，並享用串炸達摩或橫綱串炸',
-      transport: '地鐵',
-      location: '新世界、通天閣',
-      duration: '約1小時30分鐘',
-      coordinates: [34.6525, 135.5063],
-      subway: '森之宮站 (中央線) → 堺筋本町 (轉堺筋線) → 動物園前站',
-      mustEat: '串炸 (Kushikatsu)',
-      lunchOptions: '串炸達摩或橫綱串炸',
-      restaurants: {
-        lunch: [
-          { name: '串炸達摩 Kushikatsu Daruma', location: '大阪新世界', note: '大阪名物串炸' },
-          { name: '橫綱串炸', location: '大阪新世界', note: '知名串炸店' }
-        ]
-      },
-      details: {
-        japaneseInfo: null,
-        notes: '交通：森之宮站 (中央線) → 堺筋本町 (轉堺筋線) → 動物園前站。活動：與通天閣合影拍照，並享用串炸達摩或橫綱串炸。',
-        kkdayLink: null
-      }
-    },
-    {
-      time: '13:30-16:15',
-      title: 'NAMBA PARKS 或 心齋橋 PARCO (二選一)',
-      description: 'NAMBA PARKS：適合想看綠地花園、追求安靜休憩環境、且離難波飯店近。心齋橋 PARCO：適合 10 歲小孩想逛寶可夢中心、任天堂商店 (但人潮較擠)',
-      transport: '地鐵',
-      location: 'NAMBA PARKS 或 心齋橋 PARCO 百貨',
-      duration: '約2小時45分鐘',
-      coordinates: [34.6739, 135.5011],
-      subway: '動物園前站 (御堂筋線) → 天王寺站 (御堂筋線) → 心齋橋站',
-      mustVisit: 'NAMBA PARKS：綠地花園 | PARCO：6F 玩具/寶可夢區/橡子共和國',
-      details: {
-        japaneseInfo: null,
-        notes: '* NAMBA PARKS：適合想看綠地花園、追求安靜休憩環境、且離難波飯店近。* 心齋橋 PARCO：適合 10 歲小孩想逛寶可夢中心、任天堂商店 (但人潮較擠)。',
-        kkdayLink: null
-      }
-    },
-    {
-      time: '16:15-17:00',
-      title: '唐吉訶德惠比壽摩天輪',
-      description: '搭乘摩天輪俯瞰道頓堀河景',
-      transport: '步行',
+      time: '15:00-15:30',
+      title: '唐吉軻德 道頓堀店摩天輪（白天）',
+      description: '使用大阪周遊卡免費搭乘',
+      transport: '走路',
       location: '道頓堀',
-      duration: '約45分鐘',
+      duration: '約30分鐘',
       coordinates: [34.6686, 135.5011],
-      mustVisit: '唐吉訶德惠比壽摩天輪',
+      mustVisit: '唐吉軻德摩天輪',
       details: {
         japaneseInfo: null,
-        notes: '搭乘摩天輪從河岸高處俯瞰道頓堀夜景。',
+        notes: '從神社步行至道頓堀（約 8–10 分鐘）。使用大阪周遊卡免費搭乘。白天視野清楚、排隊較短。屬於「坐著休息型」景點',
         kkdayLink: null
       }
     },
     {
-      time: '17:20-18:45',
-      title: '晚餐時間',
-      description: '享用晚餐',
-      transport: '步行',
+      time: '15:30-17:00',
+      title: '道頓堀自由活動／休息',
+      description: '河岸拍照、慢慢逛街',
+      transport: '走路',
       location: '道頓堀',
-      duration: '約1小時25分鐘',
+      duration: '約1.5小時',
       coordinates: [34.6686, 135.5011],
-      dinnerOptions: '大起水產迴轉壽司或千房大阪燒',
+      details: {
+        japaneseInfo: null,
+        notes: '河岸拍照、慢慢逛街。建議找咖啡店或甜點店坐著。為晚餐與夜間觀光船保留體力',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '17:30-18:30',
+      title: '晚餐（道頓堀／難波）',
+      description: '不排隊、可久坐、離碼頭近',
+      transport: '走路',
+      location: '道頓堀',
+      duration: '約1小時',
+      coordinates: [34.6686, 135.5011],
+      dinnerOptions: '千房大阪燒 (道頓堀ビル店)、大起水產迴轉壽司 (道頓堀店)',
       restaurants: {
         dinner: [
-          { name: '大起水產迴轉壽司', location: '大阪道頓堀', note: '平價迴轉壽司，高CP值與多樣性' },
-          { name: '千房大阪燒 Chibo', location: '大阪道頓堀', note: '大阪燒名店' }
+          { name: '千房大阪燒 (道頓堀ビル店)', location: '道頓堀', note: '大阪燒名店' },
+          { name: '大起水產迴轉壽司 (道頓堀店)', location: '道頓堀', note: '迴轉壽司，高CP值與多樣性' }
         ]
       },
       details: {
         japaneseInfo: null,
-        notes: '推薦餐廳：大起水產迴轉壽司 或 千房大阪燒。需在 18:45 前用餐完畢，步行至碼頭報到。',
+        notes: '建議選擇：千房大阪燒 (道頓堀ビル店)、大起水產迴轉壽司 (道頓堀店)。原則：不排隊、可久坐、離碼頭近',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '18:30-18:50',
+      title: '步行至碼頭＋休息',
+      description: '飯後慢慢走到道頓堀碼頭',
+      transport: '走路',
+      location: '道頓堀碼頭',
+      duration: '約20分鐘',
+      coordinates: [34.6686, 135.5011],
+      details: {
+        japaneseInfo: null,
+        notes: '飯後慢慢走到道頓堀碼頭。在碼頭附近座位休息。不趕時間、不奔跑',
         kkdayLink: null
       }
     },
     {
       time: '19:00-19:30',
-      title: '道頓堀水上觀光船 (Wonder Cruise)',
-      description: '體驗夜晚最華麗的格力高跑跑人燈海',
-      transport: '步行',
+      title: '道頓堀水上觀光船（夜景）',
+      description: '夜景完整、招牌全亮',
+      transport: '遊船',
       location: '道頓堀',
       duration: '約30分鐘',
       coordinates: [34.6686, 135.5011],
       mustVisit: 'Wonder Cruise',
       details: {
         japaneseInfo: null,
-        notes: '已預約 19:00 班次，準時搭船，體驗夜晚最華麗的格力高跑跑人燈海。',
+        notes: '夜景完整、招牌全亮。使用大阪周遊卡免費。是整天最放鬆的一段行程',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '19:30-20:00',
+      title: '返回飯店',
+      description: '從道頓堀步行或短程地鐵',
+      transport: '走路或地鐵',
+      location: 'KOKO HOTEL Osaka Namba',
+      duration: '約30分鐘',
+      coordinates: [34.6658, 135.5043],
+      details: {
+        japaneseInfo: null,
+        notes: '從道頓堀步行或短程地鐵。回飯店時間不晚。洗澡、休息，結束一天',
         kkdayLink: null
       }
     }
