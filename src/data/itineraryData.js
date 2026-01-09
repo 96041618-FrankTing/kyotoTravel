@@ -192,6 +192,7 @@ export const itineraryData = {
           { name: '奥丹（湯豆腐）', location: '京都站附近', note: '🍲 清爽熟食，適合晚上想吃清淡一點' }
         ]
       },
+      category: 'main',
       details: {
         japaneseInfo: null,
         notes: '推薦餐廳（擇一，長輩友善）：🥇 名代 とんかつ かつくら（京都站 / 伊勢丹）｜🥈 京都勝牛（點豬排）｜🍜 京都拉麵小路（京都站 10F）｜🍲 奥丹（湯豆腐）',
@@ -206,6 +207,7 @@ export const itineraryData = {
       location: '御宿野乃 京都七條',
       duration: '休息',
       coordinates: [34.9877, 135.7551],
+      category: 'main',
       details: {
         japaneseInfo: null,
         notes: '不再安排夜間景點，早點休息',
@@ -318,6 +320,7 @@ export const itineraryData = {
       duration: '約30分鐘',
       coordinates: [34.6873, 135.5262],
       subway: '日本橋站 → 森之宮站（中央線 / 長堀鶴見綠地線）',
+      category: 'main',
       details: {
         japaneseInfo: null,
         notes: '建議下車站：森之宮站（中央線 / 長堀鶴見綠地線）。出站後步行約 3–5 分鐘即可抵達大阪城路面小火車站',
@@ -333,9 +336,10 @@ export const itineraryData = {
       duration: '約20分鐘',
       coordinates: [34.6873, 135.5262],
       mustVisit: '大阪城路面小火車',
+      category: 'main',
       details: {
         japaneseInfo: null,
-        notes: '從森之宮站搭乘小火車進大阪城。使用大阪周遊卡免費。坐著進入大阪城核心區。省去公園內 20 分鐘以上步行',
+        notes: '交通：小火車（周遊卡）。省去公園內 20 分鐘以上步行',
         kkdayLink: null
       }
     },
@@ -348,38 +352,72 @@ export const itineraryData = {
       duration: '約1小時10分',
       coordinates: [34.6873, 135.5262],
       mustVisit: '大阪城天守閣',
+      category: 'main',
       details: {
         japaneseInfo: null,
-        notes: '使用大阪周遊卡免費入場。建議參觀重點樓層＋觀景台',
+        notes: '重點樓層＋觀景台即可，不必硬走全館',
         kkdayLink: null
       }
     },
     {
-      time: '10:30-11:00',
-      title: '（選擇性）大阪城御座船',
-      description: '船程約 20–30 分鐘',
-      transport: '遊船',
-      location: '大阪城護城河',
-      duration: '約30分鐘',
+      time: '10:30-11:20',
+      title: '【備用插槽 A】室內景點選項',
+      description: '觸發：天守閣逛很快／天氣冷風大／雨天想去室內坐一下',
+      transport: '步行/地鐵',
+      location: '大阪城周邊',
+      duration: '約30-50分鐘',
       coordinates: [34.6873, 135.5262],
-      mustVisit: '大阪城御座船',
+      category: 'backup-slot',
       details: {
         japaneseInfo: null,
-        notes: '船程約 20–30 分鐘。幾乎不需走路，輕鬆拍照',
+        notes: '選 1 個就好（不選也可以，直接走主行程）。建議 11:20 前收尾，避免影響移動＋午餐',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '10:30-11:15',
+      title: '海洋堂模型博物館（親子超推）',
+      description: 'KAIYODO FIGURE MUSEUM MIRAIZA OSAKA-JO',
+      transport: '步行',
+      location: '大阪城園區內',
+      duration: '約30-45分鐘',
+      coordinates: [34.6873, 135.5262],
+      mustVisit: '模型博物館',
+      category: 'backup-option',
+      details: {
+        japaneseInfo: null,
+        notes: '周遊卡｜室內｜親子超推。在大阪城園區內（多為平路），走到「ミライザ大阪城」即可',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '10:30-11:20',
+      title: 'Peace Osaka（大阪國際和平中心）',
+      description: '大阪國際和平中心',
+      transport: '地鐵',
+      location: '森之宮/谷町四丁目',
+      duration: '約30-50分鐘',
+      coordinates: [34.6873, 135.5262],
+      mustVisit: '和平中心',
+      category: 'backup-option',
+      details: {
+        japaneseInfo: null,
+        notes: '周遊卡｜室內。地鐵「森之宮」或「谷町四丁目」周邊步行',
         kkdayLink: null
       }
     },
     {
       time: '11:00-11:20',
-      title: '大阪城路面小火車（出城）',
+      title: '大阪城路面小火車（出城回森之宮）',
       description: '從天守閣周邊搭乘小火車回森之宮站',
       transport: '路面小火車',
       location: '森之宮站',
       duration: '約20分鐘',
       coordinates: [34.6873, 135.5262],
+      category: 'main',
       details: {
         japaneseInfo: null,
-        notes: '從天守閣周邊搭乘小火車。搭乘方向：森之宮站。下車後步行 3–5 分鐘即可回到地鐵站',
+        notes: '避免走回公園出口（省體力）',
         kkdayLink: null
       }
     },
@@ -394,6 +432,7 @@ export const itineraryData = {
       subway: '森之宮站 → 中央線 → 堺筋本町 → 轉堺筋線 → 恵美須町站',
       mustEat: '熟食定食、串炸',
       lunchOptions: '新世界 かわち屋 本店',
+      category: 'main',
       restaurants: {
         lunch: [
           { name: '新世界 かわち屋 本店', location: '新世界', note: '熟食定食、串炸，建議60分鐘' }
@@ -407,16 +446,48 @@ export const itineraryData = {
     },
     {
       time: '12:30-14:00',
-      title: '通天閣展望台＋新世界散步',
-      description: '展望台拍照＋新世界街區自由散步',
-      transport: '走路',
-      location: '通天閣、新世界',
-      duration: '約1.5小時',
+      title: '【備用插槽 B】室內景點選項',
+      description: '觸發：不想逛新世界／天氣差／吃完午餐還有時間',
+      transport: '地鐵',
+      location: '大阪市區',
+      duration: '約1-1.5小時',
       coordinates: [34.6525, 135.5063],
-      mustVisit: '通天閣展望台',
+      category: 'backup-slot',
       details: {
         japaneseInfo: null,
-        notes: '步行 3–5 分鐘。使用大阪周遊卡登通天閣。展望台拍照後慢慢下樓。新世界街區自由散步',
+        notes: '選 1 個替換「通天閣＋新世界散步」。選 B1 最不吃語言也最少走路',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '12:30-14:00',
+      title: '大阪今昔館（最推薦）',
+      description: 'Osaka Museum of Housing and Living',
+      transport: '地鐵',
+      location: '天神橋筋六丁目',
+      duration: '約60-90分鐘',
+      coordinates: [34.6525, 135.5063],
+      mustVisit: '今昔館',
+      category: 'backup-option',
+      details: {
+        japaneseInfo: null,
+        notes: '周遊卡｜室內｜最推薦。從恵美須町站（堺筋線）→ 天神橋筋六丁目站，出站即到（幾乎不走路）',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '12:30-14:00',
+      title: '國立國際美術館',
+      description: 'The National Museum of Art, Osaka',
+      transport: '地鐵',
+      location: '肥後橋/渡邊橋',
+      duration: '約45-75分鐘',
+      coordinates: [34.6525, 135.5063],
+      mustVisit: '美術館',
+      category: 'backup-option',
+      details: {
+        japaneseInfo: null,
+        notes: '周遊卡｜室內。若你們想換成「安靜室內」，從堺筋線轉到肥後橋／渡邊橋一帶（中途需轉乘）',
         kkdayLink: null
       }
     },
@@ -429,6 +500,7 @@ export const itineraryData = {
       duration: '約30分鐘',
       coordinates: [34.6628, 135.5011],
       subway: '恵美須町站 → 日本橋站',
+      category: 'main',
       details: {
         japaneseInfo: null,
         notes: '地鐵返回日本橋站。步行約 5 分鐘',
@@ -444,6 +516,7 @@ export const itineraryData = {
       duration: '約20分鐘',
       coordinates: [34.6628, 135.5011],
       mustVisit: '巨大獅子頭舞台',
+      category: 'main',
       details: {
         japaneseInfo: null,
         notes: '拍照、參拜。停留約 15–20 分鐘',
@@ -459,23 +532,57 @@ export const itineraryData = {
       duration: '約30分鐘',
       coordinates: [34.6686, 135.5011],
       mustVisit: '唐吉軻德摩天輪',
+      category: 'main',
       details: {
         japaneseInfo: null,
-        notes: '從神社步行至道頓堀（約 8–10 分鐘）。使用大阪周遊卡免費搭乘。白天視野清楚、排隊較短。屬於「坐著休息型」景點',
+        notes: '白天視野清楚、排隊通常比較短',
         kkdayLink: null
       }
     },
     {
       time: '15:30-17:00',
-      title: '道頓堀自由活動／休息',
-      description: '河岸拍照、慢慢逛街',
-      transport: '走路',
+      title: '【備用插槽 C】道頓堀室內活動選項',
+      description: '觸發：道頓堀逛很快／長輩想坐著／不想一直走',
+      transport: '步行',
       location: '道頓堀',
-      duration: '約1.5小時',
+      duration: '約30分鐘-1.5小時',
       coordinates: [34.6686, 135.5011],
+      category: 'backup-slot',
       details: {
         japaneseInfo: null,
-        notes: '河岸拍照、慢慢逛街。建議找咖啡店或甜點店坐著。為晚餐與夜間觀光船保留體力',
+        notes: '選 1 個或直接咖啡店休息',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '15:30-16:15',
+      title: '上方浮世繪館',
+      description: 'Kamigata Ukiyoe Museum',
+      transport: '步行',
+      location: '道頓堀/難波',
+      duration: '約30-45分鐘',
+      coordinates: [34.6686, 135.5011],
+      mustVisit: '浮世繪館',
+      category: 'backup-option',
+      details: {
+        japaneseInfo: null,
+        notes: '周遊卡｜室內。以視覺展品為主，不懂日文也能看得懂',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '15:30-17:00',
+      title: '百貨商場休息區',
+      description: '高島屋、Namba Parks、心齋橋地下街',
+      transport: '步行',
+      location: '道頓堀周邊',
+      duration: '約30-90分鐘',
+      coordinates: [34.6686, 135.5011],
+      mustVisit: '商場',
+      category: 'backup-option',
+      details: {
+        japaneseInfo: null,
+        notes: '室內保命點。彈性最大，原地步行即可',
         kkdayLink: null
       }
     },
@@ -525,7 +632,7 @@ export const itineraryData = {
       mustVisit: 'Wonder Cruise',
       details: {
         japaneseInfo: null,
-        notes: '夜景完整、招牌全亮。使用大阪周遊卡免費。是整天最放鬆的一段行程',
+        notes: '建議白天先完成換票／確認，熱門時段可能較滿',
         kkdayLink: null
       }
     },

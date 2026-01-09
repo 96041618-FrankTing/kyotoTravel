@@ -462,7 +462,12 @@
           <template v-for="(item, index) in getCurrentDayItinerary()" :key="index">
             <!-- Itinerary Card -->
             <div
-              class="bg-white rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg transition-shadow duration-200"
+              :class="[
+                'rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg transition-shadow duration-200',
+                item.category === 'main' ? 'bg-white' : '',
+                item.category === 'backup-slot' ? 'bg-amber-50 border-l-4 border-amber-400' : '',
+                item.category === 'backup-option' ? 'bg-blue-50 border-l-4 border-blue-400 ml-4' : ''
+              ]"
               @click="openDetailModal(item)"
             >
               <div class="flex items-start space-x-4">
@@ -472,7 +477,11 @@
                   </div>
                 </div>
                 <div class="flex-1">
-                  <h3 class="text-lg font-semibold text-dark mb-2">{{ item.title }}</h3>
+                  <div class="flex items-center space-x-2 mb-2">
+                    <h3 class="text-lg font-semibold text-dark">{{ item.title }}</h3>
+                    <span v-if="item.category === 'backup-slot'" class="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded-full font-medium">備用插槽</span>
+                    <span v-if="item.category === 'backup-option'" class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full font-medium">備用選項</span>
+                  </div>
                   <p class="text-gray-600 mb-2">{{ item.description }}</p>
                   <div class="flex items-center space-x-4 text-sm text-gray-500">
                     <span v-if="item.transport">🚄 {{ item.transport }}</span>
