@@ -16,12 +16,12 @@ export const itineraryData = {
       }
     },
     {
-      time: '15:30-17:30',
+      time: '15:30-17:00',
       title: '京都車站周邊探險 & 採購',
       description: 'Yodobashi Camera 京都店 (友都八喜)',
       transport: '走路',
       location: '京都車站',
-      duration: '約2小時',
+      duration: '約1.5小時',
       coordinates: [34.9854, 135.7581],
       details: {
         japaneseInfo: null,
@@ -30,33 +30,33 @@ export const itineraryData = {
       }
     },
     {
-      time: '18:00-20:00',
+      time: '17:00-19:00',
       title: '晚餐',
-      description: '東洋亭 (Porta 地下街店) 或 鳥貴族 (京都七條店)',
-      location: '京都車站 Porta 地下街 或 京都七條',
+      description: '鳥貴族 (京都七條店) 或 東洋亭 (Porta 地下街店)',
+      location: '京都七條 或 京都車站 Porta 地下街',
       duration: '約2小時',
       coordinates: [34.9854, 135.7581],
       mustEat: '百年洋食漢堡排、整顆番茄沙拉',
       restaurants: {
         dinner: [
-          { name: '東洋亭 Porta店', location: '京都車站 Porta地下街', note: '百年洋食漢堡排 (鋁箔包著，打開熱氣騰騰)、整顆番茄沙拉' },
-          { name: '鳥貴族 京都七條店', location: '京都七條', note: '全品項均一價的平價串燒居酒屋，離飯店走路僅 3 分鐘，氣氛輕鬆，適合作為第一晚的放鬆餐或宵夜' }
+          { name: '鳥貴族 京都七條店', location: '京都七條', note: '全品項均一價的平價串燒居酒屋，離飯店走路僅 3 分鐘，氣氛輕鬆，適合作為第一晚的放鬆餐或宵夜 (已預約)' },
+          { name: '東洋亭 Porta店', location: '京都車站 Porta地下街', note: '百年洋食漢堡排 (鋁箔包著，打開熱氣騰騰)、整顆番茄沙拉' }
         ]
       },
       details: {
         japaneseInfo: null,
-        notes: '推薦餐廳 1：東洋亭 (Porta 地下街店) - 必吃：百年洋食漢堡排、整顆番茄沙拉。推薦餐廳 2：鳥貴族 (京都七條店) - 特色：全品項均一價的平價串燒居酒屋。',
+        notes: '推薦餐廳 1：鳥貴族 (京都七條店) - 已預約，特色：全品項均一價的平價串燒居酒屋。推薦餐廳 2：東洋亭 (Porta 地下街店) - 必吃：百年洋食漢堡排、整顆番茄沙拉。',
         kkdayLink: null
       }
     }
   ],
   day2: [
     {
-      time: '08:30-09:00',
-      title: '抵達璃光八坂店',
+      time: '08:30–09:00',
+      title: '抵達璃光祇園店',
       description: '換和服、上洗手間',
       transport: '計程車 x1',
-      location: '八坂神社',
+      location: '祇園',
       duration: '約30分鐘',
       coordinates: [35.0036, 135.7810],
       details: {
@@ -66,9 +66,9 @@ export const itineraryData = {
       }
     },
     {
-      time: '09:00-11:30',
+      time: '09:00–11:30',
       title: '八坂神社 → 圓山公園 → 花見小路（和服拍照）',
-      description: '和服拍照路線（平坦、適合慢走）',
+      description: '拍照路線（平坦、適合慢走）',
       transport: '走路',
       location: '八坂神社、圓山公園、花見小路',
       duration: '約2.5小時',
@@ -81,11 +81,11 @@ export const itineraryData = {
       }
     },
     {
-      time: '11:30-12:00',
-      title: '返回璃光八坂店・歸還和服',
+      time: '11:30–12:00',
+      title: '返回璃光祇園店・歸還和服',
       description: '換回一般衣物與好走的鞋、上洗手間、稍作休息',
       transport: '走路',
-      location: '璃光八坂店',
+      location: '璃光祇園店',
       duration: '約30分鐘',
       coordinates: [35.0036, 135.7810],
       details: {
@@ -95,7 +95,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '12:15-13:30',
+      time: '12:15–13:30',
       title: '午餐｜祇園 鰻川藤',
       description: '鰻魚飯（熟食、口味溫和）',
       transport: '走路',
@@ -116,7 +116,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '13:30-14:00',
+      time: '13:30–14:00',
       title: '安井金比羅宮（縁切り縁結び）',
       description: '縁切り縁結び碑',
       transport: '走路',
@@ -126,13 +126,13 @@ export const itineraryData = {
       mustVisit: '縁切り縁結び碑',
       details: {
         japaneseInfo: null,
-        notes: '從午餐地點步行約 8–10 分鐘。路線平坦，適合長輩。參拜重點：縁切り縁結び碑。可不鑽洞，只在旁邊合掌參拜或拍照。停留約 20–30 分鐘即可',
+        notes: '從午餐地點步行約 8–10 分鐘。參拜重點：縁切り縁結び碑。可不鑽洞，只在旁邊合掌參拜或拍照。停留約 20–30 分鐘即可',
         kkdayLink: null
       }
     },
     {
-      time: '14:00-14:20',
-      title: '搭計程車 → 清水道 / 五条坂',
+      time: '14:00–14:20',
+      title: '搭計程車 → 清水道 / 茶碗坂',
       description: '整天最重要的一次搭車，省去隱形上坡',
       transport: '計程車 x1',
       location: '清水道',
@@ -145,7 +145,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '14:30-15:30',
+      time: '14:30–15:30',
       title: '清水寺',
       description: '清水舞台、本堂周邊',
       transport: '走路',
@@ -160,7 +160,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '15:30-17:00',
+      time: '15:30–17:00',
       title: '二三年坂 → 產寧坂（一路下坡慢慢逛）',
       description: '必逛/必吃店家',
       transport: '走路',
@@ -176,8 +176,8 @@ export const itineraryData = {
       }
     },
     {
-      time: '17:30-18:30',
-      title: '晚餐（擇一，長輩友善）',
+      time: '17:30–18:30',
+      title: '晚餐',
       description: '京都站或附近區域晚餐',
       transport: '走路或計程車',
       location: '京都站、伊勢丹',
@@ -314,7 +314,7 @@ export const itineraryData = {
     {
       time: '08:30-09:00',
       title: '飯店出發 → 森之宮站',
-      description: '地鐵移動約 15–20 分鐘',
+      description: '交通：地鐵（目標：森之宮 Morinomiya）',
       transport: '地鐵',
       location: '森之宮站',
       duration: '約30分鐘',
@@ -323,14 +323,14 @@ export const itineraryData = {
       category: 'main',
       details: {
         japaneseInfo: null,
-        notes: '建議下車站：森之宮站（中央線 / 長堀鶴見綠地線）。出站後步行約 3–5 分鐘即可抵達大阪城路面小火車站',
+        notes: '交通：地鐵（目標：森之宮 Morinomiya）',
         kkdayLink: null
       }
     },
     {
       time: '09:00-09:20',
       title: '大阪城路面小火車（進城）',
-      description: '從森之宮站搭乘小火車進大阪城',
+      description: '交通：小火車（周遊卡）',
       transport: '路面小火車',
       location: '大阪城',
       duration: '約20分鐘',
@@ -339,14 +339,14 @@ export const itineraryData = {
       category: 'main',
       details: {
         japaneseInfo: null,
-        notes: '交通：小火車（周遊卡）。省去公園內 20 分鐘以上步行',
+        notes: '交通：小火車（周遊卡）',
         kkdayLink: null
       }
     },
     {
       time: '09:20-10:30',
       title: '大阪城天守閣',
-      description: '參觀天守閣及觀景台',
+      description: '建議：重點樓層＋觀景台即可，不必硬走全館',
       transport: '走路',
       location: '大阪城天守閣',
       duration: '約1小時10分',
@@ -355,61 +355,29 @@ export const itineraryData = {
       category: 'main',
       details: {
         japaneseInfo: null,
-        notes: '重點樓層＋觀景台即可，不必硬走全館',
+        notes: '建議：重點樓層＋觀景台即可，不必硬走全館',
         kkdayLink: null
       }
     },
     {
-      time: '10:30-11:20',
-      title: '【備用插槽 A】室內景點選項',
-      description: '觸發：天守閣逛很快／天氣冷風大／雨天想去室內坐一下',
-      transport: '步行/地鐵',
-      location: '大阪城周邊',
-      duration: '約30-50分鐘',
+      time: '10:30-11:00',
+      title: '【備用插槽 A】大阪城御座船',
+      description: '觸發：天守閣逛得快／天氣冷風大',
+      transport: '大阪城園區內步行',
+      location: '大阪城',
+      duration: '約30分鐘',
       coordinates: [34.6873, 135.5262],
       category: 'backup-slot',
       details: {
         japaneseInfo: null,
-        notes: '選 1 個就好（不選也可以，直接走主行程）。建議 11:20 前收尾，避免影響移動＋午餐',
-        kkdayLink: null
-      }
-    },
-    {
-      time: '10:30-11:15',
-      title: '海洋堂模型博物館（親子超推）',
-      description: 'KAIYODO FIGURE MUSEUM MIRAIZA OSAKA-JO',
-      transport: '步行',
-      location: '大阪城園區內',
-      duration: '約30-45分鐘',
-      coordinates: [34.6873, 135.5262],
-      mustVisit: '模型博物館',
-      category: 'backup-option',
-      details: {
-        japaneseInfo: null,
-        notes: '周遊卡｜室內｜親子超推。在大阪城園區內（多為平路），走到「ミライザ大阪城」即可',
-        kkdayLink: null
-      }
-    },
-    {
-      time: '10:30-11:20',
-      title: 'Peace Osaka（大阪國際和平中心）',
-      description: '大阪國際和平中心',
-      transport: '地鐵',
-      location: '森之宮/谷町四丁目',
-      duration: '約30-50分鐘',
-      coordinates: [34.6873, 135.5262],
-      mustVisit: '和平中心',
-      category: 'backup-option',
-      details: {
-        japaneseInfo: null,
-        notes: '周遊卡｜室內。地鐵「森之宮」或「谷町四丁目」周邊步行',
+        notes: '做法：以下「選 1 個」插入，不選也可直接走主行程。Option A1【坐著休息型】大阪城御座船 - 時長：20–30 分鐘（含等候緩衝）',
         kkdayLink: null
       }
     },
     {
       time: '11:00-11:20',
       title: '大阪城路面小火車（出城回森之宮）',
-      description: '從天守閣周邊搭乘小火車回森之宮站',
+      description: '交通：小火車（周遊卡）',
       transport: '路面小火車',
       location: '森之宮站',
       duration: '約20分鐘',
@@ -417,222 +385,207 @@ export const itineraryData = {
       category: 'main',
       details: {
         japaneseInfo: null,
-        notes: '避免走回公園出口（省體力）',
+        notes: '備註：避免走回公園出口，直接接地鐵最順',
         kkdayLink: null
       }
     },
     {
-      time: '11:30-12:30',
-      title: '移動 → 新世界｜午餐',
-      description: '新世界 かわち屋 本店',
+      time: '11:30-12:00',
+      title: '森之宮 → 日本橋（黑門市場）',
+      description: '交通建議：森之宮 →（中央線）堺筋本町 →（堺筋線）日本橋',
       transport: '地鐵',
-      location: '新世界',
-      duration: '約1小時',
-      coordinates: [34.6525, 135.5063],
-      subway: '森之宮站 → 中央線 → 堺筋本町 → 轉堺筋線 → 恵美須町站',
-      mustEat: '熟食定食、串炸',
-      lunchOptions: '新世界 かわち屋 本店',
-      category: 'main',
-      restaurants: {
-        lunch: [
-          { name: '新世界 かわち屋 本店', location: '新世界', note: '熟食定食、串炸，建議60分鐘' }
-        ]
-      },
-      details: {
-        japaneseInfo: null,
-        notes: '地鐵路線建議：森之宮站 → 中央線 → 堺筋本町，轉堺筋線 → 恵美須町站。午餐：新世界 かわち屋 本店 - 熟食定食、串炸，建議60分鐘',
-        kkdayLink: null
-      }
-    },
-    {
-      time: '12:30-14:00',
-      title: '【備用插槽 B】室內景點選項',
-      description: '觸發：不想逛新世界／天氣差／吃完午餐還有時間',
-      transport: '地鐵',
-      location: '大阪市區',
-      duration: '約1-1.5小時',
-      coordinates: [34.6525, 135.5063],
-      category: 'backup-slot',
-      details: {
-        japaneseInfo: null,
-        notes: '選 1 個替換「通天閣＋新世界散步」。選 B1 最不吃語言也最少走路',
-        kkdayLink: null
-      }
-    },
-    {
-      time: '12:30-14:00',
-      title: '大阪今昔館（最推薦）',
-      description: 'Osaka Museum of Housing and Living',
-      transport: '地鐵',
-      location: '天神橋筋六丁目',
-      duration: '約60-90分鐘',
-      coordinates: [34.6525, 135.5063],
-      mustVisit: '今昔館',
-      category: 'backup-option',
-      details: {
-        japaneseInfo: null,
-        notes: '周遊卡｜室內｜最推薦。從恵美須町站（堺筋線）→ 天神橋筋六丁目站，出站即到（幾乎不走路）',
-        kkdayLink: null
-      }
-    },
-    {
-      time: '12:30-14:00',
-      title: '國立國際美術館',
-      description: 'The National Museum of Art, Osaka',
-      transport: '地鐵',
-      location: '肥後橋/渡邊橋',
-      duration: '約45-75分鐘',
-      coordinates: [34.6525, 135.5063],
-      mustVisit: '美術館',
-      category: 'backup-option',
-      details: {
-        japaneseInfo: null,
-        notes: '周遊卡｜室內。若你們想換成「安靜室內」，從堺筋線轉到肥後橋／渡邊橋一帶（中途需轉乘）',
-        kkdayLink: null
-      }
-    },
-    {
-      time: '14:00-14:30',
-      title: '移動 → 難波八阪神社',
-      description: '地鐵返回日本橋站，步行約 5 分鐘',
-      transport: '地鐵＋走路',
-      location: '難波八阪神社',
+      location: '黑門市場',
       duration: '約30分鐘',
       coordinates: [34.6628, 135.5011],
-      subway: '恵美須町站 → 日本橋站',
+      subway: '森之宮站 → 中央線 → 堺筋本町 → 堺筋線 → 日本橋站',
       category: 'main',
       details: {
         japaneseInfo: null,
-        notes: '地鐵返回日本橋站。步行約 5 分鐘',
+        notes: '備註：日本橋站到黑門市場步行約 5–10 分鐘（視入口）',
         kkdayLink: null
       }
     },
     {
-      time: '14:30-14:50',
-      title: '難波八阪神社',
-      description: '拍照、參拜',
+      time: '12:00-13:10',
+      title: '黑門市場午餐＋坐下休息',
+      description: '吃法建議（不排隊，分食，以「有座位」優先）',
       transport: '走路',
+      location: '黑門市場',
+      duration: '約1小時10分',
+      coordinates: [34.6628, 135.5011],
+      lunchOptions: '黑門三平、章魚燒／大阪燒／炒麵／關東煮',
+      restaurants: {
+        lunch: [
+          { name: '黑門三平', location: '黑門市場', note: '章魚燒／大阪燒／炒麵／關東煮' }
+        ]
+      },
+      category: 'main',
+      details: {
+        japaneseInfo: null,
+        notes: '吃法建議（不排隊，分食，以「有座位」優先）：黑門三平、章魚燒／大阪燒／炒麵／關東煮',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '13:10-13:30',
+      title: '回飯店放戰利品/上洗手間',
+      description: '休息，整理戰利品更順',
+      transport: '黑門市場 ↔ 飯店步行',
+      location: 'KOKO HOTEL Osaka Namba',
+      duration: '約20分鐘',
+      coordinates: [34.6658, 135.5043],
+      category: 'main',
+      details: {
+        japaneseInfo: null,
+        notes: '備註：休息，整理戰利品更順',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '13:30-14:00',
+      title: '日本橋 → 新世界（恵美須町）',
+      description: '交通：堺筋線（日本橋 → 恵美須町）',
+      transport: '地鐵',
+      location: '新世界',
+      duration: '約30分鐘',
+      coordinates: [34.6525, 135.5063],
+      subway: '日本橋站 → 堺筋線 → 恵美須町站',
+      category: 'main',
+      details: {
+        japaneseInfo: null,
+        notes: '備註：同一條線直達，少走路',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '14:00-15:00',
+      title: '通天閣展望台＋新世界散步（精華版）',
+      description: '建議：只抓重點拍照，不拉太長',
+      transport: '走路',
+      location: '通天閣、新世界',
+      duration: '約1小時',
+      coordinates: [34.6525, 135.5063],
+      mustVisit: '通天閣展望台、新世界散步',
+      category: 'main',
+      details: {
+        japaneseInfo: null,
+        notes: '累了：找咖啡店或室內座位休息 10–15 分鐘',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '15:00-15:20',
+      title: '新世界/通天閣 → 難波',
+      description: '交通：地鐵回難波周邊',
+      transport: '地鐵',
+      location: '難波',
+      duration: '約20分鐘',
+      coordinates: [34.6628, 135.5011],
+      category: 'main',
+      details: {
+        japaneseInfo: null,
+        notes: '備註：若採用今昔館（插槽B），則從天神橋筋六丁目改搭地鐵回難波即可',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '15:25-15:45',
+      title: '難波八阪神社',
+      description: '拍照 15–20 分鐘即可',
+      transport: '難波周邊步行',
       location: '難波八阪神社',
       duration: '約20分鐘',
       coordinates: [34.6628, 135.5011],
-      mustVisit: '巨大獅子頭舞台',
+      mustVisit: '難波八阪神社',
       category: 'main',
       details: {
         japaneseInfo: null,
-        notes: '拍照、參拜。停留約 15–20 分鐘',
+        notes: '備註：平坦好走，小點快閃',
         kkdayLink: null
       }
     },
     {
-      time: '15:00-15:30',
-      title: '唐吉軻德 道頓堀店摩天輪（白天）',
-      description: '使用大阪周遊卡免費搭乘',
-      transport: '走路',
+      time: '15:45-16:30',
+      title: 'Namba Parks 或 大丸（心齋橋/難波）室內逛街＋休息',
+      description: '目標：椅子多，廁所方便，順便補買零食/保暖用品',
+      transport: '步行',
+      location: 'Namba Parks 或 大丸',
+      duration: '約45分鐘',
+      coordinates: [34.6628, 135.5011],
+      category: 'main',
+      details: {
+        japaneseInfo: null,
+        notes: '交通：難波八阪神社 → Namba Parks 多為步行可達（依步速約 10–15 分鐘）。若改去大丸（心齋橋）：可步行或短程地鐵 1 站',
+        kkdayLink: null
+      }
+    },
+    {
+      time: '16:30-17:10',
+      title: '唐吉軻德 道頓堀店摩天輪 ＆ 道頓堀自由活動',
+      description: '建議：摩天輪白天搭；之後河岸拍照，找咖啡店坐著休息',
+      transport: '步行',
       location: '道頓堀',
-      duration: '約30分鐘',
+      duration: '約40分鐘',
       coordinates: [34.6686, 135.5011],
       mustVisit: '唐吉軻德摩天輪',
       category: 'main',
       details: {
         japaneseInfo: null,
-        notes: '白天視野清楚、排隊通常比較短',
+        notes: '交通：步行',
         kkdayLink: null
       }
     },
     {
-      time: '15:30-17:00',
-      title: '【備用插槽 C】道頓堀室內活動選項',
-      description: '觸發：道頓堀逛很快／長輩想坐著／不想一直走',
-      transport: '步行',
-      location: '道頓堀',
-      duration: '約30分鐘-1.5小時',
-      coordinates: [34.6686, 135.5011],
-      category: 'backup-slot',
-      details: {
-        japaneseInfo: null,
-        notes: '選 1 個或直接咖啡店休息',
-        kkdayLink: null
-      }
-    },
-    {
-      time: '15:30-16:15',
-      title: '上方浮世繪館',
-      description: 'Kamigata Ukiyoe Museum',
-      transport: '步行',
-      location: '道頓堀/難波',
-      duration: '約30-45分鐘',
-      coordinates: [34.6686, 135.5011],
-      mustVisit: '浮世繪館',
-      category: 'backup-option',
-      details: {
-        japaneseInfo: null,
-        notes: '周遊卡｜室內。以視覺展品為主，不懂日文也能看得懂',
-        kkdayLink: null
-      }
-    },
-    {
-      time: '15:30-17:00',
-      title: '百貨商場休息區',
-      description: '高島屋、Namba Parks、心齋橋地下街',
-      transport: '步行',
-      location: '道頓堀周邊',
-      duration: '約30-90分鐘',
-      coordinates: [34.6686, 135.5011],
-      mustVisit: '商場',
-      category: 'backup-option',
-      details: {
-        japaneseInfo: null,
-        notes: '室內保命點。彈性最大，原地步行即可',
-        kkdayLink: null
-      }
-    },
-    {
-      time: '17:30-18:30',
+      time: '17:10-18:30',
       title: '晚餐（道頓堀／難波）',
-      description: '不排隊、可久坐、離碼頭近',
+      description: '建議：若中午黑門吃很多，晚餐可改「輕量」定食/麵類',
       transport: '走路',
       location: '道頓堀',
-      duration: '約1小時',
+      duration: '約1小時20分',
       coordinates: [34.6686, 135.5011],
-      dinnerOptions: '千房大阪燒 (道頓堀ビル店)、大起水產迴轉壽司 (道頓堀店)',
+      dinnerOptions: '千房大阪燒、大起水產迴轉壽司、一蘭拉麵',
       restaurants: {
         dinner: [
           { name: '千房大阪燒 (道頓堀ビル店)', location: '道頓堀', note: '大阪燒名店' },
-          { name: '大起水產迴轉壽司 (道頓堀店)', location: '道頓堀', note: '迴轉壽司，高CP值與多樣性' }
+          { name: '大起水產迴轉壽司 (道頓堀店)', location: '道頓堀', note: '平價迴轉壽司，高CP值與多樣性，有麵食可點' },
+          { name: '一蘭拉麵', location: '道頓堀', note: '拉麵' }
         ]
       },
+      category: 'main',
       details: {
         japaneseInfo: null,
-        notes: '建議選擇：千房大阪燒 (道頓堀ビル店)、大起水產迴轉壽司 (道頓堀店)。原則：不排隊、可久坐、離碼頭近',
+        notes: '建議：千房大阪燒、大起水產迴轉壽司、一蘭拉麵',
         kkdayLink: null
       }
     },
     {
-      time: '18:30-18:50',
+      time: '18:30-19:00',
       title: '步行至碼頭＋休息',
-      description: '飯後慢慢走到道頓堀碼頭',
+      description: '備註：先坐下等船，保留體力',
       transport: '走路',
       location: '道頓堀碼頭',
-      duration: '約20分鐘',
+      duration: '約30分鐘',
       coordinates: [34.6686, 135.5011],
+      category: 'main',
       details: {
         japaneseInfo: null,
-        notes: '飯後慢慢走到道頓堀碼頭。在碼頭附近座位休息。不趕時間、不奔跑',
+        notes: '備註：先坐下等船，保留體力',
         kkdayLink: null
       }
     },
     {
       time: '19:00-19:30',
       title: '道頓堀水上觀光船（夜景）',
-      description: '夜景完整、招牌全亮',
+      description: '備註：夜景完整，但不會拖太晚',
       transport: '遊船',
       location: '道頓堀',
       duration: '約30分鐘',
       coordinates: [34.6686, 135.5011],
       mustVisit: 'Wonder Cruise',
+      category: 'main',
       details: {
         japaneseInfo: null,
-        notes: '建議白天先完成換票／確認，熱門時段可能較滿',
+        notes: '備註：夜景完整，但不會拖太晚',
         kkdayLink: null
       }
     },
@@ -644,9 +597,10 @@ export const itineraryData = {
       location: 'KOKO HOTEL Osaka Namba',
       duration: '約30分鐘',
       coordinates: [34.6658, 135.5043],
+      category: 'main',
       details: {
         japaneseInfo: null,
-        notes: '從道頓堀步行或短程地鐵。回飯店時間不晚。洗澡、休息，結束一天',
+        notes: '從道頓堀步行或短程地鐵',
         kkdayLink: null
       }
     }
