@@ -217,12 +217,12 @@ export const itineraryData = {
   ],
   day3: [
     {
-      time: '06:30-07:30',
+      time: '06:30–07:20',
       title: '飯店早餐/退房',
       description: '吃飽一點，車程較長',
       transport: '飯店內',
       location: 'Onyado Nono Kyoto Shichijo',
-      duration: '約1小時',
+      duration: '約50分鐘',
       coordinates: [34.9877, 135.7551],
       details: {
         japaneseInfo: null,
@@ -231,22 +231,22 @@ export const itineraryData = {
       }
     },
     {
-      time: '07:30-08:00',
-      title: '飯店出發前往集合點',
+      time: '07:20–08:00',
+      title: '前往集合點 (改為走路)',
       description: '飯店出發前往京都車站八條口祭時計広場',
-      transport: '計程車 x2',
+      transport: '走路',
       location: '京都車站八條口祭時計広場',
-      duration: '約30分鐘',
+      duration: '約40分鐘',
       coordinates: [34.9854, 135.7581],
       subway: '京都車站',
       details: {
         japaneseInfo: '京都駅八条口の「祭時計広場（まつりどけいひろば）」までお願いします。',
-        notes: '有3個大行李，務必叫2台車。詳細地點請依憑證',
-        kkdayLink: 'https://www.kkday.com/zh-tw/product/154074'
+        notes: '改為走路，利用地下通道。飯店距離八條口約 800 公尺 (步行約 10-12 分鐘)，走地下通道可避寒。',
+        kkdayLink: 'https://www.kkday.com/zh-tw/product/269936'
       }
     },
     {
-      time: '08:00-18:00',
+      time: '08:00–18:00',
       title: 'KKday 天橋立・伊根舟屋一日遊 (京都出發/大阪下車)',
       description: '伊根舟屋餵海鷗 (船上)、天橋立飛龍觀 (纜車/吊椅)',
       transport: 'KKday 巴士一日遊',
@@ -266,11 +266,11 @@ export const itineraryData = {
       details: {
         japaneseInfo: null,
         notes: '伊根舟屋餵海鷗 (船上)、天橋立飛龍觀 (纜車/吊椅)。午餐推薦(天橋立/文殊地區自理)：特色必吃花蛤丼。推薦店家：はまや食堂(Hamaya)(智恩寺對面，出餐快)、橋立大丸(空間大)',
-        kkdayLink: 'https://www.kkday.com/zh-tw/product/154074'
+        kkdayLink: 'https://www.kkday.com/zh-tw/product/269936'
       }
     },
     {
-      time: '18:00-19:30',
+      time: '18:00–19:30',
       title: '抵達大阪・走路去飯店',
       description: '大阪近鐵日本橋車站 2 號出口下車 → 推行李步行至 KOKO HOTEL',
       transport: '走路',
@@ -285,34 +285,29 @@ export const itineraryData = {
       }
     },
     {
-      time: '19:30',
+      time: '20:00',
       title: '晚餐 - 千日前/日本橋周邊',
       description: '飯店附近美食',
       location: '千日前',
       duration: '約1小時',
       coordinates: [34.6686, 135.5011],
-      dinnerOptions: '大起水產迴轉壽司、元祿壽司、神座拉麵千日前店 (蔬菜湯頭)、千房大阪燒、元祖大阪章魚燒、播重 (壽喜燒)、章魚燒 道樂 Wanaka',
+      dinnerOptions: '神座拉麵千日前店 (蔬菜湯頭)、千房大阪燒',
       restaurants: {
         dinner: [
-          { name: '大起水產迴轉壽司', location: '大阪千日前', note: '迴轉壽司' },
-          { name: '元祿壽司', location: '大阪千日前', note: '壽司' },
           { name: '神座拉麵 Kamukura 千日前店', location: '大阪千日前', note: '蔬菜湯頭拉麵，口味清甜' },
-          { name: '千房大阪燒 Chibo', location: '大阪千日前', note: '大阪燒名店' },
-          { name: '元祖大阪章魚燒', location: '大阪千日前', note: '章魚燒' },
-          { name: '播重 Hariju', location: '大阪千日前', note: '壽喜燒老店' },
-          { name: '章魚燒 道樂 Wanaka (わなか)', location: '大阪千日前', note: '必吃章魚燒' }
+          { name: '千房大阪燒 Chibo', location: '大阪千日前', note: '大阪燒名店' }
         ]
       },
       details: {
         japaneseInfo: null,
-        notes: '千房大阪燒、神座拉麵(蔬菜湯頭清甜)、わなか章魚燒千日前總店',
+        notes: '千房大阪燒、神座拉麵(蔬菜湯頭清甜)',
         kkdayLink: null
       }
     }
   ],
   day4: [
     {
-      time: '08:30-09:00',
+      time: '08:30–09:00',
       title: '飯店出發 → 森之宮站',
       description: '交通：地鐵（目標：森之宮 Morinomiya）',
       transport: '地鐵',
@@ -328,7 +323,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '09:00-09:20',
+      time: '09:00–09:20',
       title: '大阪城路面小火車（進城）',
       description: '交通：小火車（周遊卡）',
       transport: '路面小火車',
@@ -344,7 +339,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '09:20-10:30',
+      time: '09:20–10:30',
       title: '大阪城天守閣',
       description: '建議：重點樓層＋觀景台即可，不必硬走全館',
       transport: '走路',
@@ -360,7 +355,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '10:30-11:00',
+      time: '10:30–11:00',
       title: '【備用插槽 A】大阪城御座船',
       description: '觸發：天守閣逛得快／天氣冷風大',
       transport: '大阪城園區內步行',
@@ -375,7 +370,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '11:00-11:20',
+      time: '11:00–11:20',
       title: '大阪城路面小火車（出城回森之宮）',
       description: '交通：小火車（周遊卡）',
       transport: '路面小火車',
@@ -390,7 +385,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '11:30-12:00',
+      time: '11:30–12:00',
       title: '森之宮 → 日本橋（黑門市場）',
       description: '交通建議：森之宮 →（中央線）堺筋本町 →（堺筋線）日本橋',
       transport: '地鐵',
@@ -406,7 +401,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '12:00-13:10',
+      time: '12:00–13:10',
       title: '黑門市場午餐＋坐下休息',
       description: '吃法建議（不排隊，分食，以「有座位」優先）',
       transport: '走路',
@@ -427,7 +422,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '13:10-13:30',
+      time: '13:10–13:30',
       title: '回飯店放戰利品/上洗手間',
       description: '休息，整理戰利品更順',
       transport: '黑門市場 ↔ 飯店步行',
@@ -442,7 +437,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '13:30-14:00',
+      time: '13:30–14:00',
       title: '日本橋 → 新世界（恵美須町）',
       description: '交通：堺筋線（日本橋 → 恵美須町）',
       transport: '地鐵',
@@ -458,7 +453,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '14:00-15:00',
+      time: '14:00–15:00',
       title: '通天閣展望台＋新世界散步（精華版）',
       description: '建議：只抓重點拍照，不拉太長',
       transport: '走路',
@@ -474,7 +469,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '15:00-15:20',
+      time: '15:00–15:20',
       title: '新世界/通天閣 → 難波',
       description: '交通：地鐵回難波周邊',
       transport: '地鐵',
@@ -489,7 +484,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '15:25-15:45',
+      time: '15:25–15:45',
       title: '難波八阪神社',
       description: '拍照 15–20 分鐘即可',
       transport: '難波周邊步行',
@@ -505,7 +500,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '15:45-16:30',
+      time: '15:45–16:30',
       title: 'Namba Parks 或 大丸（心齋橋/難波）室內逛街＋休息',
       description: '目標：椅子多，廁所方便，順便補買零食/保暖用品',
       transport: '步行',
@@ -520,7 +515,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '16:30-17:10',
+      time: '16:30–17:10',
       title: '唐吉軻德 道頓堀店摩天輪 ＆ 道頓堀自由活動',
       description: '建議：摩天輪白天搭；之後河岸拍照，找咖啡店坐著休息',
       transport: '步行',
@@ -536,7 +531,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '17:10-18:30',
+      time: '17:10–18:30',
       title: '晚餐（道頓堀／難波）',
       description: '建議：若中午黑門吃很多，晚餐可改「輕量」定食/麵類',
       transport: '走路',
@@ -559,7 +554,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '18:30-19:00',
+      time: '18:30–19:00',
       title: '步行至碼頭＋休息',
       description: '備註：先坐下等船，保留體力',
       transport: '走路',
@@ -574,7 +569,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '19:00-19:30',
+      time: '19:00–19:30',
       title: '道頓堀水上觀光船（夜景）',
       description: '備註：夜景完整，但不會拖太晚',
       transport: '遊船',
@@ -590,7 +585,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '19:30-20:00',
+      time: '19:30–20:00',
       title: '返回飯店',
       description: '從道頓堀步行或短程地鐵',
       transport: '走路或地鐵',
@@ -607,7 +602,7 @@ export const itineraryData = {
   ],
   day5: [
     {
-      time: '06:30-06:40',
+      time: '06:30–06:40',
       title: '退房與寄放行李',
       description: '辦理退房，將3個大行李寄放在 KOKO HOTEL 櫃檯',
       transport: '飯店內',
@@ -621,7 +616,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '06:40-07:30',
+      time: '06:40–07:30',
       title: '飯店早餐',
       description: '享用飯店早餐',
       transport: '飯店內',
@@ -635,7 +630,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '07:30-07:50',
+      time: '07:30–07:50',
       title: '前往集合地點',
       description: '走路前往 VIP Villa難波集合',
       transport: '走路',
@@ -649,7 +644,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '07:50-19:10',
+      time: '07:50–19:10',
       title: 'KKday 金閣寺・嵐山・伏見稻荷・奈良一日遊',
       description: '金閣寺 → 嵐山竹林 → 伏見稻荷千本鳥居 → 奈良公園餵鹿',
       transport: '觀光遊覽車',
@@ -665,7 +660,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '19:10-20:00',
+      time: '19:10–20:00',
       title: '晚餐 (難波下車處附近)',
       description: '回飯店沿路的快速晚餐',
       location: '難波站/VIP Villa附近',
@@ -687,7 +682,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '20:00-21:00',
+      time: '20:00–21:00',
       title: '取行李並移動至 USJ 飯店',
       description: '走路回 KOKO HOTEL 取件行李，然後移動至環球影城飯店',
       transport: '走路 + 電車',
@@ -704,7 +699,7 @@ export const itineraryData = {
   ],
   day6: [
     {
-      time: '07:30-08:30',
+      time: '07:30–08:30',
       title: '飯店早餐',
       description: '建議吃飽一點，園區食物較貴且排隊久',
       transport: '飯店內',
@@ -718,7 +713,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '08:30-20:00',
+      time: '08:30–20:00',
       title: '大阪環球影城 (USJ) 全日遊',
       description: '用APP掃描門票QRCode加入後(四個人)，進去先用APP抽整理劵。園區不可帶食物進去',
       transport: '走路',
@@ -757,7 +752,7 @@ export const itineraryData = {
   ],
   day7: [
     {
-      time: '08:30-09:30',
+      time: '08:30–09:30',
       title: '飯店早餐',
       description: '最後一天，悠閒享用早餐',
       transport: '飯店內',
@@ -785,7 +780,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '10:27-11:30',
+      time: '10:27–11:30',
       title: '搭乘利木津巴士',
       description: '前往關西機場',
       transport: '利木津巴士',
@@ -800,7 +795,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '12:00-14:00',
+      time: '12:00–14:00',
       title: '關西機場 (KIX)',
       description: '辦理登機手續，準備返程',
       location: '關西機場 T1',
@@ -815,7 +810,7 @@ export const itineraryData = {
       }
     },
     {
-      time: '14:30-16:45',
+      time: '14:30–16:45',
       title: '返程航班',
       description: '中華航空 CI153 關西機場 → 桃園機場',
       transport: '中華航空 CI153',
