@@ -820,6 +820,14 @@ export default {
         console.error('❌ Error listening to locations:', error)
         console.error('❌ Error code:', error.code)
         console.error('❌ Error message:', error.message)
+        
+        // 處理權限錯誤，顯示友好的提示
+        if (error.code === 'PERMISSION_DENIED') {
+          console.warn('⚠️ Location sharing requires Firebase authentication. This is normal for demo purposes.')
+          otherUsers.value = []
+          // 可以選擇顯示一個提示訊息給用戶
+          // showPermissionError.value = true
+        }
       })
     }
 
