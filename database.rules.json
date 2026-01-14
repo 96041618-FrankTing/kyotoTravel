@@ -1,6 +1,8 @@
 {
   "rules": {
     "locations": {
+      ".read": true,
+      ".write": true,
       "$userId": {
         ".read": true,
         ".write": true
