@@ -60,7 +60,7 @@
           :key="day.id"
           @click="activeDay = day.id"
           :class="[
-            'nav-btn px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap',
+            'nav-btn px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap min-w-[80px] text-center',
             activeDay === day.id
               ? 'bg-primary text-white shadow-md'
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -167,7 +167,7 @@
           <div class="mt-4 pt-4 border-t border-gray-200">
             <div class="flex justify-between items-center text-lg font-bold">
               <span>總計預估費用</span>
-              <span class="text-primary">NT$ {{ (63317 + 20615 + 11642 + 14565 + 7324 + 6240).toLocaleString() }}</span>
+              <span class="text-primary">NT$ {{ travelInfo.costs.reduce((sum, cost) => sum + parseInt(cost.amount.replace('NT$', '').replace(',', '')), 0).toLocaleString() }}</span>
             </div>
             <div class="text-sm text-gray-600 mt-2 text-center">
               💡 點擊查看完整預算規劃表
@@ -415,13 +415,9 @@
               </div>
             </div>
             <div class="space-y-2">
-              <div class="flex items-center text-sm text-gray-600">
-                <span class="font-medium mr-2">🏷️ 亮點：</span>
+              <div class="text-sm text-gray-600">
+                <span class="font-medium">🏷️ 亮點：</span>
                 <span>{{ attraction.highlights.join('、') }}</span>
-              </div>
-              <div class="flex items-center text-sm text-gray-600">
-                <span class="font-medium mr-2">🕐 最佳時間：</span>
-                <span>{{ attraction.bestTime }}</span>
               </div>
             </div>
             <div class="mt-4 pt-4 border-t border-gray-200">
@@ -883,14 +879,14 @@
                   <span class="text-sm text-gray-700">A. 台灣預付</span>
                   <div class="text-right">
                     <div class="text-base font-bold text-primary">NT$ {{ travelInfo.budget.summary.prepaidNTD.toLocaleString() }}</div>
-                    <div class="text-xs text-gray-500">69%</div>
+                    <div class="text-xs text-gray-500">{{ Math.round(travelInfo.budget.summary.prepaidNTD / travelInfo.budget.summary.totalNTD * 100) }}%</div>
                   </div>
                 </div>
                 <div class="bg-white rounded-lg p-3 flex justify-between items-center shadow-sm">
                   <span class="text-sm text-gray-700">B. 當地支出</span>
                   <div class="text-right">
                     <div class="text-base font-bold text-primary">NT$ {{ travelInfo.budget.summary.localNTD.toLocaleString() }}</div>
-                    <div class="text-xs text-gray-500">31%</div>
+                    <div class="text-xs text-gray-500">{{ Math.round(travelInfo.budget.summary.localNTD / travelInfo.budget.summary.totalNTD * 100) }}%</div>
                   </div>
                 </div>
                 <div class="bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg p-3 text-white">

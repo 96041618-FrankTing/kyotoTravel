@@ -44,12 +44,19 @@ export const travelInfo = {
     }
   ],
   costs: [
-    { item: '來回機票 x4人 (ezTravel訂購)', amount: 'NT$63,317' },
-    { item: '住宿 Onyado Nono Kyoto Shichijo Natural Hot Spring 兩晚', amount: 'NT$17,529' },
-    { item: '住宿 KOKO HOTEL Osaka Namba Sennichimae 兩晚', amount: 'NT$12,530' },
-    { item: '住宿 THE SINGULARI HOTEL & SKYSPA at UNIVERSAL STUDIOS JAPAN 兩晚', amount: 'NT$14,565' },
-    { item: 'Day3 KKDAY日本天橋立一日遊 x4', amount: 'NT$7,324' },
-    { item: 'Day5 KKDAY京都&奈良一日遊(金閣寺、嵐山、奈良公園、伏見稻荷大社) x4', amount: 'NT$6,240' }
+    // Part A. 台灣預付項目
+    { item: '來回機票 x4人 (ezTravel訂購)', amount: 'NT$63,317', category: '台灣預付' },
+    { item: '住宿費（6晚）x4人', amount: 'NT$46,822', category: '台灣預付' },
+    { item: 'KKday 行程 x4人', amount: 'NT$13,564', category: '台灣預付' },
+    { item: 'USJ 門票 x4人', amount: 'NT$7,800', category: '台灣預付' },
+    { item: 'HARUKA 車票 x4人', amount: 'NT$3,200', category: '台灣預付' },
+    { item: '旅遊平安險 x4人', amount: 'NT$1,870', category: '台灣預付' },
+    { item: '日本 SIM 網路卡 x4人', amount: 'NT$1,460', category: '台灣預付' },
+    { item: '大阪周遊卡（1日券）x4人', amount: 'NT$3,150', category: '台灣預付' },
+    // Part B. 日本當地支出
+    { item: '餐飲費用（7天午晚餐）x4人', amount: 'NT$27,000', category: '當地支出' },
+    { item: '當地交通（計程車/利木津巴士）x4人', amount: 'NT$4,950', category: '當地支出' },
+    { item: '門票與體驗（和服/小景點/餵食）x4人', amount: 'NT$11,150', category: '當地支出' }
   ],
   kkdayTours: [
     {
@@ -127,68 +134,67 @@ export const travelInfo = {
     days: 7,
     prepaidInTaiwan: {
       items: [
-        { name: '來回機票', amount: 63317, note: '已確認 (星宇/華航)', status: 'completed' },
-        { name: '住宿費 (6晚)', amount: 46822, note: '已確認 (3間飯店，含早餐)', status: 'completed' },
-        { name: 'KKday 行程', amount: 13564, note: 'Day3 天橋立 + Day5 嵐山奈良', status: 'pending' },
-        { name: 'USJ 門票', amount: 7800, note: '1-Day Pass (3大1小)', status: 'pending' },
-        { name: 'USJ 快速通關', amount: 18000, note: '(浮動) 預估快通4 @$4500/人', status: 'pending' },
-        { name: 'HARUKA 車票', amount: 3200, note: '機場→京都 (單程)', status: 'pending' },
-        { name: '網卡/保險', amount: 3000, note: 'eSIM x3 + 漫遊 + 旅平險', status: 'pending' }
+        { name: '來回機票', amount: 63317, note: '星宇/華航', status: 'completed' },
+        { name: '住宿費 (6晚)', amount: 46822, note: '3間飯店，含早餐', status: 'completed' },
+        { name: 'KKday 行程', amount: 13564, note: 'Day3 天橋立 + Day5 嵐山奈良', status: 'completed' },
+        { name: 'USJ 門票', amount: 7800, note: '1-Day Pass (3大1小)', status: 'completed' },
+        { name: 'HARUKA 車票', amount: 3200, note: '關西機場→京都 (單程)', status: 'completed' },
+        { name: '旅遊平安險 (4人)', amount: 1870, note: '固定金額', status: 'completed' },
+        { name: '日本 SIM 網路卡 (4人)', amount: 1460, note: '固定金額', status: 'completed' },
+        { name: '大阪周遊卡 (1日券)', amount: 3150, note: '¥3,500 × 4人', status: 'pending' }
       ],
-      subtotal: 155703,
-      perPerson: 38925
+      subtotal: 141183,
+      perPerson: 35295
     },
     localExpenses: {
       dining: {
-        total: 210000,
-        totalNTD: 47250,
-        perPersonPerDay: 7500,
+        total: 27000,
+        totalNTD: 27000,
+        perPersonPerDay: 5000,
         breakdown: {
           breakfast: 0,
           lunch: 2500,
-          dinner: 5000
+          dinner: 2500
         },
-        note: '早餐飯店包含'
+        note: '午晚餐各 ¥2,500/人/餐'
       },
       transportation: {
-        total: 50000,
-        totalNTD: 11250,
+        total: 4950,
+        totalNTD: 4950,
         items: [
-          { name: '京都移動', note: 'Day1 & Day2 計程車' },
-          { name: '大阪移動', note: 'Day3 & Day5 搬家計程車 (長途)' },
-          { name: '機場交通', note: 'Day7 利木津巴士 (約 ¥6,300)' },
-          { name: 'ICOCA儲值', note: '每人預抓 ¥3,000 (地鐵/備用)' }
+          { name: 'Day7 利木津巴士', note: '約 ¥6,300' },
+          { name: 'Day2 京都短程計程車預留', note: '約 ¥8,000' },
+          { name: '其餘走路/地鐵/JR 零星車資預留', note: '約 ¥7,700' }
         ]
       },
       tickets: {
-        total: 48000,
-        totalNTD: 10800,
+        total: 11150,
+        totalNTD: 11150,
         items: [
-          { name: '和服體驗 (4人)', amount: 24000 },
-          { name: '人力車 (2台)', amount: 10000 },
-          { name: '小景點門票', amount: 12000, note: '清水寺/大阪城等' },
-          { name: '餵食體驗', amount: 2000, note: '鹿仙貝/蝦味先' }
+          { name: '和服體驗', amount: 8000, note: '小紋和服＋攝影師' },
+          { name: '小景點門票', amount: 2700, note: '清水寺/大阪城等' },
+          { name: '餵食體驗', amount: 450, note: '鹿仙貝/蝦味先' }
         ]
       },
-      subtotal: 69300
+      subtotal: 43100
     },
     cashStrategy: {
-      recommended: 120000,
-      recommendedNTD: 27000,
-      usage: 'ICOCA 儲值、計程車、路邊攤(錦市場/黑門市場)、人力車、自動販賣機',
-      distribution: '3 位大人身上各帶 ¥40,000 現金即可'
+      recommended: 160000,
+      recommendedNTD: 36000,
+      usage: '午晚餐、計程車、小景點門票、餵食體驗',
+      distribution: '建議兌換 ¥160,000 現金'
     },
     cardStrategy: {
-      recommended: 188000,
-      recommendedNTD: 42300,
-      usage: '午晚餐大餐 (燒肉/東洋亭)、和服店、百貨公司購物、USJ 園區內消費'
+      recommended: 141183,
+      recommendedNTD: 141183,
+      usage: '台灣預付項目 (機票、住宿、KKday、USJ、HARUKA、網卡、保險)'
     },
     summary: {
-      prepaidNTD: 155703,
-      localNTD: 69300,
-      totalNTD: 225003,
-      perPersonNTD: 56250,
-      recommendedPerPerson: 60000
+      prepaidNTD: 141183,
+      localNTD: 43100,
+      totalNTD: 184283,
+      perPersonNTD: 46071,
+      recommendedPerPerson: 50000
     }
   }
 }
